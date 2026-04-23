@@ -1,0 +1,54 @@
+# ============================================================
+# apps/api/.env.example
+# ============================================================
+
+DATABASE_URL=postgresql+asyncpg://medireach:medireach_dev_pass@localhost:5432/medireach
+SYNC_DATABASE_URL=postgresql://medireach:medireach_dev_pass@localhost:5432/medireach
+REDIS_URL=redis://localhost:6379/0
+GOOGLE_API_KEY=your_google_api_key_here
+CLOUD_LLM=gemini-2.0-flash
+JWT_SECRET=replace_this_with_a_long_random_string
+DASHBOARD_URL=http://localhost:3000
+ENVIRONMENT=development
+PORT=3001
+
+# Knowledge base / RAG
+UPLOAD_DIR=./uploads                  # Where uploaded PDFs are stored locally
+FAISS_EXPORT_DIR=./exports            # Where the exported mobile FAISS index is written
+MAX_UPLOAD_SIZE_MB=50
+
+
+# ============================================================
+# apps/mobile/.env.example
+# Copy this to apps/mobile/.env and fill in your values
+# ============================================================
+
+# Your API server URL
+# For local dev: use your computer's LAN IP (not localhost!)
+# Find it: ipconfig (Windows) or ifconfig (Mac/Linux) → look for 192.168.x.x
+EXPO_PUBLIC_API_BASE_URL=http://192.168.1.100:3001
+
+# Google Gemini API key (same key as the backend)
+EXPO_PUBLIC_GEMINI_API_KEY=your_google_api_key_here
+
+# Set to "development" to use Ollama instead of the bundled SLM model
+# Set to "production" to use the bundled Llama 3.2 1B model
+EXPO_PUBLIC_ENVIRONMENT=development
+
+# Only needed when EXPO_PUBLIC_ENVIRONMENT=development
+# Your computer's LAN IP running Ollama
+EXPO_PUBLIC_OLLAMA_URL=http://192.168.1.100:11434
+
+
+# ============================================================
+# apps/dashboard/.env.local.example
+# Copy this to apps/dashboard/.env.local and fill in your values
+# ============================================================
+
+# NextAuth — any random string
+NEXTAUTH_SECRET=replace_this_with_a_long_random_string
+NEXTAUTH_URL=http://localhost:3000
+
+# API server URL
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_SOCKET_URL=http://localhost:3001
