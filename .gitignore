@@ -1,0 +1,10 @@
+.env
+.env.local
+Apps/Mobile/.env
+Apps/Api/.env
+Apps/Api/uploads/
+Apps/Api/exports/
+Apps/Mobile/src/assets/models/
+node_modules/
+__pycache__/
+.venv/

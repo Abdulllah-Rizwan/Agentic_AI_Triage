@@ -60,6 +60,69 @@ This file records every significant decision made during development — what wa
 
 ## In-Progress Decisions (Add here as you build)
 
+### DEC-006 — pydantic-settings for environment configuration
+- **Date:** 2026-04-24
+- **Decision:** Use `pydantic-settings` `BaseSettings` class in `app/core/config.py` to read all environment variables, with a module-level `settings` singleton cached via `@lru_cache`
+- **Reason:** Single source of truth for every env var with type validation at startup. If a required variable is missing the server refuses to start with a clear error rather than crashing at runtime. All other modules import `settings` directly — no scattered `os.getenv()` calls.
+- **Rejected alternative:** Raw `os.getenv()` calls at each use site — no validation, no autocomplete, easy to miss a variable
+- **Status:** Final
+
+---
+
+### DEC-007 — Dual SQLAlchemy engines (async + sync)
+- **Date:** 2026-04-24
+- **Decision:** `app/core/database.py` creates two separate engines: an async engine (`asyncpg`) for FastAPI route handlers and a sync engine (`psycopg2`) for Celery workers
+- **Reason:** FastAPI's `async def` routes require an async session; Celery tasks run in a standard synchronous thread and cannot use `await`. A single engine type would force one side to use workarounds.
+- **Rejected alternative:** Running Celery with `asyncio` event loop — adds complexity and is not the Celery-recommended pattern
+- **Status:** Final
+
+---
+
+### DEC-008 — Three distinct JWT token types
+- **Date:** 2026-04-24
+- **Decision:** `app/core/security.py` issues three token types with a `"type"` claim: `access` (15 min), `refresh` (7 days), `device` (30 days). Each route dependency validates the `type` claim before accepting the token.
+- **Reason:** Prevents token misuse — a device token cannot be used to access dashboard routes, and a refresh token cannot be used as an access token. Enforced in code, not just by expiry.
+- **Rejected alternative:** Single token type distinguished only by expiry — a stolen long-lived token would grant full access
+- **Status:** Final
+
+---
+
+### DEC-009 — Docker PostgreSQL mapped to host port 5433
+- **Date:** 2026-04-24
+- **Decision:** `docker-compose.yml` maps the PostgreSQL container to host port `5433` instead of `5432`. Both database URLs in `.env` use port `5433`.
+- **Reason:** Windows developer machines commonly have a local PostgreSQL service already bound to port `5432`. Docker cannot bind to the same port, causing silent connection failures where psycopg2 hits the local Postgres instead of the container and gets auth errors.
+- **Rejected alternative:** Port `5432` — works on clean machines but causes hard-to-diagnose auth failures on Windows dev machines with local Postgres installed
+- **Status:** Final
+
+---
+
+### DEC-010 — IVFFlat index for pgvector similarity search
+- **Date:** 2026-04-24
+- **Decision:** The initial migration creates an `ivfflat` index on `knowledge_chunks.embedding` with `lists=100` and `vector_cosine_ops`
+- **Reason:** Exact nearest-neighbour search (`IndexFlatIP`) scans every row on every RAG query — acceptable at 100 chunks but unusable at 10,000+. IVFFlat gives approximate results in logarithmic time. `lists=100` is the pgvector-recommended value for corpora up to ~1M vectors.
+- **Rejected alternative:** No index (exact scan) — correct but does not scale beyond a few thousand chunks
+- **Status:** Final
+
+---
+
+### DEC-011 — Socket.IO JWT validation on connect, org-scoped rooms
+- **Date:** 2026-04-24
+- **Decision:** The Socket.IO `connect` handler in `main.py` validates the dashboard JWT from the `auth` object and returns `False` to reject unauthenticated clients. After connect, clients emit `join:org` to enter a room named after their `org_id`. All server-side emit calls pass `room=org_id` to scope events per organisation.
+- **Reason:** Without auth on connect, any browser could subscribe to live case events. Org-scoped rooms ensure a hospital in Karachi cannot receive events for a relief camp in Peshawar.
+- **Rejected alternative:** Validate token per-event — more work, and events can still be received for a brief window before the first validated event
+- **Status:** Final
+
+---
+
+### DEC-012 — Alembic uses SYNC_DATABASE_URL, not DATABASE_URL
+- **Date:** 2026-04-24
+- **Decision:** `alembic/env.py` reads `settings.SYNC_DATABASE_URL` (psycopg2) and sets it as the Alembic connection URL at runtime
+- **Reason:** Alembic's migration runner is synchronous and does not support asyncpg. Using `DATABASE_URL` (asyncpg) with Alembic causes an immediate driver error.
+- **Rejected alternative:** Hardcoding the URL in `alembic.ini` — breaks on any machine where credentials differ and leaks secrets into version control
+- **Status:** Final
+
+---
+
 <!-- Template — copy and fill in:
 
 ### DEC-XXX — [Short title]
