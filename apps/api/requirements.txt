@@ -39,6 +39,7 @@ aiofiles==24.1.0              # Async file writes
 # Authentication
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
+bcrypt==3.2.2
 
 # Real-time
 python-socketio==5.11.4

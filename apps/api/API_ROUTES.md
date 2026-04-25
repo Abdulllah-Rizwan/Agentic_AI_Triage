@@ -1,4 +1,4 @@
-# API_ROUTES.md — Agentic AI Triage Complete Endpoint Specification
+# API_ROUTES.md — MediReach Complete Endpoint Specification
 
 This file is the authoritative reference for every API endpoint. Claude Code reads this before implementing any route. Every endpoint is defined with: authentication required, request format, success response, and error responses.
 
@@ -481,8 +481,10 @@ Server-side RAG query. Called by the cloud conversation agent (online mode only)
   "results": [
     {
       "content": "Chest pain radiating to the left arm may indicate acute myocardial infarction. Immediate actions: keep patient still, loosen tight clothing...",
-      "document_title": "WHO Emergency Field Handbook",
-      "page_number": 47,
+      "article_title": "Cardiovascular Emergencies in Disaster Settings",
+      "article_url": "https://www.who.int/europe/publications/...",
+      "article_author": "World Health Organization",
+      "article_source": "World Health Organization (WHO)",
       "relevance_score": 0.91
     }
   ]
@@ -528,15 +530,22 @@ List all uploaded documents regardless of status.
 ---
 
 ### `POST /api/v1/admin/knowledge/documents`
-Upload a new PDF document. Uses `multipart/form-data`.
+Upload a new document. Uses `multipart/form-data`.
+
+**Accepted file formats:** `.txt` (plain text) — this is the primary format. The server uses `TextLoader` to process it.
+
+**Companion YAML file:** The `.yaml` metadata file is NOT uploaded through this endpoint. It lives on the server in `Docs/knowledge_base/articles/` and is used by the seed script. For admin-uploaded documents, the metadata (title, author, source, URL) is provided directly in the form fields below instead of via a separate YAML file.
 
 **Request (`multipart/form-data`):**
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| `file` | file | Yes | PDF only, max 50MB |
-| `title` | string | Yes | Display name shown in dashboard |
-| `description` | string | No | Optional notes about the document |
+| `file` | file | Yes | `.txt` only, max 50MB |
+| `title` | string | Yes | Display name — maps to `article_title` on every chunk |
+| `author` | string | No | e.g. "World Health Organization" — maps to `article_author` |
+| `source` | string | No | e.g. "WHO" — maps to `article_source` |
+| `url` | string | No | Source URL — maps to `article_url` |
+| `description` | string | No | Internal notes about the document |
 
 **Success `202`:**
 ```json
@@ -549,7 +558,7 @@ Upload a new PDF document. Uses `multipart/form-data`.
 ```
 
 **Errors:**
-- `400` — file is not a PDF (MIME type check)
+- `400` — file is not a `.txt` file
 - `413` — file exceeds 50MB
 - `409` — document with identical filename already exists and is ACTIVE
 
