@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+message PatientProfile {
+  string cnic  = 1;
+  string name  = 2;
+  string phone = 3;
+  double lat   = 4;
+  double lng   = 5;
+}
+
+message LeanPayload {
+  string          case_id              = 1;
+  PatientProfile  patient              = 2;
+  string          chief_complaint      = 3;
+  repeated string symptoms             = 4;
+  int32           severity             = 5;
+  string          triage_level         = 6;
+  string          triage_reason        = 7;
+  string          conversation_summary = 8;
+  int64           timestamp_unix       = 9;
+  string          device_id            = 10;
+  string          network_mode         = 11;
+}

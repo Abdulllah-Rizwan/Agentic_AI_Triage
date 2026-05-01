@@ -5,6 +5,8 @@ Apps/Api/.env
 Apps/Api/uploads/
 Apps/Api/exports/
 Apps/Mobile/src/assets/models/
+apps/mobile/src/assets/knowledge/*.faiss
+apps/mobile/src/assets/knowledge/*.pkl
 node_modules/
 __pycache__/
 .venv/

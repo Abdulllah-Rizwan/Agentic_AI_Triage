@@ -169,6 +169,7 @@ class KnowledgeDocument(Base):
     uploaded_at = Column(DateTime, default=datetime.utcnow)
     processed_at = Column(DateTime, nullable=True)
     error_message = Column(Text, nullable=True)
+    retrieval_count = Column(Integer, default=0, nullable=False, server_default="0")
 
     uploaded_by_user = relationship("User", back_populates="uploaded_docs")
     chunks = relationship(
@@ -194,8 +195,12 @@ class KnowledgeChunk(Base):
         nullable=False,
     )
     content = Column(Text, nullable=False)
-    page_number = Column(Integer, nullable=True)
     chunk_index = Column(Integer, nullable=False)
+    # Source attribution — populated from companion .yaml at ingestion time
+    article_title  = Column(String, nullable=True)
+    article_url    = Column(String, nullable=True)
+    article_author = Column(String, nullable=True)
+    article_source = Column(String, nullable=True)
     embedding = Column(Vector(384), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
