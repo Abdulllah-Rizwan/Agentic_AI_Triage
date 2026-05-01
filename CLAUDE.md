@@ -1,8 +1,8 @@
-# CLAUDE.md — Agentic AI Triage: Disaster Medical Intelligence System
+# CLAUDE.md — MediReach: Disaster Medical Intelligence System
 
 ## Project Overview
 
-Agentic AI Triage is an offline-first disaster response platform that bridges the intelligence gap between stranded patients and medical responders during natural calamities. It collects symptoms directly from affected individuals via a mobile application, performs on-device clinical triage, and transmits compressed SOAP reports to an NGO/hospital/government command dashboard — even in degraded or zero-connectivity environments.
+MediReach is an offline-first disaster response platform that bridges the intelligence gap between stranded patients and medical responders during natural calamities. It collects symptoms directly from affected individuals via a mobile application, performs on-device clinical triage, and transmits compressed SOAP reports to an NGO/hospital/government command dashboard — even in degraded or zero-connectivity environments.
 
 The system has two distinct surfaces:
 1. **Patient Mobile App** — React Native (iOS + Android), offline-capable, runs an on-device SLM
@@ -568,6 +568,7 @@ class KnowledgeDocument(Base):
     uploaded_at      = Column(DateTime, default=datetime.utcnow)
     processed_at     = Column(DateTime, nullable=True)
     error_message    = Column(Text, nullable=True)          # Set if status=FAILED
+    retrieval_count  = Column(Integer, default=0)           # Incremented by rag_service on each query
     chunks           = relationship("KnowledgeChunk", back_populates="document",
                                     cascade="all, delete-orphan")
 
@@ -576,17 +577,33 @@ class KnowledgeChunk(Base):
     One row per text chunk extracted from a document.
     The embedding column is a 384-dim pgvector vector from all-MiniLM-L6-v2.
     RAG queries do cosine similarity search against this column.
+
+    Metadata fields (article_title, article_url, article_author, article_source)
+    are read from the companion .yaml file at ingestion time and denormalised onto
+    every chunk. This means a RAG result is fully self-contained — the AI and the
+    dashboard always know exactly which WHO article a chunk came from without
+    needing a second database query.
+
+    YAML metadata file format (companion file alongside every .txt content file):
+        title:  "Floods: after the flood – myths and realities"
+        url:    https://www.who.int/europe/publications/...
+        author: World Health Organization
+        source: World Health Organization (WHO)
     """
     __tablename__ = "knowledge_chunks"
-    id          = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    document_id = Column(UUID(as_uuid=True), ForeignKey("knowledge_documents.id",
-                          ondelete="CASCADE"), nullable=False)
-    document    = relationship("KnowledgeDocument", back_populates="chunks")
-    content     = Column(Text, nullable=False)
-    page_number = Column(Integer, nullable=True)
-    chunk_index = Column(Integer, nullable=False)
-    embedding   = Column(Vector(384), nullable=True)        # pgvector column
-    created_at  = Column(DateTime, default=datetime.utcnow)
+    id             = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    document_id    = Column(UUID(as_uuid=True), ForeignKey("knowledge_documents.id",
+                            ondelete="CASCADE"), nullable=False)
+    document       = relationship("KnowledgeDocument", back_populates="chunks")
+    content        = Column(Text, nullable=False)
+    chunk_index    = Column(Integer, nullable=False)        # Position within document
+    # From companion .yaml — denormalised for self-contained RAG results
+    article_title  = Column(String, nullable=True)          # yaml: title
+    article_url    = Column(String, nullable=True)          # yaml: url
+    article_author = Column(String, nullable=True)          # yaml: author
+    article_source = Column(String, nullable=True)          # yaml: source
+    embedding      = Column(Vector(384), nullable=True)     # pgvector column
+    created_at     = Column(DateTime, default=datetime.utcnow)
 
 class KnowledgeBaseVersion(Base):
     """
@@ -999,50 +1016,118 @@ The knowledge base is **not static**. An admin uploads documents through the das
 
 When a document is uploaded via `POST /api/v1/admin/knowledge/documents`, the API saves the file and immediately enqueues a Celery job. The API returns 202 instantly — the processing happens asynchronously.
 
+**File format:** Content files are plain `.txt`. Every `.txt` file has a companion `.yaml` file in the same directory with the same base name (e.g. `article_001_content.txt` + `article_001_metadata.yaml`). The worker reads both files — the `.txt` for content chunking, the `.yaml` for metadata that gets attached to every chunk.
+
+**YAML metadata fields expected:**
+```yaml
+title:  "Floods: after the flood – myths and realities"
+url:    https://www.who.int/europe/publications/m/item/...
+author: World Health Organization
+source: World Health Organization (WHO)
+```
+
+All four fields are optional — if the YAML file does not exist or a field is missing, the chunk is still created with `null` for that metadata field.
+
 ```python
+import os, yaml
+from celery import Celery
+from datetime import datetime
+from langchain_community.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from sentence_transformers import SentenceTransformer
+from app.core.database import sync_session
+from app.models.db import KnowledgeDocument, KnowledgeChunk, DocumentStatus
+from app.services.index_exporter import bump_version_and_export
+
+celery_app = Celery("medireach", broker=os.getenv("REDIS_URL"))
+
+def load_yaml_metadata(txt_file_path: str) -> dict:
+    """
+    Given a path like /uploads/article_001_content.txt, look for
+    /uploads/article_001_metadata.yaml in the same directory.
+    Returns a dict with title/url/author/source keys (all may be None).
+    """
+    base = os.path.splitext(txt_file_path)[0]  # strip .txt
+    # Handle both _content suffix and plain names
+    for yaml_candidate in [
+        base.replace("_content", "_metadata") + ".yaml",
+        base + "_metadata.yaml",
+        base + ".yaml",
+    ]:
+        if os.path.exists(yaml_candidate):
+            with open(yaml_candidate, "r", encoding="utf-8") as f:
+                data = yaml.safe_load(f) or {}
+            return {
+                "article_title":  data.get("title"),
+                "article_url":    data.get("url"),
+                "article_author": data.get("author"),
+                "article_source": data.get("source"),
+            }
+    return {"article_title": None, "article_url": None,
+            "article_author": None, "article_source": None}
+
+
 @celery_app.task(bind=True, max_retries=3)
 def ingest_document_task(self, document_id: str):
     """
-    Full pipeline: PDF → chunks → embeddings → pgvector → version bump → FAISS export
+    Full pipeline: .txt → read YAML metadata → chunks → embeddings → pgvector
+                   → version bump → FAISS export
     """
     try:
         with sync_session() as db:
             doc = db.get(KnowledgeDocument, document_id)
 
-            # Step 1: Load and parse the PDF
-            from langchain_community.document_loaders import PyPDFLoader
-            loader = PyPDFLoader(doc.file_path)
+            # Step 1: Read companion YAML metadata
+            metadata = load_yaml_metadata(doc.file_path)
+
+            # Step 2: Load plain text file
+            loader = TextLoader(doc.file_path, encoding="utf-8")
             pages = loader.load()
 
-            # Step 2: Split into chunks
-            from langchain.text_splitter import RecursiveCharacterTextSplitter
-            splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=64)
+            # Step 3: Split into chunks
+            # chunk_size=512 tokens ≈ ~400 words — good balance for medical text
+            # chunk_overlap=64 ensures context is not lost at chunk boundaries
+            splitter = RecursiveCharacterTextSplitter(
+                chunk_size=512,
+                chunk_overlap=64,
+                separators=["\n\n", "\n", ". ", " ", ""]
+            )
             chunks = splitter.split_documents(pages)
 
-            # Step 3: Embed each chunk using all-MiniLM-L6-v2 (server-side)
-            from sentence_transformers import SentenceTransformer
-            model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+            # Step 4: Embed each chunk using all-MiniLM-L6-v2
+            embedding_model = SentenceTransformer(
+                "sentence-transformers/all-MiniLM-L6-v2"
+            )
             texts = [c.page_content for c in chunks]
-            embeddings = model.encode(texts, show_progress_bar=False)
+            embeddings = embedding_model.encode(
+                texts,
+                show_progress_bar=False,
+                batch_size=32            # process 32 chunks at a time
+            )
 
-            # Step 4: Save chunks + embeddings into pgvector
+            # Step 5: Save chunks + embeddings into pgvector
+            # Metadata from YAML is denormalised onto every chunk
             for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
                 db_chunk = KnowledgeChunk(
                     document_id=document_id,
                     content=chunk.page_content,
-                    page_number=chunk.metadata.get("page"),
                     chunk_index=i,
                     embedding=embedding.tolist(),
+                    # Metadata from YAML — same values on every chunk of this doc
+                    article_title=metadata["article_title"],
+                    article_url=metadata["article_url"],
+                    article_author=metadata["article_author"],
+                    article_source=metadata["article_source"],
                 )
                 db.add(db_chunk)
 
-            # Step 5: Mark document as ACTIVE
+            # Step 6: Mark document as ACTIVE
             doc.status = DocumentStatus.ACTIVE
             doc.chunk_count = len(chunks)
             doc.processed_at = datetime.utcnow()
             db.commit()
 
-            # Step 6: Bump knowledge base version + export new FAISS index
+            # Step 7: Bump knowledge base version + export new FAISS index
             bump_version_and_export(db)
 
     except Exception as exc:
@@ -1116,32 +1201,91 @@ def bump_version_and_export(db):
 
 **File:** `apps/api/app/services/rag_service.py`
 
-Used by the cloud conversation agent when the patient's phone has internet. Queries pgvector directly — no FAISS needed on the server.
+Used by the cloud conversation agent when the patient's phone has internet. Queries pgvector directly. Returns content plus full attribution metadata from the YAML so the AI can cite its source and the dashboard can display where guidance came from.
 
 ```python
-async def query_knowledge_base(symptom_text: str, top_k: int = 3) -> list[str]:
+from sqlalchemy import select, text
+from app.core.database import async_session
+from app.models.db import KnowledgeChunk, KnowledgeDocument, DocumentStatus
+from sentence_transformers import SentenceTransformer
+from functools import lru_cache
+
+@lru_cache(maxsize=1)
+def get_embedding_model():
+    """Load once, reuse across requests."""
+    return SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+
+async def query_knowledge_base(symptom_text: str, top_k: int = 3) -> list[dict]:
     """
     Embed the query and perform cosine similarity search against pgvector.
-    Returns top_k most relevant document chunks.
+    Returns top_k most relevant chunks with full attribution metadata.
+
+    Each result dict:
+    {
+        "content":        str,   # The text chunk
+        "article_title":  str,   # From YAML: title
+        "article_url":    str,   # From YAML: url
+        "article_author": str,   # From YAML: author
+        "article_source": str,   # From YAML: source
+        "relevance_score": float # Cosine similarity 0-1
+    }
     """
-    from sentence_transformers import SentenceTransformer
-    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    model = get_embedding_model()
     query_vector = model.encode([symptom_text])[0].tolist()
 
+    # Also increment retrieval_count on the parent document for admin stats
     async with async_session() as db:
         results = await db.execute(
             text("""
-                SELECT kc.content
+                SELECT
+                    kc.content,
+                    kc.article_title,
+                    kc.article_url,
+                    kc.article_author,
+                    kc.article_source,
+                    1 - (kc.embedding <=> :query_vector::vector) AS relevance_score,
+                    kc.document_id
                 FROM knowledge_chunks kc
                 JOIN knowledge_documents kd ON kd.id = kc.document_id
                 WHERE kd.status = 'ACTIVE'
-                ORDER BY kc.embedding <=> :query_vector
+                ORDER BY kc.embedding <=> :query_vector::vector
                 LIMIT :top_k
             """),
             {"query_vector": str(query_vector), "top_k": top_k}
         )
-        return [row.content for row in results]
+        rows = results.fetchall()
+
+        # Increment retrieval counts for stats tracking
+        doc_ids = list({str(row.document_id) for row in rows})
+        if doc_ids:
+            await db.execute(
+                text("""
+                    UPDATE knowledge_documents
+                    SET retrieval_count = retrieval_count + 1
+                    WHERE id = ANY(:doc_ids::uuid[])
+                """),
+                {"doc_ids": doc_ids}
+            )
+            await db.commit()
+
+        return [
+            {
+                "content":        row.content,
+                "article_title":  row.article_title,
+                "article_url":    row.article_url,
+                "article_author": row.article_author,
+                "article_source": row.article_source,
+                "relevance_score": round(float(row.relevance_score), 4),
+            }
+            for row in rows
+        ]
 ```
+
+**Note:** `retrieval_count` needs to be added to the `KnowledgeDocument` model:
+```python
+retrieval_count = Column(Integer, default=0)   # add to KnowledgeDocument class
+```
+This powers the "Top retrieved documents" stat in the admin system health screen.
 
 #### Mobile: Knowledge Base Update Service
 
@@ -1405,25 +1549,166 @@ After upload, the new document appears immediately in the list with `PROCESSING`
 The knowledge base has two layers that work together:
 
 **Layer 1 — Baseline bundle (at install time):**
-A minimal FAISS index of core WHO emergency documents is built once and shipped inside the app. This is the safety net — it ensures the app has *something* to work with even on a brand new install with no internet. Build it once using:
-
-```bash
-cd docs/knowledge-base
-pip install langchain langchain-community faiss-cpu sentence-transformers pypdf
-python build_baseline_index.py   # outputs to apps/mobile/src/assets/knowledge/
-```
+A minimal FAISS index built from the seed articles in `Docs/knowledge_base/articles/` is shipped inside the mobile app. This is the safety net — guarantees the app has medical guidance even on a brand new install with zero internet.
 
 **Layer 2 — Dynamic server index (managed by admin):**
-All ongoing knowledge base management happens through the admin dashboard. Admins upload PDFs → server processes them into pgvector → FAISS index is exported → mobile apps download the new index automatically. See the `RAG Pipeline` section under Backend API for the full implementation.
+All ongoing knowledge base management happens through the admin dashboard. Admins upload new `.txt` documents → server processes them via the ingestion worker → FAISS index is exported → mobile apps download the new index automatically.
 
-**Mobile index priority (in order):**
-1. `documentDirectory/knowledge_index.faiss` — downloaded from server (most current)
-2. `assets/knowledge/knowledge_index.faiss` — bundled at install (baseline fallback)
+---
 
-**Source documents to include in the baseline bundle** (place in `docs/knowledge-base/`):
-- WHO Emergency Field Handbook (latest edition PDF)
+### Folder Structure for Seed Articles
+
+Your articles folder should be placed exactly here:
+
+```
+Docs/
+└── knowledge_base/
+    ├── articles/
+    │   ├── article_001_content.txt      ← plain text article content
+    │   ├── article_001_metadata.yaml    ← companion YAML metadata
+    │   ├── article_002_content.txt
+    │   ├── article_002_metadata.yaml
+    │   └── ...
+    └── build_baseline_index.py          ← seed script (see below)
+```
+
+**Naming convention:** Content file and its companion YAML must share the same base name with `_content` and `_metadata` suffixes. The ingestion worker detects the companion YAML automatically based on this pattern.
+
+---
+
+### YAML Metadata Format
+
+Every article must have a companion `.yaml` file with exactly these four fields:
+
+```yaml
+title:  "Floods: after the flood – myths and realities"
+url:    https://www.who.int/europe/publications/m/item/floods-after-the-flood---myths-and-realities
+author: World Health Organization
+source: World Health Organization (WHO)
+```
+
+All four fields are optional — if a field is missing the chunk is still created with `null` for that field. But having them populated means:
+- The AI can cite its source when giving first-aid guidance ("According to WHO...")
+- The admin stats screen shows which articles are retrieved most often
+- The dashboard SOAP viewer can show which knowledge base articles influenced the AI's response
+
+---
+
+### Seed Script — Build Baseline Mobile Index
+
+**File:** `Docs/knowledge_base/build_baseline_index.py`
+
+Run this once to build the FAISS index that gets bundled into the mobile app. Re-run it whenever you add new articles to the seed folder.
+
+```python
+"""
+Builds the baseline FAISS index from Docs/knowledge_base/articles/
+Output goes to Apps/Mobile/src/assets/knowledge/
+This index is bundled in the app at install time.
+"""
+import os, yaml, pickle
+import numpy as np
+import faiss
+from langchain_community.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from sentence_transformers import SentenceTransformer
+
+ARTICLES_DIR   = "./articles"
+OUTPUT_DIR     = "../../Apps/Mobile/src/assets/knowledge"
+CHUNK_SIZE     = 512
+CHUNK_OVERLAP  = 64
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=CHUNK_SIZE,
+    chunk_overlap=CHUNK_OVERLAP,
+    separators=["\n\n", "\n", ". ", " ", ""]
+)
+
+all_texts = []
+all_metadata = []
+
+# Process every _content.txt file in the articles folder
+for filename in sorted(os.listdir(ARTICLES_DIR)):
+    if not filename.endswith("_content.txt"):
+        continue
+
+    txt_path  = os.path.join(ARTICLES_DIR, filename)
+    yaml_path = os.path.join(
+        ARTICLES_DIR,
+        filename.replace("_content.txt", "_metadata.yaml")
+    )
+
+    # Load companion YAML metadata
+    meta = {"title": None, "url": None, "author": None, "source": None}
+    if os.path.exists(yaml_path):
+        with open(yaml_path, "r", encoding="utf-8") as f:
+            loaded = yaml.safe_load(f) or {}
+            meta.update({k: loaded.get(k) for k in meta})
+
+    # Load and chunk the text
+    loader = TextLoader(txt_path, encoding="utf-8")
+    docs   = loader.load()
+    chunks = splitter.split_documents(docs)
+
+    for chunk in chunks:
+        all_texts.append(chunk.page_content)
+        all_metadata.append({
+            "article_title":  meta["title"],
+            "article_url":    meta["url"],
+            "article_author": meta["author"],
+            "article_source": meta["source"],
+            "source_file":    filename,
+        })
+
+    print(f"  Processed: {filename} → {len(chunks)} chunks")
+
+print(f"\nTotal chunks: {len(all_texts)}")
+print("Generating embeddings...")
+
+# Embed all chunks
+vectors = embedding_model.encode(
+    all_texts,
+    show_progress_bar=True,
+    batch_size=32
+).astype("float32")
+
+# Build FAISS index
+faiss.normalize_L2(vectors)
+index = faiss.IndexFlatIP(384)
+index.add(vectors)
+
+# Save index and metadata
+index_path = os.path.join(OUTPUT_DIR, "knowledge_index.faiss")
+meta_path  = os.path.join(OUTPUT_DIR, "knowledge_meta.pkl")
+
+faiss.write_index(index, index_path)
+with open(meta_path, "wb") as f:
+    pickle.dump({"texts": all_texts, "metadata": all_metadata}, f)
+
+print(f"\nBaseline index built successfully:")
+print(f"  Index: {index_path}")
+print(f"  Metadata: {meta_path}")
+print(f"  Chunks: {len(all_texts)}")
+print(f"  Index size: {os.path.getsize(index_path) / 1024:.1f} KB")
+```
+
+**Run it:**
+```bash
+cd Docs/knowledge_base
+pip install sentence-transformers faiss-cpu langchain langchain-community pyyaml
+python build_baseline_index.py
+```
+
+The output files go directly into `Apps/Mobile/src/assets/knowledge/` and are picked up automatically by the mobile app.
+
+**Source documents to include in your seed articles:**
+- WHO Emergency Field Handbook articles
 - Pakistan NDMA Disaster Medical Response Guidelines
-- Pediatric Emergency Quick Reference Card
+- Pediatric Emergency Quick Reference articles
+- Any other verified medical emergency guidance you have prepared
 
 ---
 

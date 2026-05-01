@@ -203,8 +203,10 @@ class KnowledgeQueryRequest(BaseModel):
 
 class KnowledgeQueryResult(BaseModel):
     content: str
-    document_title: str
-    page_number: Optional[int] = None
+    article_title: Optional[str] = None
+    article_url: Optional[str] = None
+    article_author: Optional[str] = None
+    article_source: Optional[str] = None
     relevance_score: float
 
 

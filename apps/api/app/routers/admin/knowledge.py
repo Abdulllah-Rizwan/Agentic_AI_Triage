@@ -1,13 +1,10 @@
 import os
-import uuid as uuid_module
 from uuid import UUID
 
-import aiofiles
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import CurrentUser, require_admin
 from app.models import schemas
@@ -19,6 +16,7 @@ from app.models.db import (
     User,
 )
 from app.services import socket_emitter
+from app.services.document_processor import process_document_upload
 from app.services.index_exporter import bump_version_and_export
 from app.workers.ingestion_worker import ingest_document_task
 
@@ -96,55 +94,25 @@ async def upload_document(
     file: UploadFile = File(...),
     title: str = Form(...),
     description: str | None = Form(None),
+    author: str | None = Form(None),
+    source: str | None = Form(None),
+    url: str | None = Form(None),
     db: AsyncSession = Depends(get_db),
     admin: CurrentUser = Depends(require_admin),
 ):
     content = await file.read()
 
-    if len(content) > settings.max_upload_size_bytes:
-        raise HTTPException(
-            status_code=413,
-            detail=f"File exceeds the {settings.MAX_UPLOAD_SIZE_MB}MB size limit",
-        )
-
-    if not content.startswith(b"%PDF"):
-        raise HTTPException(status_code=400, detail="Only PDF files are accepted")
-
-    # Duplicate active filename check
-    existing = await db.scalar(
-        select(KnowledgeDocument).where(
-            KnowledgeDocument.filename == file.filename,
-            KnowledgeDocument.status == DocumentStatus.ACTIVE,
-        )
-    )
-    if existing:
-        raise HTTPException(
-            status_code=409,
-            detail="A document with this filename is already active in the knowledge base",
-        )
-
-    # Save file with a unique name to avoid collisions
-    unique_name = f"{uuid_module.uuid4()}_{file.filename}"
-    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
-    file_path = os.path.join(settings.UPLOAD_DIR, unique_name)
-
-    async with aiofiles.open(file_path, "wb") as f:
-        await f.write(content)
-
-    doc = KnowledgeDocument(
+    doc = await process_document_upload(
+        content=content,
+        filename=file.filename,
         title=title,
         description=description,
-        filename=file.filename,
-        file_path=file_path,
-        file_size_bytes=len(content),
-        status=DocumentStatus.PROCESSING,
         uploaded_by=admin.user_id,
+        db=db,
+        author=author,
+        source=source,
+        url=url,
     )
-    db.add(doc)
-    await db.commit()
-    await db.refresh(doc)
-
-    ingest_document_task.delay(str(doc.id))
 
     return schemas.DocumentUploadResponse(
         id=doc.id,

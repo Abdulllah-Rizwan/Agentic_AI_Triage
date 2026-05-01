@@ -1,0 +1,108 @@
+MASS CASUALTY – INTERAGENCY INTEGRATED TRIAGE TOOL (MC-IITT)
+Overview
+The MC - IITT describes how to assign patient acuity categories during the initial phases of MCI response. This tool
+provides a smooth transition from the facility-based routine IITT. The MC - IITT categorises patients into 5 colour
+categories. There are three main colours (Red, Yellow and Green), and a fourth colour (Blue) which is a subset of the
+Red category. The fifth colour, Grey, corresponds to deceased patients. Categorisation is based on clinical criteria and
+aligns with the structured approach to any emergency patient. This tool is designed to be easy to implement in all
+resource settings, including those with significant constraints.
+The MC - IITT emphasises early re-assessment with a detailed evaluation of ABCDE conditions and high-risk vital signs.
+If re-assessment is delayed due to surge conditions, triage should be repeated with MC - IITT. Further changesto triage
+category may be needed based on patient assessment or clinician concern. Patients may become more critical over
+time, requiring “up triage” to a more serious category. Initial interventions, such as fluid resuscitation, may
+temporarily improve a patient’s condition, but great care should be taken before assigning a patient to a lower acuity
+if they have not received definitive treatment.
+Table 1: Mass Casualty IITT Categories
+Category Description
+Red
+Non-walking patients with signs of critical life-threatening conditions.
+Red signs include any findings of:
+• airway compromise OR
+• respiratory distress OR
+• major (massive or catastrophic) haemorrhage or absent radial pulse or capillary
+refill > 3 sec OR
+• altered mental state or unresponsiveness OR
+• massive burns (> 40%) OR
+• clinician concern.
+Patients initially categorized as green or yellow may be re-triaged to red on assessment.
+Yellow Non-walking patients who do not have any red signs or high-risk vital signs.
+Green
+Walking patients.
+In the green area, patients are assessed and if they have any red signs or high-risk vital
+signs, they are re-categorised.
+IMPLEMENTING MASS CASUALTY TRIAGE
+Resources for mass casualty triage including space, staff and supplies should be carefully planned to provide
+appropriate care for each triage category. This guidance will only address the essential space issues around
+www.who.int/emergencycare | emergencycare@who.int 3
+implementing MC-IITT. Please see the WHOA MCM course for an expanded explanation of essential space, staff and
+supplies.
+Space
+During surge, area designation facilitates safe and effective patient flow. The term zone is used below to indicate a
+dedicated, pre-assigned area for a specific set of patients. Dedicated areas of the facility should be pre-identified to
+be used for a specific clinical function: triage point, red zone, yellow zone, green zone. The areas and transit routes
+between them must have clear signage to identify care areas and direct flow.
+• Triage points: The first triage point is ideally located at the health facility entrance, preferably outside the facility
+building, with a single-entry point. Initial triage to walking/non-walking patients is performed here. A secondary
+triage point to assign non-walking patients to red or yellow category occurs ideally outside but close to the main
+EU. The space within the EU must be protected for care delivery. In smaller facilities or lower resource settings,
+first and second triage may occur in the same place.
+● Red zone: The red zone is within the EU and reserved for the most acutely ill patients – red category patients. The
+red zone has the highest concentration of resources to care for acute life threats.
+● Yellow zone: The yellow zone may be located inside the EU, or in another clinical area nearby, and is only for
+patients categorized as yellow. The yellow zone should be close enough to the red zone for patients who acutely
+decompensate and need to be moved.
+● Green zone: The green zone should be separate from the EU to decongest high acuity areas and provide a safe
+space for treatment and monitoring of low acuity patients for potential deterioration. Some examples of common
+locations used include the outpatient department, the hospital waiting area or a separate tent.
+Take care not to overwhelm these areas, as doing so can simply move the mass casualty burden from one part of the
+facility to another.
+Patient Triage Categories and Flow
+During an MCI, ALL arriving patients should be triaged with the MC - IITT. This includes trauma patients, medical
+emergencies and non-MCI related patients. Despite high volumes in the EU, patient flow must be preserved.
+Movement from triage points to the clinical areas must be unidirectional (one-way). To support this, only initial
+resuscitation interventions are performed in the EU. Further patient care should take place in other parts of the facility
+(e.g. wards, critical care units, operating theatres) to ensure that there is space and resources for newly arriving
+patients.
+STEP 1: Patients arrive at health facility and are categorized as walking /non walking. Walking patients are directed to
+the green zone. Body parts should be directed to the morgue and not enter the clinical care space.
+STEP 2: Patients who are unable to walk are directed to a triage point at the entrance to the EU where they are
+assessed for any red signs. If any signs of immediate threat to life are present, the patient is triaged Red and
+transferred to the Red Zone. If there are no red signs, transfer the patient to the Yellow Zone.
+In some locations, if there is adequate staffing, senior clinicians may be positioned at Step 2 triage area. Depending
+on patient volumes, these clinicians may be able to assess for Grey criteria, allowing direct transfer to the morgue,
+further decompressing the Red Zone.
+RED ZONE: The Red Zone should be staffed with a larger proportion of clinicians, preferably those who are more
+experienced. In the Red Zone, the focus is on immediate life- and limb- saving ABCDE interventions and rapid decision
+making on disposition to in-patient areas for ongoing care, such as the critical care unit or the operating theatre.
+www.who.int/emergencycare | emergencycare@who.int 4
+Red patients: Red patients undergo rapid assessment and management following an ABCDE approach (add
+reference for e.g., BEC). Interventions should prioritize resuscitation, life-saving interventions, rapid decision
+making on disposition, and handover to inpatient care (e.g., surgery, intensive care).
+Blue patients: If a senior clinician identifies a red patient who exceeds the present capacity for curative efforts,
+the patient is categorised as blue. Patients with Blue criteria should be cared for by dedicated staff. These
+patients should be placed in a pre-designated space, preferably adjacent to the Red Zone. Senior clinicians
+should communicate decisions clearly with staff working in these zones. Patient condition and category should
+be reassessed if new resources become available.
+YELLOW ZONE: Patients who do not meet the criteria for either Red or Green are triaged as Yellow. These patients
+are rapidly moved to the designated Yellow Zone which may be in a separate part of the EU (if there is space) or on a
+ward close to the EU. In the Yellow Zone, patients are assessed and receive appropriate ABCDE interventions, and
+decisions on disposition are made. If there are any high-risk vital signs or if there is clinician concern, the patient should
+be transferred to the Red Zone. Patients are monitored and cared for while awaiting admission to other areas of the
+hospitals or transfer to other facilities.
+GREEN ZONE: Any walking patients should be quickly moved to a low-acuity area - the Green Zone. On arrival to the
+Green Zone, patients should be rapidly assessed and prioritized by clinical indication. If there are too many patients
+in the green zone to rapidly receive a clinical assessment, the MC-IITT should be repeated to quickly identify patients
+who are decompensating. Patients found to have a life- or limb threatening condition require transfer to the
+appropriate clinical area (e.g., red zone).
+The Green Zone should be staffed with clinicians who can rapidly evaluate patients. Patients sorted to the Green Zone
+require reassessment, evaluation, treatment and appropriate disposition. Patients may require ongoing monitoring
+and reassessment at regular intervals to ensure they do not deteriorate. Patients may be deemed fit for transfer or
+discharge after full evaluation, depending on the context. Other Green Zone patients may require admission to
+inpatient wards for ongoing care.
+
+CONCLUSION
+Triage is a dynamic process. Patient conditions evolve and capacity to provide curative treatment may change. Patient
+condition and category should be frequently reassessed. By following a systematic, validated triage approach,
+designating zones for varying acuity levels, and ensuring preparedness through a robust mass casualty management
+plan, healthcare facilities can mitigate the impact of mass casualty incidents on both acute and routine care, thereby
+achieving the greatest good for the greatest number of patients.
