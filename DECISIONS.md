@@ -370,6 +370,67 @@ This file records every significant decision made during development — what wa
 
 ---
 
+## Session 7 — 2026-05-03
+
+### What was built
+- `package.json`, `app.json`, `tsconfig.json`, `babel.config.js`, `babel-preset-expo`, `.gitignore`, `index.js` — full Expo SDK 54 project scaffold created manually (`create-expo-app` refused to overwrite existing files; same manual approach as Session 5 dashboard)
+- `src/db/database.ts` — singleton `SQLiteDatabase` via `expo-sqlite` (`openDatabaseSync`); `initDatabase()` runs migrations on first launch; no-op proxy fallback for Expo Go where native SQLite is unavailable
+- `src/db/migrations.ts` — creates four tables: `user_profile`, `pending_payloads`, `completed_cases`, `app_metadata`
+- `src/db/queries.ts` — fully typed async query functions for all four tables (`getFirstAsync`, `getAllAsync`, `runAsync`, `execAsync`)
+- `src/store/networkStore.ts` — Zustand store: `mode: NetworkMode`, `isConnected`, `lastChecked`; exported as both React hook and plain store reference for non-React service code
+- `src/store/userStore.ts` — Zustand store: `profile`, `isRegistered`, `deviceId`; `loadFromDatabase()` hydrates from SQLite on startup
+- `src/store/chatStore.ts` — Zustand store: `messages`, `isAgentTyping`, `emergencyDetected`, `emergencyTrigger`, `collectionStatus`
+- `src/services/llm/LLMAdapter.interface.ts` — shared `LLMAdapter` interface + `LLMUnavailableError` class
+- `src/services/llm/CloudLLMAdapter.ts` — `@google/generative-ai` SDK; model `gemini-2.0-flash`; 3-attempt exponential backoff (1s, 2s, 4s); 30s per-request timeout; throws `LLMUnavailableError` on exhaustion
+- `src/services/llm/SLMAdapter.ts` — singleton; dev mode routes all calls to Ollama HTTP API; prod loads `Llama-3.2-1B-Instruct-Q4_K_M.gguf` via `llama.rn` dynamic import; `isModelReady()` synchronous check used by splash screen; Llama 3.2 instruct prompt format (`<|begin_of_text|>` / `<|start_header_id|>` tokens); graceful fallback if model file is missing
+- `src/services/network/NetworkOrchestrator.ts` — singleton; subscribes to `@react-native-community/netinfo`; classifies `OFFLINE` / `DEGRADED` (2G/3G cellular) / `FULL`; `getLLMAdapter()` returns `CloudLLMAdapter` for FULL, `slmAdapter` for DEGRADED and OFFLINE; fires `onConnectivityRestored` callbacks when upgrading from OFFLINE
+- `src/services/triage/TriageEngine.ts` — deterministic keyword + severity rule engine; clinically derived RED/AMBER keyword lists (do not modify without medical review)
+- `src/services/transmission/TransmissionService.ts` — `cachePayload()` AES-encrypts and stores to SQLite; `flushQueue()` decrypts and POSTs binary protobuf to `/api/v1/cases/ingest`; `startRetryLoop()` polls every 60s; max 5 attempts per payload
+- `src/services/encryption/AESEncryption.ts` — AES-256-CBC via `react-native-aes-crypto` v3; PBKDF2 key derivation from CNIC + deviceId; dynamic import with null fallback so Expo Go does not crash
+- `src/services/rag/LocalRAG.ts` — stub returning empty array; FAISS query implementation deferred to knowledge base session
+- `src/services/knowledge/KnowledgeBaseUpdateService.ts` — checks server version on startup; downloads new FAISS index via `expo-file-system/legacy` if server version is newer than local; silent failure on any error
+- `src/agents/SymptomCollectorAgent.ts` — hand-written agent loop (no ADK — mobile has no Python runtime); sends messages to the active LLM adapter; parses `{"status":"SUFFICIENT"}` and `{"status":"CRITICAL","trigger":"..."}` JSON tokens; augments context with RAG results scoring ≥ 0.75
+- `src/proto/triage.ts` — inline `.proto` definition parsed by `protobufjs` at runtime; `encodeLeanPayload()` serialises to binary `Uint8Array`
+- `src/i18n/en.json`, `src/i18n/ur.json`, `src/i18n/index.ts` — `i18next` + `react-i18next`; auto-detects device locale; falls back to English
+- `src/screens/SplashScreen.tsx` — pulsing amber dot while SLM loads; green dot when ready; red dot + "Cloud Only" after 30s timeout; network mode badge; OFFLINE READY pill; navigates to Registration or Home once model is ready or timeout fires
+- `src/screens/RegistrationScreen.tsx` — Pakistan phone regex (`/^\+92-\d{3}-\d{7}$/`); CNIC format (`/^\d{5}-\d{7}-\d{1}$/`); GPS auto-fill via `expo-location`; red-bordered non-diagnostic disclaimer with mandatory checkbox; saves to SQLite; navigates to Home
+- `src/screens/HomeScreen.tsx` — time-based greeting; network badge; system-ready / offline-mode status card; BEGIN ASSESSMENT CTA; past-assessments flat list with triage-level coloured dot; case detail bottom-sheet modal
+- `src/screens/ChatScreen.tsx`, `src/screens/TriageResultScreen.tsx` — stubs (full implementation Session 8)
+- `App.tsx` + `index.js` — root entry: bootstraps DB → loads user profile → starts NetworkOrchestrator → initialises SLM in background → starts retry loop → silently checks KB update
+- `metro.config.js` + `metro-stubs/empty.js` — stubs Node.js built-ins (`fs`, `path`, `crypto`, `stream`, etc.) so Metro does not crash when bundling packages that reference them
+
+### Test results
+- TypeScript compiles cleanly: **yes** — `npx tsc --noEmit` exits with zero errors
+- Splash screen renders: **yes** — confirmed in Expo Go after fixing all bundling errors
+- Registration form works: **yes** — fields render, validation fires, GPS detects, disclaimer checkbox gates the submit button
+- Home screen renders: **yes** — greeting, network badge, CTA, empty assessments list all visible
+- Navigation flow correct: **yes** — Splash → Registration (first launch) / Home (returning user); back button disabled on Splash
+
+### SLM status
+- Development mode using Ollama: **yes**
+- Ollama URL configured: `http://192.168.1.100:11434` (set in `apps/mobile/.env` as `EXPO_PUBLIC_OLLAMA_URL`)
+
+### Any deviations from CLAUDE.md or issues fixed
+- **`create-expo-app` refused to scaffold:** Existing `CLAUDE.md`, `README.md`, `.env`, `src/` blocked the command. All config files written manually — same workaround as dashboard Session 5.
+- **`package.json` `main` field wrong:** Initially set to `"expo-router/entry"` (Expo Router convention). This project uses React Navigation with a plain `App.tsx`. Changed to `"index.js"` and created `index.js` with `registerRootComponent`.
+- **SDK 51 vs Expo Go SDK 54 mismatch:** Project scaffolded with SDK 51; phone had Expo Go SDK 54 installed. Upgraded all packages to SDK 54 (`react@19.1.0`, `react-native@0.81.5`, all `expo-*` packages).
+- **`@types/react` version mismatch:** `devDependencies` still pinned to `~18.2.45` after SDK upgrade; React Native 0.81 requires `^19.x`. Updated to `~19.1.10`.
+- **`npm install --fix` peer resolution failure:** Upgrading all packages at once caused cascading peer conflicts. Resolved with `npm install --legacy-peer-deps`.
+- **`react-native-aes-crypto@^2.1.2` does not exist:** Package jumped from v1 to v3 with no v2 release. Updated to `^3.3.0`.
+- **`@react-navigation/native-stack@7` peer conflict:** v7 requires `@react-navigation/native@^7`; project uses v6. Installed `@react-navigation/native-stack@6` to match.
+- **TypeScript dynamic import error:** `import()` expressions in `App.tsx` and `SLMAdapter.ts` required `"module": "esnext"` in `tsconfig.json`. Added. Replaced the dynamic `flushQueue` import in `App.tsx` with a static import.
+- **`ChatMessage` type collision:** `chatStore.ChatMessage` (`role: 'user'|'agent'`, has `id`/`timestamp`) vs `LLMAdapter.ChatMessage` (`role: 'user'|'assistant'|'system'`). `SymptomCollectorAgent` now uses `LLMChatMessage` alias for the LLM type and an explicit `HistoryEntry` type for its internal history array.
+- **`expo-file-system` v19 API break:** `documentDirectory` and `EncodingType` removed from the main export; moved to `expo-file-system/legacy`. Updated `KnowledgeBaseUpdateService.ts` import path.
+- **`babel-preset-expo` missing:** Not included in the manual scaffold. Metro crashed on first bundle. Installed as a `devDependency`.
+- **`app.json` icon asset missing:** `icon` and `adaptiveIcon` fields referenced `./src/assets/icon.png` which does not exist. Removed both fields; Expo Go uses a default icon without them.
+- **Native modules crash Expo Go:** `react-native-aes-crypto` and `expo-sqlite` throw when their native bridge is absent in Expo Go. `AESEncryption.ts` switched to a dynamic import with a null-fallback (encryption skipped in dev). `database.ts` catches the open error and returns a no-op proxy so the app loads and navigates normally.
+- **Node.js built-ins break Metro bundler:** `protobufjs` and other packages reference `fs`, `path`, `crypto`, etc. Added `metro.config.js` that resolves all of them to `metro-stubs/empty.js`.
+
+### What is next
+- Session 8: Chat screen, SymptomCollectorAgent, local RAG, triage engine, triage result screen
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
