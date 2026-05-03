@@ -1,95 +1,135 @@
-INFO:     127.0.0.1:50139 - "POST /api/v1/auth/register HTTP/1.1" 500 Internal Server Error       
-ERROR:    Exception in ASGI application
-Traceback (most recent call last):
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 421, in run_asgi
-    result = await app(  # type: ignore[func-returns-value]
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 56, in __call__
-    return await self.app(scope, receive, send)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\engineio\async_drivers\asgi.py", line 75, in __call__
-    await self.other_asgi_app(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
-    await super().__call__(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
-    raise exc
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
-    await self.app(scope, receive, _send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
-    await self.simple_response(scope, receive, send, request_headers=headers)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
-    await self.app(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
-    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 62, in wrapped_app
-    raise exc
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
-    await app(scope, receive, sender)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
-    await self.middleware_stack(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\routing.py", line 735, in app
-    await route.handle(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\routing.py", line 288, in handle
-    await self.app(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\routing.py", line 76, in app
-    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 62, in wrapped_app
-    raise exc
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
-    await app(scope, receive, sender)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\starlette\routing.py", line 73, in app
-    response = await f(request)
-               ^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\fastapi\routing.py", line 301, in app
-    raw_response = await run_endpoint_function(
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
-    return await dependant.call(**values)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\app\routers\auth.py", line 50, in register
-    password_hash=hash_password(body.password),
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\app\core\security.py", line 36, in hash_password
-    return pwd_context.hash(_prehash(plain))
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\context.py", line 2258, in hash
-    return record.hash(secret, **kwds)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\utils\handlers.py", line 779, in hash
-    self.checksum = self._calc_checksum(secret)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 591, in _calc_checksum
-    self._stub_requires_backend()
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\utils\handlers.py", line 2254, in _stub_requires_backend
-    cls.set_backend()
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\utils\handlers.py", line 2156, in set_backend
-    return owner.set_backend(name, dryrun=dryrun)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\utils\handlers.py", line 2163, in set_backend
-    return cls.set_backend(name, dryrun=dryrun)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\utils\handlers.py", line 2188, in set_backend
-    cls._set_backend(name, dryrun)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\utils\handlers.py", line 2311, in _set_backend
-    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\utils\handlers.py", line 2224, in _set_backend
-    ok = loader(**kwds)
-         ^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 626, in _load_backend_mixin
-    return mixin_cls._finalize_backend_mixin(name, dryrun)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 421, in _finalize_backend_mixin
-    if detect_wrap_bug(IDENT_2A):
-       ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 380, in detect_wrap_bug
-    if verify(secret, bug_hash):
-       ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\utils\handlers.py", line 792, in verify
-    return consteq(self._calc_checksum(secret), chk)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 655, in _calc_checksum
-    hash = _bcrypt.hashpw(secret, config)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+Android Bundling failed 2690ms index.js (1 module)
+ ERROR  Error: Cannot find module 'babel-preset-expo'
+Require stack:
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\index.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\index.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js      
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\jest-worker\build\workers\processChild.js
+
+Make sure that all the Babel plugins and presets you are using
+are defined as dependencies or devDependencies in your package.json
+file. It's possible that the missing plugin is loaded by a preset
+you are using that forgot to add the plugin to its dependencies: you
+can workaround this problem by explicitly adding the missing package
+to your top-level package.json.
+
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1420:15)
+    at resolve (node:internal/modules/helpers:163:19)
+    at tryRequireResolve (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:128:11)
+    at resolveStandardizedNameForRequire (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:162:19)
+    at resolveStandardizedName (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:183:12)        
+    at loadPreset (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:68:7)
+    at loadPreset.next (<anonymous>)
+    at createDescriptor (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:140:16)
+    at createDescriptor.next (<anonymous>)
+    at evaluateSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:251:28)
+    at C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:31:34
+    at Array.map (<anonymous>)
+    at gensync.sync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:31:22)
+    at gensync.all (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:210:24)
+    at Generator.next (<anonymous>)
+    at createDescriptors (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:102:41)
+    at createDescriptors.next (<anonymous>)
+    at createPresetDescriptors (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:96:17)    
+    at createPresetDescriptors.next (<anonymous>)
+    at C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\gensync-utils\functional.js:22:27
+    at Generator.next (<anonymous>)
+    at mergeChainOpts (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:350:34)
+    at mergeChainOpts.next (<anonymous>)
+    at chainWalker (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:316:14)
+    at chainWalker.next (<anonymous>)
+    at loadFileChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:191:24)
+    at loadFileChain.next (<anonymous>)
+    at mergeExtendsChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:328:28)
+    at mergeExtendsChain.next (<anonymous>)
+    at chainWalker (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:312:20)
+    at chainWalker.next (<anonymous>)
+    at buildRootChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:56:36)
+    at buildRootChain.next (<anonymous>)
+    at loadPrivatePartialConfig (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\partial.js:72:62)
+    at loadPrivatePartialConfig.next (<anonymous>)
+    at loadFullConfig (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\full.js:36:46)
+    at loadFullConfig.next (<anonymous>)
+    at transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\transform.js:20:44)
+    at transform.next (<anonymous>)
+    at evaluateSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:251:28)
+    at sync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:89:14)
+    at stopHiding - secret - don't use this - v1 (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\errors\rewrite-stack-trace.js:47:12)
+    at Object.transformSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\transform.js:40:76)
+    at parseWithBabel (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:75:18)
+    at transformSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:64:12)
+    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\babel-transformer.js:127:58)
+    at transformJSWithBabel (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:468:47)
+    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:583:12)
+    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js:178:19)
+Unable to resolve asset "./src/assets/icon.png" from "icon" in your app.json or app.config.js
+Android Bundling failed 12ms index.js (1 module)
+ ERROR  Error: Cannot find module 'babel-preset-expo'
+Require stack:
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\index.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\index.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js      
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.js
+- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\jest-worker\build\workers\processChild.js
+
+Make sure that all the Babel plugins and presets you are using
+are defined as dependencies or devDependencies in your package.json
+file. It's possible that the missing plugin is loaded by a preset
+you are using that forgot to add the plugin to its dependencies: you
+can workaround this problem by explicitly adding the missing package
+to your top-level package.json.
+
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1420:15)
+    at resolve (node:internal/modules/helpers:163:19)
+    at tryRequireResolve (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:128:11)
+    at resolveStandardizedNameForRequire (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:162:19)
+    at resolveStandardizedName (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:183:12)        
+    at loadPreset (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:68:7)
+    at loadPreset.next (<anonymous>)
+    at createDescriptor (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:140:16)
+    at createDescriptor.next (<anonymous>)
+    at evaluateSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:251:28)
+    at C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:31:34
+    at Array.map (<anonymous>)
+    at gensync.sync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:31:22)
+    at gensync.all (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:210:24)
+    at Generator.next (<anonymous>)
+    at createDescriptors (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:102:41)
+    at createDescriptors.next (<anonymous>)
+    at createPresetDescriptors (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:96:17)    
+    at createPresetDescriptors.next (<anonymous>)
+    at C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\gensync-utils\functional.js:22:27
+    at Generator.next (<anonymous>)
+    at mergeChainOpts (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:350:34)
+    at mergeChainOpts.next (<anonymous>)
+    at chainWalker (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:316:14)
+    at chainWalker.next (<anonymous>)
+    at loadFileChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:191:24)
+    at loadFileChain.next (<anonymous>)
+    at mergeExtendsChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:328:28)
+    at mergeExtendsChain.next (<anonymous>)
+    at chainWalker (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:312:20)
+    at chainWalker.next (<anonymous>)
+    at buildRootChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:56:36)
+    at buildRootChain.next (<anonymous>)
+    at loadPrivatePartialConfig (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\partial.js:72:62)
+    at loadPrivatePartialConfig.next (<anonymous>)
+    at loadFullConfig (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\full.js:36:46)
+    at loadFullConfig.next (<anonymous>)
+    at transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\transform.js:20:44)
+    at transform.next (<anonymous>)
+    at evaluateSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:251:28)
+    at sync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:89:14)
+    at stopHiding - secret - don't use this - v1 (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\errors\rewrite-stack-trace.js:47:12)
+    at Object.transformSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\transform.js:40:76)
+    at parseWithBabel (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:75:18)
+    at transformSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:64:12)
+    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\babel-transformer.js:127:58)
+    at transformJSWithBabel (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:468:47)
+    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:583:12)
+    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js:178:19)

@@ -1,388 +1,515 @@
-Read CLAUDE.md, Apps/Dashboard/README.md, Apps/Dashboard/ADMIN.md,
-Apps/Api/API_ROUTES.md, and DECISIONS.md before doing anything.
+Read CLAUDE.md, Apps/Mobile/CLAUDE.md, Apps/Mobile/README.md, 
+and DECISIONS.md before doing anything.
 
 Session 1: Backend scaffold complete
 Session 2: All 7 API route files implemented
-Session 3: ADK agents, Celery workers, socket emitter, RAG 
-           service, document processor, index exporter
+Session 3: ADK agents, Celery workers, socket emitter, 
+           RAG service, document processor, index exporter
 Session 4: RAG pipeline complete and tested end to end
-Session 5: Dashboard scaffold, auth, layout, cases page, 
-           CaseCard, SoapReportPanel, CasesMap, case detail 
-           page, real-time Socket.IO updates
+Session 5: Dashboard scaffold, auth, layout, cases page,
+           CaseCard, SoapReportPanel, CasesMap, real-time 
+           Socket.IO
+Session 6: Analytics, admin screens (Knowledge Base, 
+           Organizations, System Health), resources page,
+           full visual consistency review
 
-Session 6 goal: Complete the dashboard — analytics screen, 
-all three admin screens (Knowledge Base, Organizations, 
-System Health), the resources screen, and the case history 
-table. After all screens are built, do a full visual review 
-pass to ensure consistent dark styling across every page.
+Session 7 goal: Build the React Native mobile app foundation.
+This covers the project scaffold, navigation structure, 
+all screens up to and including the home screen, the 
+NetworkOrchestrator service, both LLM adapters (cloud and 
+SLM), and the SQLite database setup. The SLM will use 
+llama.rn with Llama 3.2 1B — this works on all Android 
+and iOS devices with 3GB+ RAM.
 
 Work one task at a time. Tell me what you built after each 
 task and wait for me to say "continue".
 
-Task 1: Case history table on the cases page
-The cases page currently shows only active (PENDING + 
-ACKNOWLEDGED) cases. Add a history section below the 
-active cases list.
+Task 1: Initialise the Expo project
+Inside Apps/Mobile/ initialise a new Expo project:
+npx create-expo-app . --template blank-typescript
 
-In app/cases/page.tsx add a second API call:
-getCases({ status: "RESOLVED,CLOSED", limit: 20 })
+After scaffolding install all required dependencies:
 
-Below the active cases section add a "Past Cases" heading 
-and a table component:
+# Navigation
+npm install @react-navigation/native @react-navigation/stack
+npm install react-native-screens react-native-safe-area-context
 
-Create components/CaseHistoryTable.tsx:
-Props: cases (CaseListItem[])
-Table with these columns:
-- Case ID: first 8 chars of UUID in monospace gray-500
-- Status: colored pill — RESOLVED (green), CLOSED (gray)
-- Triage: TriageBadge component
-- Chief Complaint: truncated to 40 chars
-- Location: lat, lng truncated to 4 decimal places
-- Received: formatted date (Jan 15, 2024 10:30)
-- Duration: time between received_at and resolved_at 
-  formatted as "1h 23m" (calculate client side)
-- Actions: "View Report" link to /cases/[id]
+# State management
+npm install zustand
 
-Table styling:
-- bg-gray-900 rounded-xl border border-gray-800
-- Header row: bg-gray-800 text-gray-400 text-xs uppercase 
-  tracking-wider
-- Body rows: text-gray-300 text-sm, hover:bg-gray-800 
-  transition
-- Alternating row backgrounds: every odd row bg-gray-900, 
-  even row bg-gray-850 (use bg-opacity trick)
-- Empty state: "No resolved cases yet" centered in the table
+# Local database
+npm install expo-sqlite
 
-Task 2: Analytics page — KPI cards
-Create app/analytics/page.tsx.
-On mount fetch getAnalyticsSummary() and render four KPI 
-cards in a top row.
+# Location
+npm install expo-location
 
-Create components/analytics/KPICard.tsx:
-Props: title, value, subtitle, icon (lucide-react), 
-       trend? (number — positive is good)
-Card styling: bg-gray-900 border border-gray-800 rounded-xl 
-p-6, icon in top-right corner in muted color
+# Network detection  
+npm install @react-native-community/netinfo
 
-Four cards using data from /analytics/summary:
-1. Total Cases — value: total_cases
-   icon: Users, subtitle: "Last 7 days"
-2. Critical Cases — value: critical_cases  
-   icon: AlertTriangle, color accent: red-500
-   subtitle: "Require immediate response"
-3. Avg Response Time — value: avg_response_time_minutes 
-   formatted as "12.4 min"
-   icon: Clock, subtitle: "Claim to resolve"
-4. Resolution Rate — value: resolution_rate_percent 
-   formatted as "78%"
-   icon: CheckCircle, color accent: green-500
-   subtitle: "Cases resolved"
+# Encryption
+npm install react-native-aes-crypto
 
-Task 3: Analytics page — cases over time chart
-Fetch getTimeseries({ days: 7 }) and render a line chart.
+# File system
+npm install expo-file-system
 
-Create components/analytics/CasesTimelineChart.tsx:
-Uses Recharts LineChart.
-Three lines:
-- RED cases: stroke #ef4444 (red-500)
-- AMBER cases: stroke #f59e0b (amber-500)  
-- GREEN cases: stroke #22c55e (green-500)
-X-axis: date labels formatted as "Jan 15"
-Y-axis: case count, no decimals
-Legend at bottom with colored indicators
-Tooltip showing exact counts on hover
-Chart background: transparent
-Grid lines: stroke gray-800, strokeDasharray "3 3"
-Container: bg-gray-900 border border-gray-800 rounded-xl p-6
-Title: "Cases Over Time" above the chart
+# Background tasks
+npm install expo-task-manager expo-background-fetch
 
-Add a time range toggle above the chart:
-Three buttons: 7D | 30D | 90D
-Clicking refetches getTimeseries with the new days value
-Active button: bg-gray-700, inactive: bg-transparent
+# Device info
+npm install expo-device expo-constants
 
-Task 4: Analytics page — symptoms bar chart
-Fetch getSymptoms({ days: 7 }) and render a bar chart.
+# LLM — cloud
+npm install @google/generative-ai
 
-Create components/analytics/TopSymptomsChart.tsx:
-Uses Recharts BarChart horizontal layout.
-X-axis: count
-Y-axis: symptom name (truncate to 25 chars)
-Bar fill: #3b82f6 (blue-500) with rounded corners
-Show top 10 symptoms only
-Tooltip showing exact count
-Container: bg-gray-900 border border-gray-800 rounded-xl p-6
-Title: "Top Reported Symptoms"
+# LLM — on device (llama.rn for Llama 3.2 1B)
+npm install llama.rn
 
-Task 5: Analytics page — geographic heatmap
-Fetch getGeoData({ days: 7 }) and render a heatmap.
+# RAG — embeddings and FAISS (JS port)
+npm install @xenova/transformers
 
-Create components/analytics/GeoHeatmap.tsx:
-Uses Leaflet with the HeatLayer plugin.
-Same dark CartoDB tiles as CasesMap.
-Import L.heatLayer — install leaflet.heat:
-npm install leaflet.heat @types/leaflet.heat
+# Protobuf
+npm install protobufjs
 
-Convert geo points to heatmap format:
-[lat, lng, weight] where weight is from the API response.
-Initial center: Karachi (24.8607, 67.0011), zoom 10.
-This MUST be a client component with dynamic import 
-ssr:false in the parent page — same pattern as CasesMap.
-Container: bg-gray-900 border border-gray-800 rounded-xl 
-overflow-hidden height 400px
-Title: "Geographic Distribution" above the map
+# i18n
+npm install i18next react-i18next
 
-Full analytics page layout:
-- KPI cards row at top (4 columns)
-- Below: two-column grid
-  Left: CasesTimelineChart (full width on mobile, 
-        60% on large screens)
-  Right: TopSymptomsChart (40% on large screens)
-- Below: GeoHeatmap full width
-- All charts share the same days state — 
-  changing the toggle refetches all charts
+# UI utilities
+npm install date-fns
 
-Task 6: Medical Resources page
-Create app/resources/page.tsx.
-This is a static page — no API calls needed.
-Layout: grid of resource cards, 2 columns on desktop.
+After installing, create the full folder structure 
+defined in Apps/Mobile/CLAUDE.md:
 
-Four sections, each with a heading and cards below:
+src/
+  agents/
+    SymptomCollectorAgent.ts
+  components/
+    (empty for now)
+  screens/
+    SplashScreen.tsx
+    RegistrationScreen.tsx
+    HomeScreen.tsx
+    ChatScreen.tsx
+    TriageResultScreen.tsx
+  services/
+    network/
+      NetworkOrchestrator.ts
+    llm/
+      LLMAdapter.interface.ts
+      CloudLLMAdapter.ts
+      SLMAdapter.ts
+    rag/
+      LocalRAG.ts
+    knowledge/
+      KnowledgeBaseUpdateService.ts
+    triage/
+      TriageEngine.ts
+    transmission/
+      TransmissionService.ts
+    encryption/
+      AESEncryption.ts
+  store/
+    networkStore.ts
+    userStore.ts
+    chatStore.ts
+  db/
+    database.ts
+    migrations.ts
+    queries.ts
+  proto/
+    triage.ts
+  assets/
+    knowledge/
+      .gitkeep
+    models/
+      .gitkeep
+  i18n/
+    en.json
+    ur.json
+    index.ts
 
-Section 1 — Guidelines (downloadable documents):
-Create components/resources/ResourceCard.tsx
-Props: title, description, badge, actionLabel, 
-       actionHref, icon
-Card: bg-gray-900 border border-gray-800 rounded-xl p-5
-Icon in top-left (lucide-react FileText in blue-500)
-Title in white, description in gray-400 text-sm
-Badge pill in top-right (e.g. "WHO", "NDMA")
-Action button at bottom: outline style
+Create all files as empty stubs with correct imports only.
 
-Four guideline cards:
-- WHO Emergency Field Handbook
-  badge: "WHO" · action: "Download PDF" (link to #)
-- Pakistan NDMA Flood Response Protocol  
-  badge: "NDMA" · action: "Download PDF"
-- Earthquake Trauma Management Guide
-  badge: "WHO" · action: "Download PDF"
-- Pediatric Emergency Quick Reference
-  badge: "WHO" · action: "Download PDF"
+Task 2: SQLite database setup
+Implement Apps/Mobile/src/db/database.ts:
+- Opens the SQLite database using expo-sqlite
+- Exports a singleton db instance
+- Exports an initDatabase() function that runs all 
+  migrations on first call
 
-Section 2 — Interactive Tools:
-Two tool cards with "Open Tool" buttons:
-- Glasgow Coma Scale Calculator
-  icon: Brain · description: "Calculate GCS score for 
-  head injury assessment"
-- Burn Surface Area Estimator
-  icon: Thermometer · description: "Rule of Nines 
-  calculator for burn coverage"
-Both open a modal — create stub modals for now with 
-"Coming soon" placeholder content.
+Implement Apps/Mobile/src/db/migrations.ts:
+Create all three tables exactly as defined in 
+Apps/Mobile/CLAUDE.md:
 
-Section 3 — Emergency Directory:
-A single card listing contacts in a clean table format:
-Contact name | Number | Type
-Aga Khan Hospital Emergency | 021-3493-0051 | Hospital
-EDHI Foundation             | 115           | Ambulance
-Pakistan Red Crescent       | 1716          | Relief
-NDMA Helpline               | 1700          | Government
-Each row has a phone icon and "Call" label.
+user_profile table:
+  id TEXT PRIMARY KEY DEFAULT 'local_user'
+  full_name TEXT NOT NULL
+  phone TEXT NOT NULL
+  cnic TEXT NOT NULL
+  lat REAL
+  lng REAL
+  registered_at INTEGER NOT NULL
 
-Section 4 — Training:
-One card:
-- AI System Onboarding Module
-  Progress bar (hardcoded at 0% for now — 
-  localStorage can track progress later)
-  "Start Training" button
+pending_payloads table:
+  case_id TEXT PRIMARY KEY
+  encrypted_blob TEXT NOT NULL
+  triage_level TEXT NOT NULL
+  created_at INTEGER NOT NULL
+  attempts INTEGER DEFAULT 0
+  last_attempt INTEGER
 
-Task 7: Admin — Knowledge Base page
-Create app/admin/knowledge/page.tsx.
-This is the most complex admin screen. 
-Read ADMIN.md carefully before implementing.
+completed_cases table:
+  case_id TEXT PRIMARY KEY
+  triage_level TEXT NOT NULL
+  chief_complaint TEXT NOT NULL
+  completed_at INTEGER NOT NULL
+  acknowledged INTEGER DEFAULT 0
 
-Left panel (Upload form):
-Create components/admin/DocumentUploadForm.tsx
-Form fields:
-- Title (required text input)
-- Author (optional text input, placeholder: 
-  "World Health Organization")
-- Source (optional text input, placeholder: "WHO")  
-- URL (optional url input)
-- Description (optional textarea)
-- File upload zone: dashed border, drag-and-drop area
-  Shows file name after selection
-  Only accepts .txt files
-  "Browse" link inside the zone
-Submit button: "Upload and Process" — disabled while 
-submitting, shows spinner
+app_metadata table (add this — needed by 
+KnowledgeBaseUpdateService):
+  key TEXT PRIMARY KEY
+  value TEXT NOT NULL
 
-On submit:
-1. Build FormData with all fields + file
-2. Call uploadDocument(formData) from lib/api.ts
-3. On success: clear form, show success toast, 
-   trigger document list refresh
-4. On error: show error message below the form
+Implement Apps/Mobile/src/db/queries.ts:
+Typed query functions for every table operation needed:
 
-Right panel (Document table):
-Create components/admin/DocumentTable.tsx
-Props: documents[], onRefresh(), isLoading
+User profile:
+  saveUserProfile(profile) → void
+  getUserProfile() → UserProfile | null
 
-Table columns:
-- Title (bold white)
-- Status badge:
-  PROCESSING: amber spinner + "Processing" text
-  ACTIVE: green dot + "Active"
-  FAILED: red dot + "Failed" 
-  ARCHIVED: gray dot + "Archived"
-- Chunks: number or "—" if still processing
-- Size: formatted as "1.8 MB"
-- Uploaded by: user email (truncated)
-- Date: relative time "3 days ago"
-- Actions column:
-  ACTIVE: Archive button (gray outline)
-  FAILED: Re-process button (amber outline) + 
-          Delete button (red outline)
-  ARCHIVED: Delete button (red outline)
-  PROCESSING: disabled spinner only
+Pending payloads:
+  savePendingPayload(payload) → void
+  getPendingPayloads(maxAttempts: number) → PendingPayload[]
+  deletePendingPayload(caseId) → void
+  incrementPayloadAttempts(caseId) → void
 
-Auto-polling: while any document has status=PROCESSING,
-poll GET /api/v1/admin/knowledge/documents/{id} every 
-5 seconds for that document. Stop when terminal state.
+Completed cases:
+  saveCompletedCase(case) → void
+  getCompletedCases() → CompletedCase[]
+  markCaseAcknowledged(caseId) → void
 
-Footer below table:
-"Knowledge Base v{version} · {n} active documents · 
- {n} total chunks · Last updated {relative time}"
-Fetch this from getKBStats().
+App metadata:
+  getMetadata(key) → string | null
+  setMetadata(key, value) → void
 
-Socket.IO: listen for kb:updated event and refresh 
-the document list and footer stats automatically.
+Task 3: Zustand state stores
+Implement Apps/Mobile/src/store/networkStore.ts:
+State: 
+  mode: 'OFFLINE' | 'DEGRADED' | 'FULL'
+  isConnected: boolean
+  lastChecked: number
+Actions:
+  setMode(mode)
+  setConnected(connected)
 
-Page layout:
-Heading: "Knowledge Base Management" 
-Two columns: upload form left (35%), document table right (65%)
-Below table: stats footer
+Implement Apps/Mobile/src/store/userStore.ts:
+State:
+  profile: UserProfile | null
+  isRegistered: boolean
+  deviceId: string
+Actions:
+  setProfile(profile)
+  setRegistered(registered)
+  loadFromDatabase() — reads user_profile from SQLite 
+    on app start
 
-Task 8: Admin — Organizations page
-Create app/admin/organizations/page.tsx.
-Read ADMIN.md for full spec.
+Implement Apps/Mobile/src/store/chatStore.ts:
+State:
+  messages: ChatMessage[]
+  isAgentTyping: boolean
+  emergencyDetected: boolean
+  emergencyTrigger: string | null
+  collectionStatus: 'IDLE'|'COLLECTING'|'SUFFICIENT'|'CRITICAL'
+Actions:
+  addMessage(message)
+  setAgentTyping(typing)
+  setEmergencyDetected(trigger)
+  setCollectionStatus(status)
+  clearChat()
 
-Create components/admin/OrgTable.tsx:
-Props: organizations[], onApprove(id), onSuspend(id), 
-       onReactivate(id)
+ChatMessage type:
+  id: string
+  role: 'user' | 'agent'
+  content: string
+  timestamp: number
 
-Table columns:
-- Name (bold white)
-- Type badge: colored pill per org type
-  NGO: blue, HOSPITAL: purple, GOVT: red, 
-  RELIEF_CAMP: orange
-- Status badge: 
-  PENDING_APPROVAL: amber pulsing dot + "Pending"
-  ACTIVE: green dot + "Active"
-  SUSPENDED: red dot + "Suspended"
-- Users: count
-- Cases: total count
-- Registered: relative time
-- Actions:
-  PENDING_APPROVAL: green "Approve" + red "Reject"
-  ACTIVE: gray "Suspend" (opens confirmation modal)
-  SUSPENDED: blue "Reactivate"
+Task 4: LLM Adapter interface and Cloud adapter
+Implement Apps/Mobile/src/services/llm/LLMAdapter.interface.ts:
 
-Confirmation modal for Suspend:
-Shows org name, reason text input (required), 
-confirm/cancel buttons.
-Calls suspendOrg(id, reason) on confirm.
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system'
+  content: string
+}
 
-Sorting: PENDING_APPROVAL rows always appear first.
+export interface LLMAdapter {
+  chat(
+    messages: ChatMessage[], 
+    systemPrompt: string
+  ): Promise<string>
+  isAvailable(): Promise<boolean>
+}
 
-Page layout:
-Heading: "Organization Management"
-Subtitle: count summary "3 pending approval · 
-           12 active · 1 suspended"
-Full-width OrgTable below
+Implement Apps/Mobile/src/services/llm/CloudLLMAdapter.ts:
+- Implements LLMAdapter interface
+- Uses @google/generative-ai SDK
+- Model: gemini-2.0-flash
+- API key from EXPO_PUBLIC_GEMINI_API_KEY env var
+- chat() method: prepends systemPrompt as first system 
+  message, sends all messages, returns text response
+- isAvailable(): makes a lightweight test call, returns 
+  true if response received within 5 seconds
+- Retry logic: 3 attempts with exponential backoff 
+  (1s, 2s, 4s) on network errors
+- Timeout: 30 seconds per request
+- On timeout or all retries exhausted: throw a typed 
+  LLMUnavailableError so the caller can fall back to SLM
 
-Task 9: Admin — System Health page
-Create app/admin/system/page.tsx.
-Read ADMIN.md for full spec.
+Task 5: SLM Adapter using llama.rn
+Implement Apps/Mobile/src/services/llm/SLMAdapter.ts:
+- Implements LLMAdapter interface
+- Uses llama.rn to load and run Llama 3.2 1B
+- Model file path: 
+  require('../../assets/models/
+  Llama-3.2-1B-Instruct-Q4_K_M.gguf')
+- In development mode (EXPO_PUBLIC_ENVIRONMENT === 
+  'development'): route ALL calls to Ollama at 
+  EXPO_PUBLIC_OLLAMA_URL instead of the bundled model.
+  This avoids needing the 700MB model file during dev.
 
-Create components/admin/SystemHealthCard.tsx:
-Props: label, status ("ok" | "down"), value?, 
-       lastChecked
-Card: bg-gray-900 border rounded-xl p-5
-Green left border if ok, red left border if down
-Icon: CheckCircle (green) or XCircle (red) from lucide
-Label in white, status text below in gray-400
-Refresh on a 30-second polling interval.
+Private state:
+  private llm: LlamaContext | null = null
+  private isReady: boolean = false
+  private isLoading: boolean = false
 
-Four health cards in a 2x2 grid:
-- API Server
-- PostgreSQL  
-- Redis
-- Celery Workers (shows worker count if ok)
+Public methods:
 
-Queue panel below health cards:
-Table showing SOAP generation and document ingestion 
-queue depths.
-If pending > 50: show yellow warning banner 
-"Queue depth is high — worker may be overwhelmed"
+initialize(): Promise<void>
+  - If EXPO_PUBLIC_ENVIRONMENT === 'development': 
+    set isReady = true immediately (Ollama needs 
+    no initialisation)
+  - Otherwise: load the GGUF model using 
+    llama.rn initLlama()
+  - Set isReady = true on success
+  - Set isReady = false on failure, log the error
+  - Must be idempotent — calling twice does nothing 
+    if already loaded
 
-RAG Stats panel below queue:
-Four stats in a row:
-- KB Version: number
-- Active Documents: number
-- Total Chunks: number with comma formatting
-- Index Size: formatted as "18.4 MB"
+isAvailable(): Promise<boolean>
+  - Returns isReady
 
-Top retrieved documents list:
-Table: Document title | Retrievals (7 days)
-Sorted by retrievals desc, show top 5.
+chat(messages, systemPrompt): Promise<string>
+  - If development mode: call Ollama HTTP API at 
+    EXPO_PUBLIC_OLLAMA_URL/api/chat with model 
+    llama3.2:1b
+  - Otherwise: use this.llm.completion() from llama.rn
+  - Format messages as Llama 3.2 instruct template:
+    <|system|>{systemPrompt}<|user|>{last_user_message}
+    <|assistant|>
+  - maxTokens: 512 (sufficient for symptom collection)
+  - temperature: 0.3 (low — we want consistent 
+    structured responses not creative ones)
+  - On error: throw LLMUnavailableError
 
-Auto-refresh: poll all health endpoints every 30 seconds.
-Show "Last updated X seconds ago" counter that increments.
+isModelReady(): boolean
+  - Returns isReady synchronously (used by splash screen)
 
-Task 10: Full visual consistency review
-Go through every page that exists and ensure:
+Task 6: Network Orchestrator
+Implement Apps/Mobile/src/services/network/
+NetworkOrchestrator.ts exactly as defined in 
+Apps/Mobile/CLAUDE.md.
 
-1. All pages use the same dark color palette:
-   - Page background: bg-gray-950
-   - Card/panel background: bg-gray-900
-   - Elevated elements: bg-gray-800
-   - Primary text: text-white
-   - Secondary text: text-gray-400
-   - Muted text: text-gray-500
-   - Borders: border-gray-800
+This is the most important service in the mobile app — 
+everything routes through it.
 
-2. All pages have consistent spacing:
-   - Page padding: p-6 or p-8
-   - Card padding: p-5 or p-6
-   - Gap between cards: gap-4 or gap-6
+Responsibilities:
+- Subscribes to @react-native-community/netinfo
+- Classifies connection as OFFLINE, DEGRADED, or FULL:
+  OFFLINE: isConnected === false OR isInternetReachable 
+           === false
+  DEGRADED: connected but type is 'cellular' and 
+            effectiveType is '2g' or '3g'  
+  FULL: WiFi, or cellular 4G/5G
+- Updates networkStore.mode on every change
+- Exposes getLLMAdapter(): returns CloudLLMAdapter if 
+  FULL, SLMAdapter if DEGRADED or OFFLINE
+- Exposes start(): begins monitoring — call this once 
+  at app startup
+- Exposes stop(): unsubscribes — call on app teardown
+- On mode change OFFLINE→DEGRADED or OFFLINE→FULL: 
+  emit a 'connectivity_restored' event so 
+  TransmissionService can flush the queue
 
-3. All interactive elements have hover states
+The NetworkOrchestrator must be a singleton — export 
+a single instance, not a class to instantiate.
 
-4. All loading states show skeleton loaders 
-   (not spinners on full pages)
+Task 7: App entry point and navigation
+Implement App.tsx as the root component:
 
-5. All empty states have an icon + message
+On mount (useEffect):
+1. Call initDatabase() to create SQLite tables
+2. Call networkOrchestrator.start()
+3. Call slmAdapter.initialize() — run in background, 
+   do not await (splash screen shows while loading)
+4. Call userStore.loadFromDatabase() to check if 
+   user is already registered
 
-6. The sidebar active item is highlighted 
-   on every page
+Navigation structure using React Navigation:
+Stack Navigator with these screens:
 
-7. The TriageBadge component is used everywhere 
-   a triage level is displayed — no raw text
+SplashScreen (no header, no back button)
+↓ (navigates to Registration if not registered, 
+   Home if registered)
+RegistrationScreen (no header)
+↓
+HomeScreen (header: "MediReach", right: network badge)
+↓
+ChatScreen (header: "Assessment", back disabled once 
+           triage computed)
+↓
+TriageResultScreen (no back button)
 
-Fix any inconsistencies found.
+Pass slmAdapter.isModelReady as a prop to SplashScreen
+so it can show the loading state.
+
+Task 8: Splash screen
+Implement Apps/Mobile/src/screens/SplashScreen.tsx
+exactly as defined in Apps/Mobile/CLAUDE.md.
+
+Layout — full screen dark background (#0a0a0a):
+Center column with:
+  - App logo: large "M" in a red circle (use a View 
+    with borderRadius, no image file needed for now)
+  - "MediReach" text: white, 32px, bold, marginTop 16
+  - "Emergency Medical Assessment" text: gray, 16px
+  - marginTop 48: status section
+
+Status section:
+  SLM status indicator:
+  - If isModelReady === false AND slmLoading === true:
+    amber pulsing dot + "Loading Device AI..."
+  - If isModelReady === true:  
+    green dot + "Device AI Ready"
+  - If failed (timeout after 30s):
+    red dot + "Device AI Unavailable — Cloud Only"
+
+  Network badge (below SLM status):
+  - Read from networkStore
+  - FULL: green badge "CLOUD AI ACTIVE"
+  - DEGRADED: amber badge "DEVICE AI ACTIVE"  
+  - OFFLINE: red badge "OFFLINE MODE"
+
+OFFLINE READY badge at bottom of screen:
+  A pill badge: "OFFLINE READY" with wifi-off icon
+  Always shown — reassures user app works without internet
+
+Navigation logic (useEffect watching isModelReady 
+and a 30-second timeout):
+  Once model is ready OR 30 seconds pass:
+    Check userStore.isRegistered
+    Navigate to RegistrationScreen or HomeScreen
+
+Task 9: Registration screen
+Implement Apps/Mobile/src/screens/RegistrationScreen.tsx
+
+Layout — dark background, scrollable, centered card:
+Header: "Create Your Profile" white 24px bold
+Subtext: "Your information helps responders find you" 
+         gray 14px
+
+Form fields (in order):
+1. Full Name
+   Placeholder: "Ahmed Khan"
+   Validation: required, min 2 chars
+
+2. Phone Number  
+   Placeholder: "+92-300-1234567"
+   Keyboard type: phone-pad
+   Validation: must match Pakistan format regex:
+   /^\+92-\d{3}-\d{7}$/
+   Error: "Enter a valid Pakistan number: +92-300-1234567"
+
+3. CNIC
+   Placeholder: "42201-1234567-8"
+   Keyboard type: numeric
+   Validation: must match /^\d{5}-\d{7}-\d{1}$/
+   Error: "Enter a valid CNIC: 42201-1234567-8"
+
+4. Location (auto-filled, not editable directly)
+   Shows: "📍 Detecting location..." while loading
+   Shows: "📍 24.8607, 67.0011" when detected
+   Shows: "📍 Location unavailable" if permission denied
+   "Update Location" button below the field
+
+On mount: request location permission and get current 
+coords using expo-location getCurrentPositionAsync().
+
+Non-Diagnostic Disclaimer (MUST appear before submit):
+A red-bordered box (border border-red-600 bg-red-950 
+rounded-lg p-4) containing:
+Title: "⚠️ Medical Disclaimer" in red-400 bold
+Text: "This application provides AI-assisted symptom 
+collection only. It is NOT a substitute for professional 
+medical diagnosis or treatment. In a life-threatening 
+emergency, contact emergency services immediately."
+A checkbox: "I understand this is not a medical 
+diagnosis tool" — user MUST check this before 
+the submit button is enabled
+
+Submit button: "BEGIN ASSESSMENT"
+  Disabled until: all fields valid + checkbox checked
+  Shows loading spinner while saving
+  On success: save to SQLite via saveUserProfile(), 
+  update userStore, navigate to HomeScreen
+
+Task 10: Home screen
+Implement Apps/Mobile/src/screens/HomeScreen.tsx
+
+Layout — dark background:
+
+Header area:
+  "Good [morning/afternoon/evening], {firstName}" 
+  in white 22px (derive time-based greeting)
+  Network mode badge (same as splash screen badges)
+  Below name: "Stay safe. Help is connected." in gray
+
+Status card (bg-gray-900 rounded-xl border 
+border-gray-800 p-5 marginTop 24):
+  Icon: shield check in green
+  "System Ready" in white bold
+  "Device AI loaded · Location active" in gray-400 
+  small text
+  If offline: amber shield + "Offline Mode — 
+  Assessment available without internet"
+
+Main CTA button:
+  "BEGIN ASSESSMENT" 
+  Large, full-width, bg-red-600 rounded-xl p-4
+  White text 18px bold
+  Below: "AI-guided symptom collection · 
+         Takes 2-3 minutes" in gray small text
+  On press: navigate to ChatScreen
+
+Past assessments section (below CTA):
+  Heading: "My Assessments" gray uppercase small
+  If completed_cases table is empty: 
+    "No assessments yet" in gray centered
+  Otherwise: flat list of completed case rows:
+    Triage level colored dot + chief complaint + date
+    Tap row → show a simple modal with case details
 
 Rules:
-- "use client" only where genuinely needed — 
-  prefer server components for data fetching
-- All charts (Recharts) are client components
-- All map components are client components with 
-  dynamic import ssr:false
-- No hardcoded colors outside of Tailwind classes
-- All admin pages must check session.user.role 
-  server-side and redirect if not ADMIN — 
-  middleware.ts handles routing but the page 
-  should also verify
-- TypeScript strict — no any types anywhere
-- Do not modify lib/api.ts or lib/socket.ts 
-  unless a function is genuinely missing
+- Do not attempt to run the app yet — just build 
+  the files
+- SLM model file (700MB GGUF) is NOT in the repo — 
+  the SLMAdapter must handle the missing file 
+  gracefully in development mode by falling back 
+  to Ollama automatically
+- EXPO_PUBLIC_ENVIRONMENT=development must be set 
+  in Apps/Mobile/.env for all dev work so Ollama 
+  is used instead of the bundled model
+- All screens use StyleSheet.create() — no inline 
+  styles
+- All screens are dark: background #0a0a0a, cards 
+  #111111, text white/#9ca3af
+- TypeScript strict — no any types
+- Do not use React Native Paper or any UI library — 
+  raw React Native components only, styled manually

@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "MediReach",
+    "slug": "medireach-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0a0a0a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.medireach.mobile",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "MediReach needs your location to help responders find you in an emergency.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "MediReach needs your location to help responders find you in an emergency."
+      }
+    },
+    "android": {
+      "package": "com.medireach.mobile",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "MediReach needs your location to help responders find you in an emergency."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "medireach-mobile"
+      }
+    }
+  }
+}

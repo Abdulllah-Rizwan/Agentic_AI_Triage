@@ -44,7 +44,10 @@
       "PowerShell(Set-ExecutionPolicy *)",
       "PowerShell(Get-ChildItem -Recurse \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\dashboard\\\\components\" | Where-Object { !$_.PSIsContainer } | Select-Object FullName)",
       "Read(//mnt/c/Users/ABDULLAH RIZWAN/OneDrive/Desktop/FYP Project/Agentic_AI_Triage/apps/**)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "PowerShell(cmd /c \"npm view react-native-aes-crypto versions --json\" 2>&1 | Select-Object -Last 5)",
+      "PowerShell(cmd /c \"npm view llama.rn versions --json\" 2>&1)",
+      "PowerShell(New-Item *)"
     ]
   }
 }

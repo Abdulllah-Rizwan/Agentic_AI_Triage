@@ -1,0 +1,64 @@
+{
+  "splash": {
+    "title": "MediReach",
+    "subtitle": "Emergency Medical Assessment",
+    "offlineReady": "OFFLINE READY",
+    "slmLoading": "Loading Device AI...",
+    "slmReady": "Device AI Ready",
+    "slmFailed": "Device AI Unavailable — Cloud Only"
+  },
+  "network": {
+    "full": "CLOUD AI",
+    "degraded": "DEVICE AI",
+    "offline": "OFFLINE MODE"
+  },
+  "registration": {
+    "title": "Create Your Profile",
+    "subtitle": "Your information helps responders find you",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Ahmed Khan",
+    "phone": "Phone Number",
+    "phonePlaceholder": "+92-300-1234567",
+    "phoneError": "Enter a valid Pakistan number: +92-300-1234567",
+    "cnic": "CNIC",
+    "cnicPlaceholder": "42201-1234567-8",
+    "cnicError": "Enter a valid CNIC: 42201-1234567-8",
+    "locationDetecting": "Detecting location...",
+    "locationUnavailable": "Location unavailable",
+    "updateLocation": "Update Location",
+    "disclaimerTitle": "Medical Disclaimer",
+    "disclaimerBody": "This application provides AI-assisted symptom collection only. It is NOT a substitute for professional medical diagnosis or treatment. In a life-threatening emergency, contact emergency services immediately.",
+    "disclaimerCheckbox": "I understand this is not a medical diagnosis tool",
+    "submit": "BEGIN ASSESSMENT"
+  },
+  "home": {
+    "greeting_morning": "Good morning",
+    "greeting_afternoon": "Good afternoon",
+    "greeting_evening": "Good evening",
+    "tagline": "Stay safe. Help is connected.",
+    "systemReady": "System Ready",
+    "systemReadyDetail": "Device AI loaded · Location active",
+    "offlineMode": "Offline Mode",
+    "offlineModeDetail": "Assessment available without internet",
+    "cta": "BEGIN ASSESSMENT",
+    "ctaSubtext": "AI-guided symptom collection · Takes 2-3 minutes",
+    "assessmentsTitle": "My Assessments",
+    "noAssessments": "No assessments yet"
+  },
+  "chat": {
+    "header": "Assessment",
+    "offline": "You are offline. Your information is being saved securely and will be sent when signal is available.",
+    "emergencyAlert": "Critical symptom detected. Emergency alert sent.",
+    "firstAid": "While you wait:",
+    "typing": "Assessing..."
+  },
+  "triage": {
+    "green": "No Immediate Emergency",
+    "amber": "Urgent Attention Needed",
+    "red": "Critical — Emergency Response Required",
+    "sending": "Sending to relief network...",
+    "sent": "Report received. Help has been alerted.",
+    "stored": "Stored securely. Will send when signal is available.",
+    "newAssessment": "Start New Assessment"
+  }
+}
