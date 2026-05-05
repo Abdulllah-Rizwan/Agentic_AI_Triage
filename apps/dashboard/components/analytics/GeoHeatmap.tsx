@@ -22,7 +22,7 @@ export function GeoHeatmap({ points }: Props) {
       L = (await import("leaflet")).default;
 
       // Fix default marker icons broken by webpack
-      // @ts-expect-error leaflet internal
+      // @ts-expect-error leaflet internal — _getIconUrl is not in the type definition
       delete L.Icon.Default.prototype._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -46,7 +46,6 @@ export function GeoHeatmap({ points }: Props) {
 
       // Load leaflet.heat and add heatmap layer
       await import("leaflet.heat");
-      // @ts-expect-error leaflet.heat extends L at runtime
       const heat = L.heatLayer(
         points.map((p) => [p.lat, p.lng, p.weight] as [number, number, number]),
         {
@@ -81,7 +80,6 @@ export function GeoHeatmap({ points }: Props) {
           map.removeLayer(layer);
         }
       });
-      // @ts-expect-error leaflet.heat extends L at runtime
       L.heatLayer(
         points.map((p) => [p.lat, p.lng, p.weight] as [number, number, number]),
         {

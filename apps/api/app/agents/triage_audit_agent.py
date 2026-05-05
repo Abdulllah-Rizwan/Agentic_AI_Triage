@@ -22,7 +22,7 @@ def create_audit_agent() -> LlmAgent:
     return LlmAgent(
         name="triage_auditor",
         model=os.getenv("CLOUD_LLM", "gemini-2.0-flash"),
-        system_prompt=AUDIT_SYSTEM_PROMPT,
+        instruction=AUDIT_SYSTEM_PROMPT,
         output_schema=AuditOutput,
         description="Audits and optionally escalates a device-computed triage level",
     )

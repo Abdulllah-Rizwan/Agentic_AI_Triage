@@ -1,515 +1,575 @@
-Read CLAUDE.md, Apps/Mobile/CLAUDE.md, Apps/Mobile/README.md, 
+Read CLAUDE.md, Apps/Mobile/CLAUDE.md,
+Apps/Mobile/README.md, Apps/Api/API_ROUTES.md,
+Apps/Dashboard/README.md, Apps/Dashboard/ADMIN.md,
 and DECISIONS.md before doing anything.
 
-Session 1: Backend scaffold complete
-Session 2: All 7 API route files implemented
-Session 3: ADK agents, Celery workers, socket emitter, 
-           RAG service, document processor, index exporter
-Session 4: RAG pipeline complete and tested end to end
-Session 5: Dashboard scaffold, auth, layout, cases page,
-           CaseCard, SoapReportPanel, CasesMap, real-time 
-           Socket.IO
-Session 6: Analytics, admin screens (Knowledge Base, 
-           Organizations, System Health), resources page,
-           full visual consistency review
+Sessions 1-9 complete. The entire application is
+built:
+- FastAPI backend with all routes
+- Google ADK SOAP + triage audit agents
+- Celery workers for SOAP and document ingestion
+- RAG pipeline with pgvector and FAISS export
+- Next.js dashboard with real-time Socket.IO
+- React Native mobile app with offline SLM
+- TransmissionService with store-and-forward
+- AES encryption for cached payloads
+- KnowledgeBaseUpdateService with silent sync
 
-Session 7 goal: Build the React Native mobile app foundation.
-This covers the project scaffold, navigation structure, 
-all screens up to and including the home screen, the 
-NetworkOrchestrator service, both LLM adapters (cloud and 
-SLM), and the SQLite database setup. The SLM will use 
-llama.rn with Llama 3.2 1B — this works on all Android 
-and iOS devices with 3GB+ RAM.
+Session 10 goal: End-to-end testing of the complete
+system. Simulate every major flow. Fix every bug
+found. Security audit. Performance checks. EAS
+build. Final git commit.
 
-Work one task at a time. Tell me what you built after each 
-task and wait for me to say "continue".
+Work one task at a time. Report every result and
+wait for me to say "continue".
 
-Task 1: Initialise the Expo project
-Inside Apps/Mobile/ initialise a new Expo project:
-npx create-expo-app . --template blank-typescript
+Task 1: Fix all TypeScript errors across the project
 
-After scaffolding install all required dependencies:
+Run from Apps/Mobile:
+npx tsc --noEmit
 
-# Navigation
-npm install @react-navigation/native @react-navigation/stack
-npm install react-native-screens react-native-safe-area-context
+Run from Apps/Dashboard:
+npx tsc --noEmit
 
-# State management
-npm install zustand
+Run from Apps/Api (if mypy installed):
+mypy app/ --ignore-missing-imports
 
-# Local database
-npm install expo-sqlite
+List every error found. Fix them all. Do not use
+@ts-ignore or type: ignore. Report what was fixed.
 
-# Location
-npm install expo-location
+Task 2: Backend integration test suite
+Create Apps/Api/scripts/test_full_backend.py
+This script tests every single API route in order
+using the running server at localhost:3001.
+Must be self-contained — creates and cleans up
+its own test data.
 
-# Network detection  
-npm install @react-native-community/netinfo
+Test sequence:
 
-# Encryption
-npm install react-native-aes-crypto
+--- AUTH (5 tests) ---
+1. Register test organization
+   POST /api/v1/auth/register
+   Expected: 201
 
-# File system
-npm install expo-file-system
+2. Login before approval
+   POST /api/v1/auth/login
+   Expected: 403 pending approval message
 
-# Background tasks
-npm install expo-task-manager expo-background-fetch
+3. Approve org as admin
+   PATCH /api/v1/admin/organizations/{id}/approve
+   Use admin token from env TEST_ADMIN_TOKEN
+   Expected: 200
 
-# Device info
-npm install expo-device expo-constants
+4. Login after approval
+   POST /api/v1/auth/login
+   Expected: 200 access_token returned
+   Save as RESPONDER_TOKEN
 
-# LLM — cloud
-npm install @google/generative-ai
+5. Register device
+   POST /api/v1/auth/device-register
+   Expected: 200 device_token returned
+   Save as DEVICE_TOKEN
 
-# LLM — on device (llama.rn for Llama 3.2 1B)
-npm install llama.rn
+--- CASES (8 tests) ---
+6. Submit RED triage payload as protobuf
+   POST /api/v1/cases/ingest
+   Auth: DEVICE_TOKEN
+   Content-Type: application/octet-stream
+   Build a real LeanPayload and encode it:
+   chief_complaint: "Severe chest pain"
+   symptoms: ["chest pain", "shortness of breath"]
+   severity: 9
+   triage_level: RED
+   lat: 24.8607, lng: 67.0011
+   Expected: 202
 
-# RAG — embeddings and FAISS (JS port)
-npm install @xenova/transformers
+7. Submit same case_id again (idempotency)
+   Expected: 202 status DUPLICATE
 
-# Protobuf
-npm install protobufjs
+8. List cases filtered by RED
+   GET /api/v1/cases?triage_level=RED
+   Expected: 200 case appears in list
 
-# i18n
-npm install i18next react-i18next
+9. Get case detail
+   GET /api/v1/cases/{id}
+   Expected: 200 all fields present
 
-# UI utilities
-npm install date-fns
+10. Wait for SOAP report (poll max 60s)
+    Expected: soap_report not null with all 4 
+    sections
 
-After installing, create the full folder structure 
-defined in Apps/Mobile/CLAUDE.md:
+11. Claim case
+    PATCH /api/v1/cases/{id}/claim
+    Expected: 200 status ACKNOWLEDGED
 
-src/
-  agents/
-    SymptomCollectorAgent.ts
-  components/
-    (empty for now)
-  screens/
-    SplashScreen.tsx
-    RegistrationScreen.tsx
-    HomeScreen.tsx
-    ChatScreen.tsx
-    TriageResultScreen.tsx
-  services/
-    network/
-      NetworkOrchestrator.ts
-    llm/
-      LLMAdapter.interface.ts
-      CloudLLMAdapter.ts
-      SLMAdapter.ts
-    rag/
-      LocalRAG.ts
-    knowledge/
-      KnowledgeBaseUpdateService.ts
-    triage/
-      TriageEngine.ts
-    transmission/
-      TransmissionService.ts
-    encryption/
-      AESEncryption.ts
-  store/
-    networkStore.ts
-    userStore.ts
-    chatStore.ts
-  db/
-    database.ts
-    migrations.ts
-    queries.ts
-  proto/
-    triage.ts
-  assets/
-    knowledge/
-      .gitkeep
-    models/
-      .gitkeep
-  i18n/
-    en.json
-    ur.json
-    index.ts
+12. Claim again — conflict
+    Expected: 409
 
-Create all files as empty stubs with correct imports only.
+13. Resolve case
+    PATCH /api/v1/cases/{id}/resolve
+    Expected: 200 status RESOLVED
 
-Task 2: SQLite database setup
-Implement Apps/Mobile/src/db/database.ts:
-- Opens the SQLite database using expo-sqlite
-- Exports a singleton db instance
-- Exports an initDatabase() function that runs all 
-  migrations on first call
+--- ANALYTICS (4 tests) ---
+14. GET /api/v1/analytics/summary
+    Expected: total_cases >= 1
 
-Implement Apps/Mobile/src/db/migrations.ts:
-Create all three tables exactly as defined in 
-Apps/Mobile/CLAUDE.md:
+15. GET /api/v1/analytics/timeseries
+    Expected: series array not empty
 
-user_profile table:
-  id TEXT PRIMARY KEY DEFAULT 'local_user'
-  full_name TEXT NOT NULL
-  phone TEXT NOT NULL
-  cnic TEXT NOT NULL
-  lat REAL
-  lng REAL
-  registered_at INTEGER NOT NULL
+16. GET /api/v1/analytics/symptoms
+    Expected: chest pain in list
 
-pending_payloads table:
-  case_id TEXT PRIMARY KEY
-  encrypted_blob TEXT NOT NULL
-  triage_level TEXT NOT NULL
-  created_at INTEGER NOT NULL
-  attempts INTEGER DEFAULT 0
-  last_attempt INTEGER
+17. GET /api/v1/analytics/geo
+    Expected: our test case coordinates appear
 
-completed_cases table:
-  case_id TEXT PRIMARY KEY
-  triage_level TEXT NOT NULL
-  chief_complaint TEXT NOT NULL
-  completed_at INTEGER NOT NULL
-  acknowledged INTEGER DEFAULT 0
+--- KNOWLEDGE BASE (6 tests) ---
+18. GET /api/v1/knowledge/version
+    Expected: version >= 1
 
-app_metadata table (add this — needed by 
-KnowledgeBaseUpdateService):
-  key TEXT PRIMARY KEY
-  value TEXT NOT NULL
+19. POST /api/v1/knowledge/query
+    Body: {"query":"chest pain emergency","top_k":3}
+    Expected: 200
 
-Implement Apps/Mobile/src/db/queries.ts:
-Typed query functions for every table operation needed:
+20. Upload test document
+    POST /api/v1/admin/knowledge/documents
+    Create a small test .txt inline
+    Expected: 202 PROCESSING
 
-User profile:
-  saveUserProfile(profile) → void
-  getUserProfile() → UserProfile | null
+21. Poll until ACTIVE (max 120s)
+    Expected: status ACTIVE chunk_count > 0
 
-Pending payloads:
-  savePendingPayload(payload) → void
-  getPendingPayloads(maxAttempts: number) → PendingPayload[]
-  deletePendingPayload(caseId) → void
-  incrementPayloadAttempts(caseId) → void
+22. Archive test document
+    PATCH /api/v1/admin/knowledge/documents/{id}/
+    archive
+    Expected: 200 new_kb_version incremented
 
-Completed cases:
-  saveCompletedCase(case) → void
-  getCompletedCases() → CompletedCase[]
-  markCaseAcknowledged(caseId) → void
+23. Download FAISS index
+    GET /api/v1/knowledge/index
+    Expected: 200 binary file size > 0
 
-App metadata:
-  getMetadata(key) → string | null
-  setMetadata(key, value) → void
+--- ADMIN (6 tests) ---
+24. GET /api/v1/admin/organizations
+    Expected: test org appears
 
-Task 3: Zustand state stores
-Implement Apps/Mobile/src/store/networkStore.ts:
-State: 
-  mode: 'OFFLINE' | 'DEGRADED' | 'FULL'
-  isConnected: boolean
-  lastChecked: number
-Actions:
-  setMode(mode)
-  setConnected(connected)
+25. Suspend test org
+    PATCH /api/v1/admin/organizations/{id}/suspend
+    Expected: 200
 
-Implement Apps/Mobile/src/store/userStore.ts:
-State:
-  profile: UserProfile | null
-  isRegistered: boolean
-  deviceId: string
-Actions:
-  setProfile(profile)
-  setRegistered(registered)
-  loadFromDatabase() — reads user_profile from SQLite 
-    on app start
+26. Login with suspended org
+    Expected: 403 suspended message
 
-Implement Apps/Mobile/src/store/chatStore.ts:
-State:
-  messages: ChatMessage[]
-  isAgentTyping: boolean
-  emergencyDetected: boolean
-  emergencyTrigger: string | null
-  collectionStatus: 'IDLE'|'COLLECTING'|'SUFFICIENT'|'CRITICAL'
-Actions:
-  addMessage(message)
-  setAgentTyping(typing)
-  setEmergencyDetected(trigger)
-  setCollectionStatus(status)
-  clearChat()
+27. GET /api/v1/admin/system/health
+    Expected: all services ok
 
-ChatMessage type:
-  id: string
-  role: 'user' | 'agent'
-  content: string
-  timestamp: number
+28. GET /api/v1/admin/system/queue
+    Expected: queue depths returned
 
-Task 4: LLM Adapter interface and Cloud adapter
-Implement Apps/Mobile/src/services/llm/LLMAdapter.interface.ts:
+29. Cleanup — delete test org if possible
+    or mark it for manual cleanup
 
-export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system'
-  content: string
+Print final summary table:
+Test N | Route | Expected | Actual | PASS/FAIL
+
+Run: python scripts/test_full_backend.py
+Fix all FAILs before moving to Task 3.
+
+Task 3: Full mobile flow test — GREEN path
+Manually walk through on phone or emulator:
+
+Step 1: Launch app
+Expected: SplashScreen with network + SLM badges
+
+Step 2: Register (if not already registered)
+Complete all fields + disclaimer checkbox
+Expected: navigates to HomeScreen
+
+Step 3: Start assessment
+Tap BEGIN ASSESSMENT
+Expected: ChatScreen opens with agent greeting
+
+Step 4: Report mild symptoms
+"I have a mild headache since this morning,
+severity 2, no other symptoms, no allergies"
+Continue responding until agent produces
+SUFFICIENT JSON
+Expected: navigates to TriageResultScreen
+
+Step 5: Verify GREEN screen
+Expected: dark green background, checkmark,
+"You Are Safe", first-aid guidance from RAG
+Transmission status card should NOT appear
+for GREEN (no transmission needed)
+
+Step 6: Start new assessment
+Expected: HomeScreen, chat cleared
+
+Report any steps that failed. Fix them.
+
+Task 4: Full mobile flow test — RED path
+This is the most critical test in the project.
+
+Step 1: Start new assessment
+
+Step 2: Type EXACTLY this as first message:
+"I have chest pain"
+
+Step 3: Verify Emergency Bar appears IMMEDIATELY
+The Emergency Notification Bar must appear
+BEFORE the LLM responds — because
+detectCriticalSymptom checks raw input first.
+
+If the bar does NOT appear before the LLM
+responds — this is a critical safety bug.
+Fix it immediately before continuing.
+The check order must be:
+1. detectCriticalSymptom(userMessage) — synchronous
+2. If critical: show bar, return CRITICAL response
+3. Only THEN call the LLM
+
+Step 4: Verify RED result screen
+Expected: dark red background
+"Critical — Emergency Response Activated"
+Transmission status changing through states
+ending at SENT or CACHED
+
+Step 5: Verify API received the payload
+Check API server terminal — ingest POST visible
+Check Celery terminal — SOAP job running
+
+Step 6: Verify dashboard updates
+Open localhost:3000/cases
+Expected: RED case card appears at top
+SOAP report available within 30 seconds
+
+Report every step. Fix any failures.
+
+Task 5: Offline to reconnect flow test
+
+Step 1: Enable airplane mode on device
+
+Step 2: Complete a RED assessment
+Expected: TriageResultScreen shows CACHED status
+"Saved securely. Will send when signal available"
+
+Step 3: Verify SQLite has the payload
+Add a temporary console.log in
+TransmissionService.sendOrCache after 
+savePendingPayload to confirm it was called.
+Check the output in Expo console.
+
+Step 4: Disable airplane mode
+Wait up to 60 seconds for retry loop to fire
+Expected: console shows transmission attempt
+Expected: SENT confirmation OR API terminal shows
+the ingest request arrive
+
+Step 5: Verify case on dashboard
+Open localhost:3000/cases
+Expected: the offline case now appears
+
+Step 6: Verify payload removed from SQLite
+Queue status should show 0 pending
+
+Report every step. Fix any failures.
+
+Task 6: Knowledge base sync test
+
+Step 1: Upload a new document via dashboard
+Go to localhost:3000/admin/knowledge
+Upload a test .txt article
+Wait for ACTIVE status
+Note the new KB version number (e.g. v3)
+
+Step 2: Force outdated local version on device
+In SQLite set kb_local_version to 0:
+Call setMetadata('kb_local_version', '0') in
+a temporary debug button on HomeScreen
+OR just clear and reinstall the app
+
+Step 3: Restart app with internet enabled
+Expected console log:
+"Knowledge base updated: v0 → v3"
+
+Step 4: Verify new index downloaded
+Check FileSystem.documentDirectory — 
+knowledge_index.faiss should exist and be
+newer than app install time
+
+Step 5: Test RAG uses new content
+Start assessment, describe symptoms related to
+the article you uploaded
+Expected: agent response includes context
+from that article
+
+Report results. Fix any failures.
+
+Task 7: Security audit
+Verify every security requirement in CLAUDE.md.
+
+Check 1: CNIC never stored in plaintext on server
+Query PostgreSQL:
+SELECT patient_cnic_hash FROM cases LIMIT 3;
+Expected: long hex hashes, not readable CNICs
+
+Check 2: Payloads encrypted before SQLite
+Add temporary debug log in sendOrCache to print
+the encrypted_blob — it should be unreadable
+ciphertext not JSON
+
+Check 3: JWT expiry enforced
+Use an access_token after 16 minutes
+Expected: 401 Unauthorized
+Use refresh_token to get new one
+Expected: new access_token returned
+
+Check 4: Admin routes reject non-admins
+GET /api/v1/admin/organizations with 
+RESPONDER_TOKEN
+Expected: 403 Forbidden
+
+Check 5: Device token cannot access dashboard routes
+GET /api/v1/cases with DEVICE_TOKEN
+Expected: 403 Forbidden
+
+Check 6: Payload size limit enforced
+POST /api/v1/cases/ingest with 15KB body
+Expected: 413 Request Entity Too Large
+
+Check 7: Non-diagnostic disclaimer required
+On RegistrationScreen try to tap BEGIN ASSESSMENT
+without checking the disclaimer checkbox
+Expected: button is disabled, cannot proceed
+
+Report PASS or FAIL for each check.
+Fix all FAILs before moving on.
+
+Task 8: Performance benchmarks
+Measure and report these numbers:
+
+Mobile:
+1. SLM response time (Ollama in dev mode)
+   Time agent.sendMessage() for a typical message
+   Target: under 5 seconds
+   
+2. TriageEngine.computeTriage() time
+   Time it on a full MedicalFeatureVector
+   Target: under 50ms (synchronous JS)
+   
+3. LocalRAG.query() time
+   Time it on "chest pain difficulty breathing"
+   Target: under 500ms
+   
+4. Protobuf payload size
+   Log byte count of a typical RED LeanPayload
+   Target: under 2000 bytes
+   If over: trim conversation_summary field
+
+Backend:
+5. POST /api/v1/cases/ingest response time
+   Target: under 200ms
+   
+6. SOAP generation time
+   Time from ingest to soap_report populated
+   Target: under 30 seconds
+   
+7. POST /api/v1/knowledge/query response time
+   Target: under 1 second
+
+Report all numbers with pass/fail vs target.
+If any target is missed by more than 2x investigate
+and fix the bottleneck.
+
+Task 9: CLAUDE.md constraints final verification
+Go through EVERY non-negotiable in the
+"Key Constraints and Non-Negotiables" section
+of root CLAUDE.md and verify each one:
+
+Constraint 1: Triage is rule-based, LLM is not
+the sole decision maker
+Verify: TriageEngine.computeTriage() is pure
+JavaScript with no LLM call anywhere in it
+
+Constraint 2: App works fully offline
+Verify: enable airplane mode, complete an
+assessment start to finish
+Expected: everything works, payload cached
+
+Constraint 3: Non-diagnostic disclaimer requires
+explicit acknowledgment
+Verify: checkbox is required, button disabled
+without it
+
+Constraint 4: Patient data never leaves device
+in plaintext
+Verify: encryptLeanPayload is called BEFORE
+any savePendingPayload or fetch call
+
+Constraint 5: Lean payload under 2KB
+Verify: log payload byte size, must be < 2000
+
+Constraint 6: Dashboard requires org approval
+Verify: register new org, try to login before
+admin approves — must get 403
+
+Constraint 7: GPS required before assessment
+Verify: on RegistrationScreen, if location
+permission denied, the form cannot be submitted
+The location field must be populated
+
+Report PASS or FAIL for each.
+Fix all FAILs.
+
+Task 10: EAS development build
+Build a proper development APK with all
+native modules included.
+
+Step 1: Verify EAS login
+eas whoami
+If not logged in: eas login with your Expo account
+
+Step 2: Verify app.json is correct
+Ensure these fields are present:
+{
+  "expo": {
+    "name": "MediReach",
+    "slug": "medireach",
+    "version": "1.0.0",
+    "android": {
+      "package": "com.medireach.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ]
+    },
+    "plugins": [
+      "expo-location",
+      "expo-task-manager",
+      "expo-background-fetch",
+      "expo-secure-store"
+    ]
+  }
 }
 
-export interface LLMAdapter {
-  chat(
-    messages: ChatMessage[], 
-    systemPrompt: string
-  ): Promise<string>
-  isAvailable(): Promise<boolean>
+Step 3: Verify eas.json has development profile
+{
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    }
+  }
 }
 
-Implement Apps/Mobile/src/services/llm/CloudLLMAdapter.ts:
-- Implements LLMAdapter interface
-- Uses @google/generative-ai SDK
-- Model: gemini-2.0-flash
-- API key from EXPO_PUBLIC_GEMINI_API_KEY env var
-- chat() method: prepends systemPrompt as first system 
-  message, sends all messages, returns text response
-- isAvailable(): makes a lightweight test call, returns 
-  true if response received within 5 seconds
-- Retry logic: 3 attempts with exponential backoff 
-  (1s, 2s, 4s) on network errors
-- Timeout: 30 seconds per request
-- On timeout or all retries exhausted: throw a typed 
-  LLMUnavailableError so the caller can fall back to SLM
+Step 4: Trigger the build
+cd Apps/Mobile
+eas build --profile development --platform android
 
-Task 5: SLM Adapter using llama.rn
-Implement Apps/Mobile/src/services/llm/SLMAdapter.ts:
-- Implements LLMAdapter interface
-- Uses llama.rn to load and run Llama 3.2 1B
-- Model file path: 
-  require('../../assets/models/
-  Llama-3.2-1B-Instruct-Q4_K_M.gguf')
-- In development mode (EXPO_PUBLIC_ENVIRONMENT === 
-  'development'): route ALL calls to Ollama at 
-  EXPO_PUBLIC_OLLAMA_URL instead of the bundled model.
-  This avoids needing the 700MB model file during dev.
+This runs on EAS cloud servers and takes 10-15
+minutes. It will give you a QR code and download
+URL when done. Note the build ID.
 
-Private state:
-  private llm: LlamaContext | null = null
-  private isReady: boolean = false
-  private isLoading: boolean = false
+Do not wait — move to Task 11 while it builds.
 
-Public methods:
+Task 11: Download SLM model (document the process)
+The 700MB Llama model file is not in the repo.
+Document exactly how to add it for the production
+build.
 
-initialize(): Promise<void>
-  - If EXPO_PUBLIC_ENVIRONMENT === 'development': 
-    set isReady = true immediately (Ollama needs 
-    no initialisation)
-  - Otherwise: load the GGUF model using 
-    llama.rn initLlama()
-  - Set isReady = true on success
-  - Set isReady = false on failure, log the error
-  - Must be idempotent — calling twice does nothing 
-    if already loaded
+Create a file Apps/Mobile/SETUP_SLM.md:
 
-isAvailable(): Promise<boolean>
-  - Returns isReady
+# Setting Up the On-Device SLM
 
-chat(messages, systemPrompt): Promise<string>
-  - If development mode: call Ollama HTTP API at 
-    EXPO_PUBLIC_OLLAMA_URL/api/chat with model 
-    llama3.2:1b
-  - Otherwise: use this.llm.completion() from llama.rn
-  - Format messages as Llama 3.2 instruct template:
-    <|system|>{systemPrompt}<|user|>{last_user_message}
-    <|assistant|>
-  - maxTokens: 512 (sufficient for symptom collection)
-  - temperature: 0.3 (low — we want consistent 
-    structured responses not creative ones)
-  - On error: throw LLMUnavailableError
+## Download the model
+mkdir -p src/assets/models
+cd src/assets/models
 
-isModelReady(): boolean
-  - Returns isReady synchronously (used by splash screen)
+curl -L "https://huggingface.co/bartowski/
+Llama-3.2-1B-Instruct-GGUF/resolve/main/
+Llama-3.2-1B-Instruct-Q4_K_M.gguf" \
+-o "Llama-3.2-1B-Instruct-Q4_K_M.gguf"
 
-Task 6: Network Orchestrator
-Implement Apps/Mobile/src/services/network/
-NetworkOrchestrator.ts exactly as defined in 
-Apps/Mobile/CLAUDE.md.
+## Verify the download
+ls -lh src/assets/models/
+# Should show ~700MB file
 
-This is the most important service in the mobile app — 
-everything routes through it.
+## Switch from development to production mode
+In Apps/Mobile/.env change:
+EXPO_PUBLIC_ENVIRONMENT=production
 
-Responsibilities:
-- Subscribes to @react-native-community/netinfo
-- Classifies connection as OFFLINE, DEGRADED, or FULL:
-  OFFLINE: isConnected === false OR isInternetReachable 
-           === false
-  DEGRADED: connected but type is 'cellular' and 
-            effectiveType is '2g' or '3g'  
-  FULL: WiFi, or cellular 4G/5G
-- Updates networkStore.mode on every change
-- Exposes getLLMAdapter(): returns CloudLLMAdapter if 
-  FULL, SLMAdapter if DEGRADED or OFFLINE
-- Exposes start(): begins monitoring — call this once 
-  at app startup
-- Exposes stop(): unsubscribes — call on app teardown
-- On mode change OFFLINE→DEGRADED or OFFLINE→FULL: 
-  emit a 'connectivity_restored' event so 
-  TransmissionService can flush the queue
+## Rebuild with EAS
+eas build --profile preview --platform android
 
-The NetworkOrchestrator must be a singleton — export 
-a single instance, not a class to instantiate.
+## What changes in production mode
+- SLMAdapter loads the bundled GGUF instead of
+  calling Ollama
+- First model load takes 5-15 seconds depending
+  on device
+- Subsequent loads use cached model weights
 
-Task 7: App entry point and navigation
-Implement App.tsx as the root component:
+## Minimum device requirements
+- Android 7.0+ (API level 24+)
+- 3GB RAM minimum (4GB recommended)
+- 1.5GB free storage for model + app
 
-On mount (useEffect):
-1. Call initDatabase() to create SQLite tables
-2. Call networkOrchestrator.start()
-3. Call slmAdapter.initialize() — run in background, 
-   do not await (splash screen shows while loading)
-4. Call userStore.loadFromDatabase() to check if 
-   user is already registered
+Task 12: Final git commit
+1. Verify .gitignore is complete:
+.env
+.env.local
+Apps/Mobile/.env
+Apps/Api/.env
+Apps/Api/uploads/
+Apps/Api/exports/
+Apps/Mobile/src/assets/models/*.gguf
+Apps/Mobile/src/assets/knowledge/*.faiss
+Apps/Mobile/src/assets/knowledge/*.pkl
+Apps/Mobile/src/assets/knowledge/*.bin
+__pycache__/
+.venv/
+node_modules/
+*.pyc
+.DS_Store
 
-Navigation structure using React Navigation:
-Stack Navigator with these screens:
+2. Verify no .env files are tracked:
+git status
+If any .env files appear: git rm --cached <file>
 
-SplashScreen (no header, no back button)
-↓ (navigates to Registration if not registered, 
-   Home if registered)
-RegistrationScreen (no header)
-↓
-HomeScreen (header: "MediReach", right: network badge)
-↓
-ChatScreen (header: "Assessment", back disabled once 
-           triage computed)
-↓
-TriageResultScreen (no back button)
+3. Stage everything:
+git add .
 
-Pass slmAdapter.isModelReady as a prop to SplashScreen
-so it can show the loading state.
+4. Final commit:
+git commit -m "feat: MediReach complete application
 
-Task 8: Splash screen
-Implement Apps/Mobile/src/screens/SplashScreen.tsx
-exactly as defined in Apps/Mobile/CLAUDE.md.
+Backend:
+- FastAPI with pgvector RAG pipeline
+- Google ADK SOAP generation agent
+- Celery async workers
+- All API routes per API_ROUTES.md spec
 
-Layout — full screen dark background (#0a0a0a):
-Center column with:
-  - App logo: large "M" in a red circle (use a View 
-    with borderRadius, no image file needed for now)
-  - "MediReach" text: white, 32px, bold, marginTop 16
-  - "Emergency Medical Assessment" text: gray, 16px
-  - marginTop 48: status section
+Dashboard:
+- Next.js 14 with real-time Socket.IO
+- Cases, analytics, admin screens
+- Leaflet geospatial mapping
 
-Status section:
-  SLM status indicator:
-  - If isModelReady === false AND slmLoading === true:
-    amber pulsing dot + "Loading Device AI..."
-  - If isModelReady === true:  
-    green dot + "Device AI Ready"
-  - If failed (timeout after 30s):
-    red dot + "Device AI Unavailable — Cloud Only"
+Mobile:
+- React Native Expo offline-first
+- Llama 3.2 1B on-device SLM
+- AES-256 encrypted store-and-forward
+- Silent knowledge base sync
 
-  Network badge (below SLM status):
-  - Read from networkStore
-  - FULL: green badge "CLOUD AI ACTIVE"
-  - DEGRADED: amber badge "DEVICE AI ACTIVE"  
-  - OFFLINE: red badge "OFFLINE MODE"
+Tested: full offline to reconnect to dashboard"
 
-OFFLINE READY badge at bottom of screen:
-  A pill badge: "OFFLINE READY" with wifi-off icon
-  Always shown — reassures user app works without internet
-
-Navigation logic (useEffect watching isModelReady 
-and a 30-second timeout):
-  Once model is ready OR 30 seconds pass:
-    Check userStore.isRegistered
-    Navigate to RegistrationScreen or HomeScreen
-
-Task 9: Registration screen
-Implement Apps/Mobile/src/screens/RegistrationScreen.tsx
-
-Layout — dark background, scrollable, centered card:
-Header: "Create Your Profile" white 24px bold
-Subtext: "Your information helps responders find you" 
-         gray 14px
-
-Form fields (in order):
-1. Full Name
-   Placeholder: "Ahmed Khan"
-   Validation: required, min 2 chars
-
-2. Phone Number  
-   Placeholder: "+92-300-1234567"
-   Keyboard type: phone-pad
-   Validation: must match Pakistan format regex:
-   /^\+92-\d{3}-\d{7}$/
-   Error: "Enter a valid Pakistan number: +92-300-1234567"
-
-3. CNIC
-   Placeholder: "42201-1234567-8"
-   Keyboard type: numeric
-   Validation: must match /^\d{5}-\d{7}-\d{1}$/
-   Error: "Enter a valid CNIC: 42201-1234567-8"
-
-4. Location (auto-filled, not editable directly)
-   Shows: "📍 Detecting location..." while loading
-   Shows: "📍 24.8607, 67.0011" when detected
-   Shows: "📍 Location unavailable" if permission denied
-   "Update Location" button below the field
-
-On mount: request location permission and get current 
-coords using expo-location getCurrentPositionAsync().
-
-Non-Diagnostic Disclaimer (MUST appear before submit):
-A red-bordered box (border border-red-600 bg-red-950 
-rounded-lg p-4) containing:
-Title: "⚠️ Medical Disclaimer" in red-400 bold
-Text: "This application provides AI-assisted symptom 
-collection only. It is NOT a substitute for professional 
-medical diagnosis or treatment. In a life-threatening 
-emergency, contact emergency services immediately."
-A checkbox: "I understand this is not a medical 
-diagnosis tool" — user MUST check this before 
-the submit button is enabled
-
-Submit button: "BEGIN ASSESSMENT"
-  Disabled until: all fields valid + checkbox checked
-  Shows loading spinner while saving
-  On success: save to SQLite via saveUserProfile(), 
-  update userStore, navigate to HomeScreen
-
-Task 10: Home screen
-Implement Apps/Mobile/src/screens/HomeScreen.tsx
-
-Layout — dark background:
-
-Header area:
-  "Good [morning/afternoon/evening], {firstName}" 
-  in white 22px (derive time-based greeting)
-  Network mode badge (same as splash screen badges)
-  Below name: "Stay safe. Help is connected." in gray
-
-Status card (bg-gray-900 rounded-xl border 
-border-gray-800 p-5 marginTop 24):
-  Icon: shield check in green
-  "System Ready" in white bold
-  "Device AI loaded · Location active" in gray-400 
-  small text
-  If offline: amber shield + "Offline Mode — 
-  Assessment available without internet"
-
-Main CTA button:
-  "BEGIN ASSESSMENT" 
-  Large, full-width, bg-red-600 rounded-xl p-4
-  White text 18px bold
-  Below: "AI-guided symptom collection · 
-         Takes 2-3 minutes" in gray small text
-  On press: navigate to ChatScreen
-
-Past assessments section (below CTA):
-  Heading: "My Assessments" gray uppercase small
-  If completed_cases table is empty: 
-    "No assessments yet" in gray centered
-  Otherwise: flat list of completed case rows:
-    Triage level colored dot + chief complaint + date
-    Tap row → show a simple modal with case details
-
-Rules:
-- Do not attempt to run the app yet — just build 
-  the files
-- SLM model file (700MB GGUF) is NOT in the repo — 
-  the SLMAdapter must handle the missing file 
-  gracefully in development mode by falling back 
-  to Ollama automatically
-- EXPO_PUBLIC_ENVIRONMENT=development must be set 
-  in Apps/Mobile/.env for all dev work so Ollama 
-  is used instead of the bundled model
-- All screens use StyleSheet.create() — no inline 
-  styles
-- All screens are dark: background #0a0a0a, cards 
-  #111111, text white/#9ca3af
-- TypeScript strict — no any types
-- Do not use React Native Paper or any UI library — 
-  raw React Native components only, styled manually
+Rules for this session:
+- The RED emergency bar test in Task 4 Step 3
+  is the single most critical test — it must pass
+  before anything else
+- Fix every test failure before moving to the
+  next task — do not skip
+- Security audit checks are not optional
+- EAS build requires a free Expo account —
+  create one at expo.dev if needed
+- Do not suppress TypeScript errors

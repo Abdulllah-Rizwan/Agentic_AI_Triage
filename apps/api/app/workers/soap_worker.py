@@ -19,7 +19,7 @@ async def _invoke_soap_agent(case_id: str, user_message: str) -> str:
     agent = create_soap_agent()
     session_service = InMemorySessionService()
     runner = Runner(agent=agent, app_name="medireach", session_service=session_service)
-    session = session_service.create_session(app_name="medireach", user_id=case_id)
+    session = await session_service.create_session(app_name="medireach", user_id=case_id)
 
     async for event in runner.run_async(
         user_id=case_id,

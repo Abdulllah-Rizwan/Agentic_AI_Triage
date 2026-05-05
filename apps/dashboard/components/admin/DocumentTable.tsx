@@ -66,7 +66,7 @@ export function DocumentTable({ documents, onRefresh, isLoading }: Props) {
     const processingIds = new Set(processing.map((d) => d.id));
 
     // Stop polling for docs no longer processing
-    for (const [id, timer] of pollingRef.current.entries()) {
+    for (const [id, timer] of Array.from(pollingRef.current.entries())) {
       if (!processingIds.has(id)) {
         clearInterval(timer);
         pollingRef.current.delete(id);
@@ -93,7 +93,7 @@ export function DocumentTable({ documents, onRefresh, isLoading }: Props) {
 
     return () => {
       // Clear all on unmount
-      for (const timer of pollingRef.current.values()) clearInterval(timer);
+      for (const timer of Array.from(pollingRef.current.values())) clearInterval(timer);
       pollingRef.current.clear();
     };
   }, [documents, onRefresh]);

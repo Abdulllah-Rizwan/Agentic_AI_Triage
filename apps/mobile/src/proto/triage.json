@@ -1,0 +1,28 @@
+{
+  "nested": {
+    "PatientProfile": {
+      "fields": {
+        "cnic":  { "id": 1, "type": "string" },
+        "name":  { "id": 2, "type": "string" },
+        "phone": { "id": 3, "type": "string" },
+        "lat":   { "id": 4, "type": "double" },
+        "lng":   { "id": 5, "type": "double" }
+      }
+    },
+    "LeanPayload": {
+      "fields": {
+        "case_id":              { "id": 1,  "type": "string" },
+        "patient":              { "id": 2,  "type": "PatientProfile" },
+        "chief_complaint":      { "id": 3,  "type": "string" },
+        "symptoms":             { "id": 4,  "rule": "repeated", "type": "string" },
+        "severity":             { "id": 5,  "type": "int32" },
+        "triage_level":         { "id": 6,  "type": "string" },
+        "triage_reason":        { "id": 7,  "type": "string" },
+        "conversation_summary": { "id": 8,  "type": "string" },
+        "timestamp_unix":       { "id": 9,  "type": "int64" },
+        "device_id":            { "id": 10, "type": "string" },
+        "network_mode":         { "id": 11, "type": "string" }
+      }
+    }
+  }
+}

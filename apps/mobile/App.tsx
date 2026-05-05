@@ -14,19 +14,22 @@ import {
   flushQueue,
 } from './src/services/transmission/TransmissionService';
 import { checkAndUpdateKnowledgeBase } from './src/services/knowledge/KnowledgeBaseUpdateService';
+import { localRAG } from './src/services/rag/LocalRAG';
 
 import SplashScreen from './src/screens/SplashScreen';
 import RegistrationScreen from './src/screens/RegistrationScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ChatScreen from './src/screens/ChatScreen';
 import TriageResultScreen from './src/screens/TriageResultScreen';
+import type { TriageResult } from './src/services/triage/TriageEngine';
+import type { MedicalFeatureVector } from './src/services/triage/TriageEngine';
 
 export type RootStackParamList = {
   Splash: undefined;
   Registration: undefined;
   Home: undefined;
   Chat: undefined;
-  TriageResult: { triageLevel: 'RED' | 'AMBER' | 'GREEN'; triageReason: string; caseId: string };
+  TriageResult: { triageResult: TriageResult; featureVector: MedicalFeatureVector };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -37,26 +40,31 @@ export default function App() {
 
   useEffect(() => {
     async function bootstrap() {
+      // 1. Database must be ready before anything reads/writes SQLite
       await initDatabase();
-      await loadFromDatabase();
 
+      // 2. Start network monitoring before loading user state
       networkOrchestrator.start();
-
-      // Register connectivity-restored callback to flush queue
       networkOrchestrator.onConnectivityRestored(() => {
         flushQueue();
       });
 
-      // Start retry loop in background
-      startRetryLoop();
+      // 3. Load user profile — determines Registration vs Home routing
+      await loadFromDatabase();
 
-      // Check for knowledge base updates silently
-      checkAndUpdateKnowledgeBase().catch(() => undefined);
-
-      // Initialize SLM in background — don't block navigation
+      // 4. SLM load is ~5-15s — run in background, SplashScreen gates on isModelReady
       slmAdapter.initialize().then(() => {
         setIsModelReady(slmAdapter.isModelReady());
       });
+
+      // 5. Pre-warm the local RAG index so first query is instant
+      localRAG.initialize().catch(() => undefined);
+
+      // 6. Check for knowledge base updates silently in background
+      checkAndUpdateKnowledgeBase().catch(() => undefined);
+
+      // 7. Start the transmission retry loop
+      startRetryLoop();
     }
 
     bootstrap();

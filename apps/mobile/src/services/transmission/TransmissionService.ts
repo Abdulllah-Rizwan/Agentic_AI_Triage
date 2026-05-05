@@ -1,3 +1,5 @@
+import * as Device from 'expo-device';
+
 import { networkStore } from '../../store/networkStore';
 import { userStore } from '../../store/userStore';
 import {
@@ -6,15 +8,159 @@ import {
   incrementPayloadAttempts,
   savePendingPayload,
   saveCompletedCase,
+  getMetadata,
+  setMetadata,
 } from '../../db/queries';
-import { deriveKey, decrypt, decodePayload, encrypt, encodePayload } from '../encryption/AESEncryption';
+import {
+  deriveKey,
+  encryptPayload,
+  decryptPayload,
+} from '../encryption/AESEncryption';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
 const RETRY_INTERVAL_MS = 60_000;
 const MAX_ATTEMPTS = 5;
+const DEVICE_TOKEN_KEY = 'medireach_device_token';
 
 let retryInterval: ReturnType<typeof setInterval> | null = null;
 
+// ── Device token ──────────────────────────────────────────────────────────────
+
+/**
+ * Returns a cached device JWT, or registers with the server if none is stored.
+ * Persists the token in expo-secure-store when available, falls back to the
+ * SQLite app_metadata table.
+ */
+export async function getDeviceToken(): Promise<string> {
+  // Try expo-secure-store first (preferred — hardware-backed on Android/iOS)
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
+    const SecureStore = require('expo-secure-store') as any;
+    const cached: string | null = await SecureStore.getItemAsync(DEVICE_TOKEN_KEY);
+    if (cached) return cached;
+  } catch {
+    // expo-secure-store not installed or unavailable — fall through to SQLite
+  }
+
+  // SQLite fallback
+  const sqliteCached = await getMetadata(DEVICE_TOKEN_KEY);
+  if (sqliteCached) return sqliteCached;
+
+  // No cached token — register with the server
+  const deviceId = Device.osInternalBuildId ?? 'unknown-device';
+  const response = await fetch(`${API_BASE_URL}/api/v1/auth/device-register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ device_id: deviceId }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Device registration failed: ${response.status}`);
+  }
+
+  const data = (await response.json()) as { token: string };
+  const token = data.token;
+
+  // Persist for next session
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
+    const SecureStore = require('expo-secure-store') as any;
+    await SecureStore.setItemAsync(DEVICE_TOKEN_KEY, token);
+  } catch {
+    await setMetadata(DEVICE_TOKEN_KEY, token);
+  }
+
+  return token;
+}
+
+// ── Internal send helper ──────────────────────────────────────────────────────
+
+/**
+ * Reads the encrypted blob for `caseId` from the DB, decrypts it, and POSTs
+ * the raw protobuf bytes to the ingest endpoint.
+ * Returns true on HTTP 202, false on any error.
+ */
+async function _trySend(caseId: string): Promise<boolean> {
+  const { profile, deviceId } = userStore.getState();
+  if (!profile) return false;
+
+  try {
+    const pending = await getPendingPayloads(MAX_ATTEMPTS);
+    const record = pending.find((p) => p.case_id === caseId);
+    if (!record) return false;
+
+    const key = await deriveKey(profile.cnic, deviceId);
+    const base64 = await decryptPayload(record.encrypted_blob, key);
+    const payloadBytes = Buffer.from(base64, 'base64');
+
+    let token = '';
+    try {
+      token = await getDeviceToken();
+    } catch {
+      // Proceed without auth token — server may accept unauthenticated ingests
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/v1/cases/ingest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: payloadBytes,
+    });
+
+    if (response.ok || response.status === 202) {
+      await deletePendingPayload(caseId);
+      await saveCompletedCase({
+        case_id: caseId,
+        triage_level: record.triage_level,
+        chief_complaint: 'Transmitted',
+        completed_at: Date.now(),
+      });
+      return true;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+// ── Public API ────────────────────────────────────────────────────────────────
+
+/**
+ * High-level entry point called by TriageResultScreen.
+ *
+ * The caller passes an ALREADY-encrypted blob (from AESEncryption.encryptPayload).
+ * This function:
+ *   1. Persists the encrypted blob in SQLite for durability.
+ *   2. If offline → returns 'CACHED'.
+ *   3. If online → attempts immediate send; returns 'SENT' or falls back to 'CACHED'.
+ */
+export async function sendOrCache(
+  caseId: string,
+  encryptedBlob: string,
+  triageLevel: 'RED' | 'AMBER' | 'GREEN',
+): Promise<'SENT' | 'CACHED'> {
+  // Always persist first — guarantees no data loss on crash/kill
+  await savePendingPayload({
+    case_id: caseId,
+    encrypted_blob: encryptedBlob,
+    triage_level: triageLevel,
+    created_at: Date.now(),
+  });
+
+  const mode = networkStore.getState().mode;
+  if (mode === 'OFFLINE') return 'CACHED';
+
+  const sent = await _trySend(caseId);
+  return sent ? 'SENT' : 'CACHED';
+}
+
+/**
+ * Convenience wrapper used by screens that have raw protobuf bytes rather than
+ * a pre-encrypted blob. Encrypts internally, then calls sendOrCache.
+ */
 export async function cachePayload(
   caseId: string,
   payloadBytes: Uint8Array,
@@ -25,17 +171,20 @@ export async function cachePayload(
 
   const key = await deriveKey(profile.cnic, deviceId);
   const base64 = Buffer.from(payloadBytes).toString('base64');
-  const encrypted = await encrypt(base64, key);
-  const blob = encodePayload(encrypted);
+  const encryptedBlob = await encryptPayload(base64, key);
 
   await savePendingPayload({
     case_id: caseId,
-    encrypted_blob: blob,
+    encrypted_blob: encryptedBlob,
     triage_level: triageLevel,
     created_at: Date.now(),
   });
 }
 
+/**
+ * Flushes all pending payloads to the server.
+ * Called by the retry loop and by TriageResultScreen after cachePayload.
+ */
 export async function flushQueue(): Promise<void> {
   const mode = networkStore.getState().mode;
   if (mode === 'OFFLINE') return;
@@ -48,13 +197,22 @@ export async function flushQueue(): Promise<void> {
   for (const record of pending) {
     try {
       const key = await deriveKey(profile.cnic, deviceId);
-      const parsed = decodePayload(record.encrypted_blob);
-      const decrypted = await decrypt(parsed.cipher, key, parsed.iv);
-      const payloadBytes = Buffer.from(decrypted, 'base64');
+      const base64 = await decryptPayload(record.encrypted_blob, key);
+      const payloadBytes = Buffer.from(base64, 'base64');
+
+      let token = '';
+      try {
+        token = await getDeviceToken();
+      } catch {
+        // Continue without token
+      }
 
       const response = await fetch(`${API_BASE_URL}/api/v1/cases/ingest`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/octet-stream' },
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: payloadBytes,
       });
 
@@ -75,6 +233,15 @@ export async function flushQueue(): Promise<void> {
   }
 }
 
+/**
+ * Starts the background retry loop. Uses setInterval (60s) to periodically
+ * flush the pending queue when connectivity is available.
+ *
+ * Note: expo-task-manager background tasks require native config in app.json
+ * and top-level TaskManager.defineTask() calls. For reliability in this
+ * implementation we use setInterval which runs while the app is in the
+ * foreground. Background delivery is handled by the next foreground session.
+ */
 export function startRetryLoop(): void {
   if (retryInterval) return;
   retryInterval = setInterval(flushQueue, RETRY_INTERVAL_MS);
@@ -86,3 +253,40 @@ export function stopRetryLoop(): void {
     retryInterval = null;
   }
 }
+
+/**
+ * Returns how many payloads are waiting to be sent and how old the oldest is.
+ * Used by TriageResultScreen to display "X reports queued".
+ */
+export async function getQueueStatus(): Promise<{
+  pending: number;
+  oldestAge: number | null;
+}> {
+  const records = await getPendingPayloads(MAX_ATTEMPTS);
+  if (records.length === 0) return { pending: 0, oldestAge: null };
+  const oldest = records.reduce((min, r) => Math.min(min, r.created_at), Infinity);
+  return { pending: records.length, oldestAge: Date.now() - oldest };
+}
+
+// ── Singleton facade ──────────────────────────────────────────────────────────
+
+/**
+ * Object facade used by TriageResultScreen and other callers that prefer
+ * instance-style access over named imports.
+ *
+ * The `payload` param in `sendOrCache` is accepted for API symmetry with the
+ * spec but is not used — the encrypted blob already contains all payload data.
+ */
+export const transmissionService = {
+  sendOrCache: (
+    caseId: string,
+    _payload: unknown,
+    encryptedBlob: string,
+    triageLevel: 'RED' | 'AMBER' | 'GREEN',
+  ) => sendOrCache(caseId, encryptedBlob, triageLevel),
+  cachePayload,
+  flushQueue,
+  startRetryLoop,
+  stopRetryLoop,
+  getQueueStatus,
+};

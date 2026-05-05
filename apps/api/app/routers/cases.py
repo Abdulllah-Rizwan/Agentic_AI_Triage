@@ -1,5 +1,5 @@
 import hashlib
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -242,7 +242,7 @@ async def claim_case(
     if case.claimed_by_org_id is not None:
         raise HTTPException(status_code=409, detail="Case already claimed by another organization")
 
-    now = datetime.now(timezone.utc)
+    now = datetime.utcnow()
     case.status = CaseStatus.ACKNOWLEDGED
     case.claimed_by_org_id = current_user.org_id
     case.claimed_at = now
@@ -292,7 +292,7 @@ async def resolve_case(
             detail="You can only resolve cases claimed by your organization",
         )
 
-    now = datetime.now(timezone.utc)
+    now = datetime.utcnow()
     case.status = CaseStatus.RESOLVED
     case.resolved_at = now
     await db.commit()

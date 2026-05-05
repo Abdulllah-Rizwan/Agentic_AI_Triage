@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select, text
@@ -16,7 +16,7 @@ _TRIAGE_WEIGHT = {"RED": 3, "AMBER": 2, "GREEN": 1}
 
 
 def _cutoff(days: int) -> datetime:
-    return datetime.now(timezone.utc) - timedelta(days=days)
+    return datetime.utcnow() - timedelta(days=days)
 
 
 def _validate_days(days: int) -> int:
@@ -106,7 +106,7 @@ async def get_timeseries(
         by_date[d][row.level] = row.cnt
 
     # Generate full date range (oldest → today) so gaps appear as zeros
-    today = datetime.now(timezone.utc).date()
+    today = datetime.utcnow().date()
     date_range = [
         (today - timedelta(days=i)).isoformat()
         for i in range(days - 1, -1, -1)

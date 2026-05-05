@@ -15,9 +15,12 @@ web-build/
 # Large model files — download manually, see README.md
 src/assets/models/*.gguf
 
-# Generated FAISS index — built by docs/knowledge-base/build_baseline_index.py
+# Generated knowledge index — built by docs/knowledge-base/build_baseline_index.py
 src/assets/knowledge/*.faiss
 src/assets/knowledge/*.pkl
+src/assets/knowledge/*.bin
+src/assets/knowledge/knowledge_meta.json
+src/assets/knowledge/knowledge_embeddings.json
 
 # Environment
 .env

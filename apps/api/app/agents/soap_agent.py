@@ -31,7 +31,7 @@ def create_soap_agent() -> LlmAgent:
     return LlmAgent(
         name="soap_generator",
         model=os.getenv("CLOUD_LLM", "gemini-2.0-flash"),
-        system_prompt=SOAP_SYSTEM_PROMPT,
+        instruction=SOAP_SYSTEM_PROMPT,
         output_schema=SoapOutput,
         description="Generates a structured SOAP report from a triage payload",
     )

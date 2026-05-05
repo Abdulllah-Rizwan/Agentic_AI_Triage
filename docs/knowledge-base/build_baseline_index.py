@@ -9,11 +9,20 @@ Output goes to apps/mobile/src/assets/knowledge/ — the directory must exist
 before this script is run (see Task 5).  Run it once before first app build,
 and re-run it whenever the seed articles change.
 
+Files written:
+  knowledge_index.faiss        — FAISS IndexFlatIP (Python / server use)
+  knowledge_meta.pkl           — pickle of texts + metadata (Python use)
+  knowledge_meta.json          — ChunkMetadata[] for the mobile JS RAG engine
+  knowledge_embeddings.json    — {data, dims, count} base64 Float32Array (mobile JS)
+  knowledge_embeddings.bin     — raw little-endian float32 binary (canonical spec)
+
 Usage:
     cd docs/knowledge-base
     python build_baseline_index.py
 """
 
+import base64
+import json
 import os
 import pickle
 import sys
@@ -128,18 +137,59 @@ def main() -> None:
 
     # ── write output ──────────────────────────────────────────────────────────
     index_path = os.path.join(OUTPUT_DIR, "knowledge_index.faiss")
-    meta_path  = os.path.join(OUTPUT_DIR, "knowledge_meta.pkl")
+    meta_pkl   = os.path.join(OUTPUT_DIR, "knowledge_meta.pkl")
+    meta_json  = os.path.join(OUTPUT_DIR, "knowledge_meta.json")
+    emb_json   = os.path.join(OUTPUT_DIR, "knowledge_embeddings.json")
+    emb_bin    = os.path.join(OUTPUT_DIR, "knowledge_embeddings.bin")
 
+    # 1. FAISS index (Python / server use)
     faiss.write_index(index, index_path)
-    with open(meta_path, "wb") as f:
+
+    # 2. Pickle (Python use)
+    with open(meta_pkl, "wb") as f:
         pickle.dump({"texts": all_texts, "metadata": all_metadata}, f)
 
-    index_kb = os.path.getsize(index_path) / 1024
-    meta_kb  = os.path.getsize(meta_path)  / 1024
+    # 3. JSON metadata for the mobile JS RAG engine
+    #    Each entry matches the ChunkMetadata interface in LocalRAG.ts
+    js_meta = [
+        {
+            "content":       text,
+            "articleTitle":  m.get("article_title"),
+            "articleUrl":    m.get("article_url"),
+            "articleAuthor": m.get("article_author"),
+            "articleSource": m.get("article_source"),
+        }
+        for text, m in zip(all_texts, all_metadata)
+    ]
+    with open(meta_json, "w", encoding="utf-8") as f:
+        json.dump(js_meta, f, ensure_ascii=False, separators=(",", ":"))
+
+    # 4. Raw float32 binary (canonical spec — little-endian, row-major)
+    #    Shape: (n_chunks, 384) stored as a flat sequence of float32 values.
+    #    vectors is already normalised by faiss.normalize_L2 above.
+    vectors.astype("<f4").tofile(emb_bin)   # "<f4" = little-endian float32
+
+    # 5. Base64-encoded embeddings JSON (mobile JS, no binary loader needed)
+    raw_bytes   = vectors.astype("<f4").tobytes()
+    b64_data    = base64.b64encode(raw_bytes).decode("ascii")
+    emb_payload = {
+        "data":  b64_data,
+        "dims":  384,
+        "count": len(all_texts),
+    }
+    with open(emb_json, "w", encoding="utf-8") as f:
+        json.dump(emb_payload, f, separators=(",", ":"))
+
+    # ── summary ───────────────────────────────────────────────────────────────
+    def kb(path: str) -> str:
+        return f"{os.path.getsize(path) / 1024:.1f} KB"
 
     print(f"\nBaseline index written to {OUTPUT_DIR}")
-    print(f"  knowledge_index.faiss  {index_kb:.1f} KB")
-    print(f"  knowledge_meta.pkl     {meta_kb:.1f} KB")
+    print(f"  knowledge_index.faiss       {kb(index_path)}")
+    print(f"  knowledge_meta.pkl          {kb(meta_pkl)}")
+    print(f"  knowledge_meta.json         {kb(meta_json)}")
+    print(f"  knowledge_embeddings.json   {kb(emb_json)}")
+    print(f"  knowledge_embeddings.bin    {kb(emb_bin)}")
     print(f"\nArticles processed : {len(txt_files)}")
     print(f"Total chunks       : {len(all_texts)}")
     print(f"Embedding dimension: 384")

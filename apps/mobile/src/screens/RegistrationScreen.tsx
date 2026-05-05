@@ -72,7 +72,9 @@ export default function RegistrationScreen({ navigation }: Props) {
     fullName.trim().length >= 2 &&
     PHONE_REGEX.test(phone) &&
     CNIC_REGEX.test(cnic) &&
-    disclaimerChecked;
+    disclaimerChecked &&
+    lat !== null &&   // GPS required — dispatch system is useless without coordinates
+    lng !== null;
 
   async function handleSubmit() {
     if (!isFormValid || saving) return;
@@ -162,6 +164,11 @@ export default function RegistrationScreen({ navigation }: Props) {
         <View style={styles.fieldGroup}>
           <Text style={styles.label}>Location</Text>
           {renderLocationField()}
+          {locationStatus === 'denied' && (
+            <Text style={styles.errorText}>
+              Location is required. Tap "Update Location" to enable GPS, or check your phone settings.
+            </Text>
+          )}
         </View>
 
         <View style={styles.disclaimer}>
