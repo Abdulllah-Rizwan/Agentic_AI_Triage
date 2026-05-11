@@ -62,13 +62,13 @@ try:
     _logfile.flush()
 
     # pydantic-settings reads .env into Python attributes but does NOT write
-    # them back into os.environ.  Google ADK reads GOOGLE_API_KEY directly
+    # them back into os.environ.  LiteLLM reads GROQ_API_KEY directly
     # from os.environ, so we propagate the values here.
     from app.core.config import settings
     import os as _os
-    _os.environ.setdefault("GOOGLE_API_KEY", settings.GOOGLE_API_KEY)
+    _os.environ.setdefault("GROQ_API_KEY", settings.GROQ_API_KEY)
     _os.environ.setdefault("CLOUD_LLM", settings.CLOUD_LLM)
-    _logfile.write(f"GOOGLE_API_KEY propagated (len={len(settings.GOOGLE_API_KEY)})\n")
+    _logfile.write(f"GROQ_API_KEY propagated (len={len(settings.GROQ_API_KEY)})\n")
     _logfile.flush()
 
     worker = celery_app.Worker(

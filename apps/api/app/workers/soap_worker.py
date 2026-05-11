@@ -82,7 +82,7 @@ def generate_soap_task(self, case_id: str):
                     objective=soap_data["objective"],
                     assessment=soap_data["assessment"],
                     plan=soap_data["plan"],
-                    model_used=os.getenv("CLOUD_LLM", "gemini-2.0-flash"),
+                    model_used=os.getenv("CLOUD_LLM", "groq/llama-3.3-70b-versatile"),
                 ))
 
             org_id = str(case.org_id) if case.org_id else None

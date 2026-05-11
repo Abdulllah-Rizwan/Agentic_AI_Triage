@@ -14,9 +14,9 @@ pgvector==0.3.2              # pgvector SQLAlchemy integration
 pydantic==2.9.2
 pydantic-settings==2.5.2
 
-# Google ADK and Gemini
+# Google ADK (agent framework) + LiteLLM for Groq routing
 google-adk
-google-generativeai
+litellm
 
 # Protobuf
 protobuf==5.28.2

@@ -18,9 +18,9 @@ class Settings(BaseSettings):
     # Redis / Celery
     REDIS_URL: str = "redis://localhost:6379/0"
 
-    # Google AI
-    GOOGLE_API_KEY: str
-    CLOUD_LLM: str = "gemini-2.0-flash"
+    # Groq
+    GROQ_API_KEY: str
+    CLOUD_LLM: str = "groq/llama-3.3-70b-versatile"
 
     # Auth
     JWT_SECRET: str
