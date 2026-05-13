@@ -21,7 +21,12 @@ function getAes() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const mod = require('react-native-aes-crypto');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (mod as any).default ?? mod;
+    const Aes = (mod as any).default ?? mod;
+    // In Expo Go the module loads but the native bridge is absent, so native
+    // methods like pbkdf2 are undefined.  Return null so callers fall through
+    // to their dev-mode bypass paths instead of crashing at call time.
+    if (typeof Aes?.pbkdf2 !== 'function') return null;
+    return Aes;
   } catch {
     return null;
   }

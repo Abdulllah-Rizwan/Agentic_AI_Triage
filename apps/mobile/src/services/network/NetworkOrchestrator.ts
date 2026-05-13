@@ -3,6 +3,9 @@ import { networkStore, NetworkMode } from '../../store/networkStore';
 import { CloudLLMAdapter } from '../llm/CloudLLMAdapter';
 import { slmAdapter } from '../llm/SLMAdapter';
 import { LLMAdapter } from '../llm/LLMAdapter.interface';
+import { logger } from '../../utils/logger';
+
+const TAG = 'NetworkOrchestrator';
 
 type ModeChangeCallback = (mode: NetworkMode) => void;
 
@@ -40,7 +43,15 @@ class NetworkOrchestratorClass {
       networkStore.getState().setMode(mode);
       networkStore.getState().setConnected(state.isConnected ?? false);
 
+      logger.info(TAG, `network state`, {
+        mode,
+        type: state.type,
+        isConnected: state.isConnected,
+        isInternetReachable: state.isInternetReachable,
+      });
+
       if (prev !== null && prev !== mode) {
+        logger.info(TAG, `mode changed: ${prev} → ${mode}`);
         this.modeChangeCallbacks.forEach((cb) => cb(mode));
 
         if (prev === 'OFFLINE' && mode !== 'OFFLINE') {
@@ -59,6 +70,8 @@ class NetworkOrchestratorClass {
 
   getLLMAdapter(): LLMAdapter {
     const mode = networkStore.getState().mode;
+    const adapter = mode === 'FULL' ? 'CloudLLM (Gemini)' : 'SLM (Ollama/on-device)';
+    logger.info(TAG, `getLLMAdapter() → ${adapter}`, { mode });
     return mode === 'FULL' ? this.cloudAdapter : slmAdapter;
   }
 

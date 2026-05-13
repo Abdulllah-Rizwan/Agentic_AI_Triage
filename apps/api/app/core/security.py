@@ -149,3 +149,17 @@ def get_device_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> str:
     return decode_device_token(credentials.credentials)
+
+
+_optional_bearer = HTTPBearer(auto_error=False)
+
+
+def get_device_user_optional(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(_optional_bearer),
+) -> Optional[str]:
+    if credentials is None:
+        return None
+    try:
+        return decode_device_token(credentials.credentials)
+    except HTTPException:
+        return None

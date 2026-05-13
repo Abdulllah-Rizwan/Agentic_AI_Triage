@@ -196,16 +196,19 @@ export default function CasesPage() {
                   onClaim={handleClaim}
                   onViewSoap={setSelectedCaseId}
                   isNew={newCaseIds.has(c.id)}
+                  userRole={session?.user?.role}
                 />
               ))
             )}
           </div>
         </div>
 
-        {/* Right column: map */}
-        <div className="w-[40%] overflow-hidden rounded-xl border border-gray-800">
-          <CasesMap cases={cases} onCaseClick={setSelectedCaseId} />
-        </div>
+        {/* Right column: map — hidden while SOAP panel is open to avoid Leaflet z-index conflicts */}
+        {!selectedCaseId && (
+          <div className="w-[40%] overflow-hidden rounded-xl border border-gray-800">
+            <CasesMap cases={cases} onCaseClick={setSelectedCaseId} />
+          </div>
+        )}
       </div>
 
       {/* Case history */}

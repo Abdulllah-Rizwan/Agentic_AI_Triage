@@ -1,7 +1,8 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from pydantic import BaseModel
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -36,27 +37,42 @@ async def register(body: schemas.RegisterRequest, db: AsyncSession = Depends(get
     except ValueError:
         raise HTTPException(status_code=422, detail=f"Invalid org_type: {body.org_type}")
 
+    # Bootstrap: if no ACTIVE orgs exist yet, auto-approve so the first admin can log in
+    active_org_count = await db.scalar(
+        select(func.count(Organization.id)).where(Organization.status == OrgStatus.ACTIVE)
+    )
+    is_first_org = (active_org_count or 0) == 0
+    initial_status = OrgStatus.ACTIVE if is_first_org else OrgStatus.PENDING_APPROVAL
+
     org = Organization(
         name=body.org_name,
         type=org_type,
         access_code=body.access_code,
-        status=OrgStatus.PENDING_APPROVAL,
+        status=initial_status,
     )
     db.add(org)
     await db.flush()
 
+    # First registration becomes the system ADMIN; all subsequent orgs get RESPONDER
+    role = "ADMIN" if is_first_org else "RESPONDER"
+
     user = User(
         email=body.email,
         password_hash=hash_password(body.password),
-        role="ADMIN",
+        role=role,
         org_id=org.id,
     )
     db.add(user)
     await db.commit()
 
+    if is_first_org:
+        message = "Registration successful. Your organization has been automatically approved — you can log in now."
+    else:
+        message = "Registration submitted. Awaiting admin approval before you can log in."
+
     return schemas.RegisterResponse(
         org_id=org.id,
-        message="Registration submitted. Awaiting admin approval before you can log in.",
+        message=message,
     )
 
 
@@ -110,3 +126,63 @@ async def device_register(body: schemas.DeviceRegisterRequest):
         device_token=create_device_token(body.device_id),
         expires_in_days=30,
     )
+
+
+# ── Dev-only helpers (disabled in production) ────────────────────────────────
+
+from app.core.config import settings  # noqa: E402
+
+
+@router.get("/dev/users", include_in_schema=True, tags=["dev"])
+async def dev_list_users(db: AsyncSession = Depends(get_db)):
+    """DEV ONLY — lists all user emails + org status so you can recover forgotten credentials."""
+    if not settings.is_development:
+        raise HTTPException(status_code=404, detail="Not found")
+    rows = (await db.execute(
+        select(User.email, User.role, Organization.name, Organization.status)
+        .join(Organization, User.org_id == Organization.id)
+    )).all()
+    return [
+        {"email": r[0], "role": r[1], "org_name": r[2], "org_status": r[3]}
+        for r in rows
+    ]
+
+
+class DevResetRequest(BaseModel):
+    email: str
+    new_password: str
+
+
+@router.post("/dev/reset-password", include_in_schema=True, tags=["dev"])
+async def dev_reset_password(body: DevResetRequest, db: AsyncSession = Depends(get_db)):
+    """DEV ONLY — resets a user's password without auth (development environments only)."""
+    if not settings.is_development:
+        raise HTTPException(status_code=404, detail="Not found")
+    if len(body.new_password) < 8:
+        raise HTTPException(status_code=422, detail="Password must be at least 8 characters")
+    user = await db.scalar(select(User).where(User.email == body.email))
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.password_hash = hash_password(body.new_password)
+    await db.commit()
+    return {"message": f"Password reset for {body.email}. You can now log in."}
+
+
+class DevSetRoleRequest(BaseModel):
+    email: str
+    role: str  # ADMIN | RESPONDER | VIEWER
+
+
+@router.post("/dev/set-role", include_in_schema=True, tags=["dev"])
+async def dev_set_role(body: DevSetRoleRequest, db: AsyncSession = Depends(get_db)):
+    """DEV ONLY — changes a user's role."""
+    if not settings.is_development:
+        raise HTTPException(status_code=404, detail="Not found")
+    if body.role not in ("ADMIN", "RESPONDER", "VIEWER"):
+        raise HTTPException(status_code=422, detail="role must be ADMIN, RESPONDER, or VIEWER")
+    user = await db.scalar(select(User).where(User.email == body.email))
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.role = body.role
+    await db.commit()
+    return {"message": f"{body.email} is now {body.role}"}

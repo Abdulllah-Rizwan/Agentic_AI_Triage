@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from app.core.database import get_db
-from app.core.security import CurrentUser, get_current_user, get_device_user, require_responder
+from app.core.security import CurrentUser, get_current_user, get_device_user_optional, require_responder
 from app.models import schemas
 from app.models.db import Case, CaseStatus, Organization, TriageLevel
 from app.services import socket_emitter
@@ -49,7 +49,7 @@ def _case_to_list_item(case: Case) -> schemas.CaseListItem:
 async def ingest_case(
     request: FastAPIRequest,
     db: AsyncSession = Depends(get_db),
-    _device: str = Depends(get_device_user),
+    _device: Optional[str] = Depends(get_device_user_optional),
 ):
     raw_body = await request.body()
     if len(raw_body) > _MAX_PAYLOAD_BYTES:

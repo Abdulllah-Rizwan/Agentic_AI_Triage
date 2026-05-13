@@ -120,8 +120,10 @@ async function _trySend(caseId: string): Promise<boolean> {
       return true;
     }
 
+    console.warn(`[Transmission] Ingest rejected: HTTP ${response.status} for case ${caseId}`);
     return false;
-  } catch {
+  } catch (err) {
+    console.error(`[Transmission] _trySend failed for case ${caseId}:`, err);
     return false;
   }
 }
@@ -225,9 +227,11 @@ export async function flushQueue(): Promise<void> {
           completed_at: Date.now(),
         });
       } else {
+        console.warn(`[Transmission] flushQueue: HTTP ${response.status} for case ${record.case_id}`);
         await incrementPayloadAttempts(record.case_id);
       }
-    } catch {
+    } catch (err) {
+      console.error(`[Transmission] flushQueue failed for case ${record.case_id}:`, err);
       await incrementPayloadAttempts(record.case_id);
     }
   }

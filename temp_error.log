@@ -1,135 +1,23 @@
-Android Bundling failed 2690ms index.js (1 module)
- ERROR  Error: Cannot find module 'babel-preset-expo'
-Require stack:
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\index.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\index.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js      
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\jest-worker\build\workers\processChild.js
-
-Make sure that all the Babel plugins and presets you are using
-are defined as dependencies or devDependencies in your package.json
-file. It's possible that the missing plugin is loaded by a preset
-you are using that forgot to add the plugin to its dependencies: you
-can workaround this problem by explicitly adding the missing package
-to your top-level package.json.
-
-    at Module._resolveFilename (node:internal/modules/cjs/loader:1420:15)
-    at resolve (node:internal/modules/helpers:163:19)
-    at tryRequireResolve (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:128:11)
-    at resolveStandardizedNameForRequire (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:162:19)
-    at resolveStandardizedName (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:183:12)        
-    at loadPreset (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:68:7)
-    at loadPreset.next (<anonymous>)
-    at createDescriptor (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:140:16)
-    at createDescriptor.next (<anonymous>)
-    at evaluateSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:251:28)
-    at C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:31:34
-    at Array.map (<anonymous>)
-    at gensync.sync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:31:22)
-    at gensync.all (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:210:24)
-    at Generator.next (<anonymous>)
-    at createDescriptors (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:102:41)
-    at createDescriptors.next (<anonymous>)
-    at createPresetDescriptors (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:96:17)    
-    at createPresetDescriptors.next (<anonymous>)
-    at C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\gensync-utils\functional.js:22:27
-    at Generator.next (<anonymous>)
-    at mergeChainOpts (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:350:34)
-    at mergeChainOpts.next (<anonymous>)
-    at chainWalker (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:316:14)
-    at chainWalker.next (<anonymous>)
-    at loadFileChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:191:24)
-    at loadFileChain.next (<anonymous>)
-    at mergeExtendsChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:328:28)
-    at mergeExtendsChain.next (<anonymous>)
-    at chainWalker (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:312:20)
-    at chainWalker.next (<anonymous>)
-    at buildRootChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:56:36)
-    at buildRootChain.next (<anonymous>)
-    at loadPrivatePartialConfig (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\partial.js:72:62)
-    at loadPrivatePartialConfig.next (<anonymous>)
-    at loadFullConfig (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\full.js:36:46)
-    at loadFullConfig.next (<anonymous>)
-    at transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\transform.js:20:44)
-    at transform.next (<anonymous>)
-    at evaluateSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:251:28)
-    at sync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:89:14)
-    at stopHiding - secret - don't use this - v1 (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\errors\rewrite-stack-trace.js:47:12)
-    at Object.transformSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\transform.js:40:76)
-    at parseWithBabel (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:75:18)
-    at transformSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:64:12)
-    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\babel-transformer.js:127:58)
-    at transformJSWithBabel (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:468:47)
-    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:583:12)
-    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js:178:19)
-Unable to resolve asset "./src/assets/icon.png" from "icon" in your app.json or app.config.js
-Android Bundling failed 12ms index.js (1 module)
- ERROR  Error: Cannot find module 'babel-preset-expo'
-Require stack:
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\index.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\index.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js      
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.js
-- C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\jest-worker\build\workers\processChild.js
-
-Make sure that all the Babel plugins and presets you are using
-are defined as dependencies or devDependencies in your package.json
-file. It's possible that the missing plugin is loaded by a preset
-you are using that forgot to add the plugin to its dependencies: you
-can workaround this problem by explicitly adding the missing package
-to your top-level package.json.
-
-    at Module._resolveFilename (node:internal/modules/cjs/loader:1420:15)
-    at resolve (node:internal/modules/helpers:163:19)
-    at tryRequireResolve (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:128:11)
-    at resolveStandardizedNameForRequire (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:162:19)
-    at resolveStandardizedName (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:183:12)        
-    at loadPreset (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\files\plugins.js:68:7)
-    at loadPreset.next (<anonymous>)
-    at createDescriptor (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:140:16)
-    at createDescriptor.next (<anonymous>)
-    at evaluateSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:251:28)
-    at C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:31:34
-    at Array.map (<anonymous>)
-    at gensync.sync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:31:22)
-    at gensync.all (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:210:24)
-    at Generator.next (<anonymous>)
-    at createDescriptors (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:102:41)
-    at createDescriptors.next (<anonymous>)
-    at createPresetDescriptors (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-descriptors.js:96:17)    
-    at createPresetDescriptors.next (<anonymous>)
-    at C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\gensync-utils\functional.js:22:27
-    at Generator.next (<anonymous>)
-    at mergeChainOpts (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:350:34)
-    at mergeChainOpts.next (<anonymous>)
-    at chainWalker (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:316:14)
-    at chainWalker.next (<anonymous>)
-    at loadFileChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:191:24)
-    at loadFileChain.next (<anonymous>)
-    at mergeExtendsChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:328:28)
-    at mergeExtendsChain.next (<anonymous>)
-    at chainWalker (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:312:20)
-    at chainWalker.next (<anonymous>)
-    at buildRootChain (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\config-chain.js:56:36)
-    at buildRootChain.next (<anonymous>)
-    at loadPrivatePartialConfig (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\partial.js:72:62)
-    at loadPrivatePartialConfig.next (<anonymous>)
-    at loadFullConfig (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\config\full.js:36:46)
-    at loadFullConfig.next (<anonymous>)
-    at transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\transform.js:20:44)
-    at transform.next (<anonymous>)
-    at evaluateSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:251:28)
-    at sync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\gensync\index.js:89:14)
-    at stopHiding - secret - don't use this - v1 (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\errors\rewrite-stack-trace.js:47:12)
-    at Object.transformSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\@babel\core\lib\transform.js:40:76)
-    at parseWithBabel (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:75:18)
-    at transformSync (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:64:12)
-    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\babel-transformer.js:127:58)
-    at transformJSWithBabel (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:468:47)
-    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:583:12)
-    at Object.transform (C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\mobile\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js:178:19)
+Android Bundled 27426ms index.js (1325 modules)
+ LOG  [INFO] [NetworkOrchestrator] network state {"mode":"FULL","type":"wifi","isConnected":true,"isInternetReachable":true}
+ LOG  [INFO] [NetworkOrchestrator] network state {"mode":"FULL","type":"wifi","isConnected":true,"isInternetReachable":true}
+ LOG  [INFO] [NetworkOrchestrator] network state {"mode":"FULL","type":"wifi","isConnected":true,"isInternetReachable":true}
+ LOG  [INFO] [SLMAdapter] dev mode — will route to Ollama {"url":"http://192.168.18.34","model":"llama3.2:1b"}
+ WARN  [RAG] No knowledge index found — queries will return empty.
+ LOG  [INFO] [NetworkOrchestrator] getLLMAdapter() → CloudLLM (Gemini) {"mode":"FULL"}
+ LOG  [INFO] [CloudLLM] chat() called {"model":"gemini-2.0-flash","turns":1}
+ DEBUG  [DEBUG] [CloudLLM] attempt 1/3
+ ERROR  [ERROR] [CloudLLM] attempt 1 failed {"error":"Error: [GoogleGenerativeAI Error]: Error 
+fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent: [429 ] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 35.42308269s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\",\"quotaId\":\"GenerateContentInputTokensPerModelPerMinute-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.0-flash\",\"location\":\"global\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.0-flash\",\"location\":\"global\"}}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"35s\"}]","status":429,"message":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent: [429 ] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, 
+model: gemini-2.0-flash\nPlease retry in 35.42308269s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\",\"quotaId\":\"GenerateContentInputTokensPerModelPerMinute-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.0-flash\",\"location\":\"global\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.0-flash\",\"location\":\"global\"}}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"35s\"}]"}
+ DEBUG  [DEBUG] [CloudLLM] retrying in 1000ms
+ DEBUG  [DEBUG] [CloudLLM] attempt 2/3
+ ERROR  [ERROR] [CloudLLM] attempt 2 failed {"error":"Error: [GoogleGenerativeAI Error]: Error 
+fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent: [429 ] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 33.563700149s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.0-flash\",\"location\":\"global\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\",\"quotaId\":\"GenerateContentInputTokensPerModelPerMinute-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"33s\"}]","status":429,"message":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent: [429 ] You exceeded your current quota, please check your plan and 
+billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota 
+exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 33.563700149s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.0-flash\",\"location\":\"global\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\",\"quotaId\":\"GenerateContentInputTokensPerModelPerMinute-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"33s\"}]"}
+ DEBUG  [DEBUG] [CloudLLM] retrying in 2000ms
+ DEBUG  [DEBUG] [CloudLLM] attempt 3/3
+ ERROR  [ERROR] [CloudLLM] attempt 3 failed {"error":"Error: [GoogleGenerativeAI Error]: Error 
+fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent: [429 ] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 31.30039547s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\",\"quotaId\":\"GenerateContentInputTokensPerModelPerMinute-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.0-flash\",\"location\":\"global\"}}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"31s\"}]","status":429,"message":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent: [429 ] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/d2.0-flash:generateContent: [429 ] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, 
+model: gemini-2.0-flash\nPlease retry in 31.30039547s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\",\"quotaId\":\"GenerateContentInputTokensPerModelPerMinute-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-2.0-flash\"}},{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-2.0-flash\",\"location\":\"global\"}}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"31s\"}]"}

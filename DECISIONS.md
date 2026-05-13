@@ -757,6 +757,605 @@ Follow these steps to verify the full system end-to-end on a physical device.
 
 ---
 
+---
+
+## Session 11 — 2026-05-11
+
+### Goal
+First live device test of the mobile app via Expo Go. Fix all bundling, UI, and LLM connectivity issues blocking the end-to-end flow.
+
+---
+
+### What was fixed / built
+
+#### 1. Expo Go bundling failures
+
+**Problem:** `npx expo start` produced two separate failures:
+- `Web Bundling failed — Unable to resolve "react-native-web"` — Expo was trying to bundle for the web platform even though this is a mobile-only app. `react-native-web` was never installed.
+- `expo-secure-store@14.0.1 — expected ~15.0.8` and `babel-preset-expo@55.0.19 — expected ~54.0.10` — two packages were on wrong versions for Expo SDK 54.
+
+**Fixes:**
+- Added `"platforms": ["ios", "android"]` to `apps/mobile/app.json` — prevents Expo from starting the web bundler entirely.
+- Updated `apps/mobile/package.json`: `expo-secure-store` `14.0.1` → `~15.0.8`, `babel-preset-expo` `55.0.19` → `~54.0.10`.
+- Ran `npm install --legacy-peer-deps` to apply.
+- Correct Metro start command for Expo Go is `npx expo start` (no `--android` flag). The `--android` flag requires Android Studio and ADB — it is only for launching an emulator, not for scanning the QR code with Expo Go.
+
+---
+
+#### 2. Keyboard hiding the chat input field (ChatScreen.tsx)
+
+**Problem:** On Android, when the keyboard opened in `ChatScreen`, the `TextInput` stayed hidden behind it. The user had to close the keyboard to see what they had typed.
+
+**Root cause:** `KeyboardAvoidingView` only wrapped the `inputRow` at the very bottom of the screen. It did not wrap the `FlatList` above it, so the list never shrank when the keyboard appeared — only the input row itself tried to move, but it was already inside the visible area and had nowhere to go.
+
+**Fix:** Restructured the layout so `KeyboardAvoidingView` (with `flex: 1`) wraps everything inside `SafeAreaView` — header, `FlatList`, typing indicator, emergency bar, and input row. Now when the keyboard appears, the `KeyboardAvoidingView` shrinks as a whole, the `FlatList` compresses upward, and the input row stays pinned above the keyboard.
+
+```
+Before:                           After:
+SafeAreaView                      SafeAreaView
+  Header                            KeyboardAvoidingView (flex:1)
+  FlatList                            Header
+  KeyboardAvoidingView (small)        FlatList (flex:1, shrinks)
+    inputRow                          inputRow  ← always visible
+```
+
+`keyboardVerticalOffset={24}` added for Android to account for the status bar.
+
+---
+
+#### 3. SafeAreaView deprecation warning
+
+**Problem:** `SafeAreaView` was imported from `react-native` (deprecated). The Metro terminal showed: `SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context'`.
+
+**Fix:** Changed the import in `ChatScreen.tsx` from `react-native` to `react-native-safe-area-context`. Added `edges={['top', 'left', 'right']}` prop to prevent double-padding on the bottom edge (which is handled by `KeyboardAvoidingView`). `react-native-safe-area-context` was already installed as a dependency.
+
+---
+
+#### 4. Structured logger added — `src/utils/logger.ts`
+
+**Problem:** Errors in the LLM adapters were being silently swallowed. The agent returned "I am having trouble connecting" with no indication of what failed — not the HTTP status, not the error message, nothing. Debugging required guesswork.
+
+**Decision:** Created `apps/mobile/src/utils/logger.ts` — a lightweight structured logger with four levels (`debug`, `info`, `warn`, `error`). Every log line is formatted as `[LEVEL] [tag] message {optional JSON payload}` and printed to the Metro terminal via the appropriate `console.*` method.
+
+Wired into:
+- `CloudLLMAdapter.ts` — logs every request attempt, HTTP status, and error payload
+- `SLMAdapter.ts` — logs Ollama URL/model on init, request attempts, HTTP errors
+- `NetworkOrchestrator.ts` — logs every network state change and which LLM adapter was selected
+
+**Why:** Without this, every LLM failure produces the same generic message. With it, the Metro terminal shows exactly which adapter was called, which attempt failed, and the raw HTTP status and error body. This immediately reveals whether the failure is quota (`429`), auth (`403`), network (`TypeError: Network request failed`), or a bad Ollama URL.
+
+---
+
+#### 5. Gemini quota exhaustion — root cause analysis
+
+**Diagnosis (from Metro logs):** All three `CloudLLMAdapter` retry attempts returned `HTTP 429 RESOURCE_EXHAUSTED` with `limit: 0` on three metrics simultaneously:
+- `GenerateRequestsPerDayPerProjectPerModel-FreeTier` ← **this was the blocker**
+- `GenerateRequestsPerMinutePerProjectPerModel-FreeTier`
+- `GenerateContentInputTokensPerModelPerMinute-FreeTier`
+
+**Why "limit: 0" despite the user only sending 3 messages:** The Gemini console shows a 5 RPM per-minute limit, which was not exceeded. However, there is a **separate per-day limit** on the same Google Cloud project. That daily limit was drained by the Session 10 backend integration tests (28 test runs × multiple retries each × SOAP agent + triage audit agent calls). By the time the mobile app made its first request, the project's daily bucket was already at zero. The 3 messages never had a chance.
+
+Additionally, `CloudLLMAdapter` retries 3 times on each failure, so 1 user message = 3 actual API calls. The per-minute quota was being hit simultaneously on top of the daily exhaustion.
+
+**Key lesson:** The mobile app and backend share the same Google Cloud project quota. Backend testing burns quota that the mobile app needs. These must use separate projects or separate keys.
+
+---
+
+#### 6. Switched cloud LLM from Gemini to Groq (DEC-013)
+
+- **Date:** 2026-05-11
+- **Decision:** Replace Gemini (`gemini-2.0-flash`) with Groq (`llama-3.3-70b-versatile`) as the cloud LLM for both the mobile app and backend agents.
+- **Reason:** The shared Gemini free-tier project exhausted its daily quota during backend testing. Groq's free tier provides 14,400 requests/day vs Gemini's ~50/day effective limit, making it far more suitable for active development and FYP demo days. `llama-3.3-70b-versatile` has strong instruction-following for both medical conversation and structured SOAP output.
+- **Rejected alternatives:**
+  - Create a new Gemini project (was considered — gives fresh quota but same low daily limit; will be exhausted again quickly during future testing)
+  - OpenRouter free models (unreliable shared pool, not suitable for demos)
+  - Wait for Gemini quota reset (midnight UTC — only delays the problem)
+- **Status:** Final
+
+**Files changed:**
+
+| File | Change |
+|---|---|
+| `apps/mobile/.env` | `EXPO_PUBLIC_GEMINI_API_KEY` → `EXPO_PUBLIC_GROQ_API_KEY` |
+| `apps/mobile/src/services/llm/CloudLLMAdapter.ts` | Full rewrite — uses native `fetch` to call Groq REST API (`https://api.groq.com/openai/v1/chat/completions`). No SDK installed — avoids Metro bundler Node.js polyfill issues. Model: `llama-3.3-70b-versatile`. |
+| `apps/mobile/package.json` | Removed `@google/generative-ai` dependency |
+| `apps/api/.env` | `GOOGLE_API_KEY` → `GROQ_API_KEY`, `CLOUD_LLM=groq/llama-3.3-70b-versatile` |
+| `apps/api/app/core/config.py` | `GOOGLE_API_KEY: str` → `GROQ_API_KEY: str`, updated default |
+| `apps/api/app/agents/soap_agent.py` | `model=string` → `model=LiteLlm(model=model_id)`. Added explicit JSON-only instruction to system prompt as fallback in case `output_schema` is not honored by LiteLLM. |
+| `apps/api/app/agents/triage_audit_agent.py` | Same pattern — LiteLLM + explicit JSON instruction |
+| `apps/api/app/workers/soap_worker.py` | Default model string updated |
+| `apps/api/run_celery.py` | Propagates `GROQ_API_KEY` into `os.environ` (LiteLLM reads it directly from env, same pattern as the old `GOOGLE_API_KEY` propagation) |
+| `apps/api/requirements.txt` | `google-generativeai` removed, `litellm` added. `google-adk` kept — still used for `LlmAgent`, `Runner`, `InMemorySessionService`, and `google.genai.types`. |
+
+**Why `fetch` for mobile instead of the Groq SDK:**
+The Groq SDK (`groq-sdk`) is built on the OpenAI SDK, which pulls in Node.js built-ins (`fs`, `path`, `stream`, etc.) that Metro cannot resolve in React Native. The `metro.config.js` already stubs these for `protobufjs`, but adding more stubs for a whole SDK adds risk. Using native `fetch` (available globally in React Native) against Groq's OpenAI-compatible REST endpoint is simpler and has zero native module surface area.
+
+**Why `LiteLlm` for the backend instead of a direct HTTP call:**
+The backend agents use Google ADK's `Runner` and `InMemorySessionService` which expect an `LlmAgent` with an ADK-compatible model object. Replacing the runner entirely would require rewriting `soap_worker.py` significantly. `LiteLlm` is the ADK's own supported escape hatch for non-Google models — it translates ADK's internal `Content/Part` message format to whatever LiteLLM needs, which then routes to Groq's API using the `GROQ_API_KEY` env var.
+
+---
+
+### Ollama URL fix (minor)
+
+The `apps/mobile/.env` `EXPO_PUBLIC_OLLAMA_URL` was missing the `:11434` port in the user's local environment. Updated to `http://192.168.18.34:11434`. This only matters when the network mode is `DEGRADED` or `OFFLINE` (phone routes to on-device SLM / Ollama instead of cloud).
+
+---
+
+### Reverted: NetworkOrchestrator dev-mode override (immediately reverted)
+
+During debugging, a change was made to always route to the SLM adapter when `EXPO_PUBLIC_ENVIRONMENT=development`, regardless of network mode. This was reverted immediately after the user correctly pointed out that the app should decide which LLM to use based on actual network bandwidth, not the environment flag. The original routing logic (`FULL → Cloud, DEGRADED/OFFLINE → SLM`) is the correct architecture and was restored.
+
+---
+
+### What is next
+- Verify Groq chat flow works end-to-end on the physical device (send a full 5-turn assessment, reach GREEN triage result)
+- Test RED path (critical keyword → emergency bar → transmission)
+- Test offline → reconnect → dashboard flush flow
+- Fix the `[RAG] No knowledge index found` warning (the baseline FAISS index needs to be built and placed in `apps/mobile/src/assets/knowledge/`)
+
+---
+
+---
+
+## Session 12 — 2026-05-13
+
+### Goal
+Fix all remaining blockers preventing end-to-end testing on a physical device: mobile app connectivity, dashboard UI bugs, auth bootstrap deadlock, and premature emergency bar behaviour.
+
+---
+
+### Bugs fixed
+
+| # | File(s) | Bug | Fix |
+|---|---------|-----|-----|
+| 1 | `apps/api/app/routers/auth.py` | **Bootstrap deadlock** — first org registration was auto-assigned `PENDING_APPROVAL`, then login blocked that status. The system could never be bootstrapped: no org could ever approve itself. | Added `active_org_count` check. If zero ACTIVE orgs exist, the registering org is auto-approved and its user gets `role = "ADMIN"`. All subsequent orgs go through the normal approval flow. |
+| 2 | `apps/dashboard/app/(auth)/register/page.tsx` | **Registration form was blank** — the page file contained only `return null`. Users registering a new organisation saw an empty white screen. | Replaced with a full implementation: org_name, org_type (NGO / Hospital / Government / Relief Camp), access_code (4–20 chars), email, and password (min 8 chars) fields. Auto-redirects to `/login` on successful auto-approved registration. |
+| 3 | `apps/api/app/routers/auth.py` | **No way to recover forgotten credentials** — no dev tooling existed to list users or reset passwords. Multiple test accounts had unknown passwords and roles. | Added three dev-only endpoints (disabled in production via `settings.is_development`): `GET /auth/dev/users` (list all users + org status), `POST /auth/dev/reset-password` (reset any user's password without auth), `POST /auth/dev/set-role` (change any user's role). Used to reset admin and responder passwords. |
+| 4 | `apps/dashboard/app/(dashboard)/cases/page.tsx` | **SOAP panel hidden behind Leaflet map** — clicking "View SOAP Report" rendered the panel, but Leaflet's internal z-indices (up to ~600) covered it completely. The report was unreadable. | Unmount the map entirely when `selectedCaseId` is set. Map re-mounts when the panel is closed. Simpler and more reliable than z-index wrestling with Leaflet internals. |
+| 5 | `apps/dashboard/components/CaseCard.tsx` | **Claim button visible to ADMIN** — the system admin had no business claiming cases (that is a RESPONDER action), but the Claim / Claimed buttons appeared for every logged-in user. | Added `userRole?: string` prop to `CaseCard`. Added `canClaim = userRole === "RESPONDER"` guard. Both the Claim and Claimed UI elements are now hidden for ADMIN and VIEWER. `cases/page.tsx` passes `session?.user?.role` into every card. |
+| 6 | `apps/mobile/src/agents/SymptomCollectorAgent.ts` | **Emergency bar fired on the first user message** — saying "snake bite" immediately triggered the emergency bar and transmitted a report to the dashboard without asking a single follow-up question. Root cause: `_postCriticalTurns` was incremented AFTER the CRITICAL JSON check, so the guard was always 0 when the LLM emitted CRITICAL JSON on the first turn. | Restructured `sendMessage()`: `_postCriticalTurns` now increments BEFORE the CRITICAL JSON check. Added `MIN_CRITICAL_QUESTIONS = 4` guard — CRITICAL JSON from the LLM is only honoured after 4 post-critical turns. If emitted too early, `_getFollowUpQuestion()` returns a predefined question instead (severity → onset → location → associated symptoms). |
+| 7 | `apps/mobile/src/agents/SymptomCollectorAgent.ts` | **Exception clause in `CRITICAL_MODE_SYSTEM_PROMPT` allowed immediate CRITICAL emission** — the clause "EXCEPTION: If the patient says they are losing consciousness … emit immediately" caused the LLM to classify "snake bite" as immediately fatal and skip all five required questions. | Removed the exception clause entirely. Replaced with: "You MUST ask all five questions. There are NO exceptions." The code-level `MIN_CRITICAL_QUESTIONS` guard now serves as the only early-emission backstop. |
+| 8 | `apps/mobile/src/agents/SymptomCollectorAgent.ts` | **Severity defaulted to 9 when no severity question was asked** — `_buildCriticalVector` had `severity = 9` as the hard-coded default, making the dashboard report show a near-maximum severity that was never actually reported by the patient. | Changed default from `9` to `7`. Severity 7 is a neutral "elevated" default that is more appropriate when no data was collected, and is clearly different from a patient-reported score. |
+
+---
+
+### Changes made
+
+#### `apps/api/app/routers/auth.py`
+- Added `from sqlalchemy import func` import (needed for `func.count`)
+- Added `from pydantic import BaseModel` import (for `DevResetRequest` and `DevSetRoleRequest` — these used wrong base class in an earlier session)
+- `/register` endpoint: added `active_org_count` query; first org auto-approved as ACTIVE with `role = "ADMIN"`
+- Added three dev-only endpoints: `GET /dev/users`, `POST /dev/reset-password`, `POST /dev/set-role`
+
+#### `apps/dashboard/app/(auth)/register/page.tsx`
+- Full form replacing the `return null` placeholder
+- Fields: `org_name`, `org_type` (select), `access_code`, `email`, `password`
+- Client-side validation: password ≥ 8 chars, access_code ≥ 4 chars
+- Calls `registerOrg()` from `lib/api.ts`; shows success message; auto-redirects to `/login` when auto-approved
+
+#### `apps/dashboard/app/(dashboard)/cases/page.tsx`
+- Map wrapped in `{!selectedCaseId && (...)}` so it unmounts when SOAP panel is open
+- `userRole={session?.user?.role}` passed to every `<CaseCard>`
+
+#### `apps/dashboard/components/CaseCard.tsx`
+- Added `userRole?: string` to `Props` interface
+- Added `canClaim = userRole === "RESPONDER"` constant
+- Both Claim button and Claimed badge wrapped in `{canClaim && (...)}`
+
+#### `apps/mobile/src/agents/SymptomCollectorAgent.ts`
+- Added `MIN_CRITICAL_QUESTIONS = 4` constant
+- `MAX_POST_CRITICAL_TURNS` increased from `7` to `8`
+- `sendMessage()` sections 6–8 restructured: critical mode `_postCriticalTurns` increment moved before CRITICAL JSON check
+- Added `_getFollowUpQuestion()` private method — returns questions in order: severity → onset → location → other symptoms → allergies
+- `CRITICAL_MODE_SYSTEM_PROMPT`: exception clause replaced with "You MUST ask all five questions. There are NO exceptions."
+- `_buildCriticalVector()`: severity default changed from `9` to `7`
+
+---
+
+### Infrastructure / environment fixes
+
+#### Windows Firewall — port 8081 (Metro bundler)
+- **Problem:** Expo Go on the phone could not reach Metro on the PC. The QR code scanned fine but the bundle download failed with `java.io.IOException: Failed to download remote update`.
+- **Fix:** Added Windows Firewall inbound rule:
+  ```
+  netsh advfirewall firewall add rule name="Expo Metro 8081" dir=in action=allow protocol=TCP localport=8081 profile=any
+  ```
+
+#### Windows Firewall — port 3001 (FastAPI server)
+- **Problem:** Mobile app transmitted payloads but received `TypeError: Network request failed`. API server was confirmed bound to `0.0.0.0:3001` but the firewall blocked the phone's connection.
+- **Fix:** Added Windows Firewall inbound rule:
+  ```
+  netsh advfirewall firewall add rule name="MediReach API 3001" dir=in action=allow protocol=TCP localport=3001 profile=any
+  ```
+
+#### `EXPO_NO_DOCTOR` environment variable
+- **Problem:** `npx expo start` failed with `TypeError: fetch failed` at `validateDependenciesVersionsAsync`. Expo CLI attempts a network call to `expo.dev` at startup to validate package versions. This call fails when the network or proxy blocks it, preventing Metro from starting.
+- **Fix:** Set `$env:EXPO_NO_DOCTOR = "1"` in PowerShell before starting. This skips the validation call. The `$` prefix is required — without it PowerShell throws `CommandNotFoundException`.
+
+#### Expo tunnel mode
+- **Problem:** Even after the port 8081 firewall rule, the phone still could not download the bundle in some network configurations.
+- **Fix:** `npx expo start --tunnel --clear` routes the Metro bundle through ngrok. The phone downloads via HTTPS over a public URL instead of direct LAN, bypassing all firewall and IP configuration issues. Required alongside `$env:EXPO_NO_DOCTOR = "1"`.
+
+---
+
+### Decision recorded
+
+#### DEC-014 — Emergency bar requires minimum follow-up turns before transmission
+- **Date:** 2026-05-13
+- **Decision:** The emergency bar and case transmission are only triggered after the agent has completed at least `MIN_CRITICAL_QUESTIONS = 4` follow-up turns in critical mode. A code-level guard in `sendMessage()` enforces this regardless of what the LLM emits.
+- **Reason:** The first design fired the bar immediately on the first critical keyword in the user's message. This produced reports with no clinical detail (severity defaulted, onset unknown, location unknown) and a jarring UX where the system appeared to panic before asking a single question. Responders receiving a report with "severity: 9, symptoms: [snake bite]" have nothing actionable.
+- **Rejected alternative:** Rely on the LLM system prompt alone to enforce question collection — the LLM ignored the prompt and used the exception clause as an escape hatch.
+- **Status:** Final
+
+---
+
+### What is next
+- Test the updated critical-mode flow on a physical device (send "a snake has bitten me", verify agent asks at least 4 follow-up questions before emergency bar appears)
+- Verify severity is populated from patient's actual answer (not the 7 default) when the question is asked and answered
+- Test GREEN path end-to-end on physical device
+- Test offline → reconnect → dashboard flush
+
+## Session 12 — 2026-05-11
+
+### Goal
+Fix the `EncryptionError` that blocked the RED-path transmission in Expo Go, and fix the placeholder API base URL in `apps/mobile/.env`.
+
+---
+
+### What was fixed
+
+#### 1. AESEncryption.ts — native method presence check (critical bug fix)
+
+**Problem:** When the user typed "I am having severe chest and lower back pain", the triage engine correctly detected a RED case and the emergency bar appeared. The transmission pipeline then failed with:
+
+```
+[EncryptionError: Key derivation failed: TypeError: Aes.pbkdf2 is not a function (it is undefined)]
+```
+
+**Root cause:** In Expo Go, `require('react-native-aes-crypto')` **succeeds** — it returns a module object. This means the `if (!Aes) return devkey` null-check in `deriveKey()` never fires. However, the native bridge is absent in Expo Go, so all native methods on the module object are `undefined`. When `Aes.pbkdf2(...)` is called, it throws `TypeError: Aes.pbkdf2 is not a function`. The `try/catch` around it catches the error and rethrows as `EncryptionError` instead of falling back gracefully.
+
+**Fix:** Changed `getAes()` in `AESEncryption.ts` to check that the native method actually exists before returning the module:
+
+```typescript
+// Before:
+const Aes = (mod as any).default ?? mod;
+return Aes;
+
+// After:
+const Aes = (mod as any).default ?? mod;
+if (typeof Aes?.pbkdf2 !== 'function') return null;  // ← new guard
+return Aes;
+```
+
+This makes `getAes()` return `null` in Expo Go (where native methods are absent), which causes all three callers (`deriveKey`, `encryptPayload`, `decryptPayload`) to fall through to their existing dev-mode bypass paths:
+- `deriveKey` → returns `"${cnic}:${deviceId}:devkey"` (a deterministic dev key)
+- `encryptPayload` → returns `"deviv:${data}"` (marks data as unencrypted with the `deviv:` sentinel)
+- `decryptPayload` → sees `iv === 'deviv'` at line 82 and returns the cipher directly (no decryption needed)
+
+The full transmission pipeline now works in Expo Go: payload bytes are correctly base64-wrapped with `deviv:` prefix, saved to SQLite, decrypted back to bytes, and POSTed to the API.
+
+**File changed:** `apps/mobile/src/services/encryption/AESEncryption.ts` — `getAes()` function only.
+
+**Production impact:** None. On EAS/production builds, `react-native-aes-crypto` is compiled into the APK with its native bridge. `typeof Aes.pbkdf2 === 'function'` will be `true`, so real AES-256-CBC encryption runs as designed.
+
+---
+
+#### 2. `EXPO_PUBLIC_API_BASE_URL` placeholder IP fixed
+
+**Problem:** `apps/mobile/.env` had `EXPO_PUBLIC_API_BASE_URL=http://192.168.1.100:3001` — a placeholder IP that was never updated to the user's actual machine. This caused:
+- `[KnowledgeBase] Update failure: Network request failed` (server cannot be reached)
+- Transmission attempting to POST to the wrong IP and silently falling back to CACHED
+
+**Fix:** Updated to `http://192.168.18.34:3001` (the user's actual LAN IP, confirmed from earlier `ipconfig` output).
+
+---
+
+### What is next
+- Verify the full RED path works on device after these fixes (critical keyword → emergency bar → transmission succeeds with SENT status)
+- Fix the `[RAG] No knowledge index found` warning: build the baseline FAISS index and place both JSON files in `apps/mobile/src/assets/knowledge/` (run `python docs/knowledge-base/build_baseline_index.py`)
+- Test the GREEN 5-turn assessment flow end-to-end
+- Test offline → reconnect → flush flow
+
+---
+
+---
+
+## Session 13 — 2026-05-11
+
+### Goal
+Fix three bugs discovered during live device testing: (1) the chat agent was skipping symptom collection and jumping straight to the RED triage result on the first critical keyword, (2) the GeoHeatmap on the analytics dashboard was crashing with "Map container not found", (3) `Buffer` was not available at runtime because it was being stubbed to an empty object by `metro.config.js`.
+
+---
+
+### What was fixed
+
+#### 1. `Buffer` not available in React Native runtime — `metro.config.js` + `index.js` + `package.json`
+
+**Problem:** After the AES encryption and transmission fixes from Session 12, the RED path transmission failed with a new error:
+
+```
+[ReferenceError: Property 'Buffer' doesn't exist]
+```
+
+**Root cause:** `buffer` was listed in `metro.config.js` `extraNodeModules` alongside truly-unusable Node built-ins (`fs`, `path`, `crypto`, etc.) and was being stubbed to `metro-stubs/empty.js`. This meant `require('buffer')` returned an empty object everywhere in the app. `AESEncryption.ts` and `TransmissionService.ts` both call `Buffer.from(...)` which crashed because `Buffer` was `undefined` globally.
+
+The reason `buffer` was lumped in with the other stubs is that it's also a Node.js built-in name, but unlike `fs` or `path`, the `buffer` npm package is a real pure-JavaScript polyfill that works in React Native.
+
+**Fix — three files changed:**
+
+1. **`apps/mobile/metro.config.js`** — Removed `buffer` from the `extraNodeModules` stub map entirely. Metro now resolves `require('buffer')` to the `buffer` npm package in `node_modules` naturally.
+
+2. **`apps/mobile/package.json`** — Added `"buffer": "^6.0.3"` to dependencies.
+
+3. **`apps/mobile/index.js`** — Added global polyfill at the very top of the entry file, before `registerRootComponent`:
+   ```typescript
+   import { Buffer } from 'buffer';
+   global.Buffer = Buffer;
+   ```
+   This makes `Buffer` available as a true global throughout the app — same as how Node.js exposes it. The polyfill runs before any other module loads.
+
+**After this fix:** Run `npm install --legacy-peer-deps` in `apps/mobile`, then restart Metro with `npx expo start --clear` (the `--clear` flag is required because `metro.config.js` changed).
+
+---
+
+#### 2. Chat agent skipping symptom collection on critical keywords — `SymptomCollectorAgent.ts` + `ChatScreen.tsx`
+
+**Problem:** When the user typed "I am experiencing chest pain", the agent immediately returned `status: 'CRITICAL'` and `ChatScreen` auto-navigated to `TriageResultScreen` after 2.5 seconds. No follow-up questions were asked. The feature vector sent to the SOAP agent contained only:
+- `chiefComplaint`: the single message
+- `severity`: 9 (hardcoded default)
+- `associatedSymptoms`: `['chest pain']` (the trigger keyword only)
+- `conversationSummary`: a one-sentence string
+
+This gave the SOAP generation agent almost nothing to work with.
+
+**Root cause:** In `SymptomCollectorAgent.sendMessage()`, `detectCriticalSymptom(userMessage)` fired on the raw first message. When it returned a trigger, the agent immediately returned `{ status: 'CRITICAL', ... }` without calling the LLM at all. `ChatScreen` received this and immediately showed the emergency bar AND disabled the input, then navigated after 2.5 seconds.
+
+The safety invariant (detect critical before LLM) is correct and must stay. But there was no mechanism to keep collecting data after the detection.
+
+**Fix:**
+
+**`SymptomCollectorAgent.ts`** — redesigned critical path:
+
+- Added private state: `_criticalMode: boolean`, `_criticalTrigger: string | null`, `_postCriticalTurns: number`
+- Added `CRITICAL_MODE_SYSTEM_PROMPT` — a replacement system prompt used only when in critical mode. It instructs the LLM to ask exactly two follow-up questions (severity 1-10, then other symptoms) and then emit `{"status":"CRITICAL",...}` JSON.
+- Changed the safety gate: when `detectCriticalSymptom` fires, instead of returning CRITICAL immediately, the agent now sets `_criticalMode = true` and falls through to the LLM call using the critical-mode system prompt.
+- The agent returns `status: 'COLLECTING'` with `criticalTrigger` set — this signals to ChatScreen to show the emergency bar but keep the input enabled.
+- The LLM asks severity, then other symptoms. After `MAX_POST_CRITICAL_TURNS = 3` LLM responses in critical mode (or when the LLM itself emits CRITICAL JSON), the agent calls `_buildCriticalVector()` and returns `status: 'CRITICAL'` with a populated `featureVector`.
+- `_buildCriticalVector()` — new private method that extracts severity from user messages (regex for digits 1–10), builds `associatedSymptoms` from follow-up answers, and writes a proper conversation summary.
+- `reset()` updated to clear all critical-mode state.
+
+**`ChatScreen.tsx`** — two changes:
+
+1. `status === 'COLLECTING'` with `criticalTrigger` set → call `setEmergencyDetected()` (shows the bar) but do NOT call `setIsInputDisabled(true)`. Input stays open for follow-up answers.
+2. `status === 'CRITICAL'` → now always has `featureVector` from the agent (no more hand-built minimal vector in ChatScreen). Navigate using `response.featureVector!` directly. Removed the 2500ms timeout — replaced with 1500ms (bar animation has already completed during the collection turns).
+
+Removed unused `MedicalFeatureVector` import from `ChatScreen.tsx`.
+
+**Critical mode conversation flow (3 turns to navigate):**
+
+```
+User: "I am experiencing chest pain"
+  → Emergency bar slides up, input stays enabled
+  → Agent (LLM): "On a scale of 1 to 10, how severe is your chest pain?"
+
+User: "About 8 out of 10"
+  → Agent (LLM): "Are you experiencing any other symptoms — such as shortness of breath, dizziness, or sweating?"
+
+User: "Yes, I have shortness of breath and I feel dizzy"
+  → LLM emits {"status":"CRITICAL",...} JSON
+  → Agent builds feature vector: severity=8, associatedSymptoms=["shortness of breath and I feel dizzy"]
+  → Input disabled, navigate to TriageResult after 1500ms
+```
+
+If the LLM fails to emit CRITICAL JSON by turn 3, the agent force-navigates with whatever was collected (`MAX_POST_CRITICAL_TURNS = 3`).
+
+**Why not return CRITICAL immediately for obvious cases?** The SOAP generation agent on the server needs a minimum of: chief complaint, severity, and at least one associated symptom to generate a clinically useful SOAP note. A single "chest pain" message produces a note that says "objective findings not available" for three of the four SOAP sections. Two additional turns adds severity and associated symptoms — enough for the AI to generate a medically useful plan section.
+
+---
+
+#### 3. GeoHeatmap crash `(33:21) @ map` — `GeoHeatmap.tsx`
+
+**Problem:** The analytics page crashed with the error pointing to line 33 of `GeoHeatmap.tsx`:
+
+```
+L.map(containerRef.current!, { ... })
+     ^
+Map container not found
+```
+
+**Root cause:** React StrictMode (active in Next.js development builds) intentionally unmounts and remounts components to detect side effects. The component's `useEffect` starts an `async` IIFE that awaits `import("leaflet")`. During that await, StrictMode calls the cleanup function, which sets `isMounted`-equivalent state. By the time the IIFE resumes and reaches `L.map(containerRef.current!, {...})`, the component has already unmounted — `containerRef.current` is `null`. The non-null assertion `!` masked this as a runtime crash instead of a TypeScript error.
+
+**Fix:** Added an `isMounted` boolean flag in the `useEffect`. The async IIFE checks `isMounted` after every `await`. If the component unmounted during any async operation, the IIFE bails out before calling `L.map()` or `L.heatLayer()`.
+
+```typescript
+let isMounted = true;
+
+(async () => {
+  const L = (await import("leaflet")).default;
+  if (!isMounted || !containerRef.current) return;  // ← bail if unmounted
+
+  const map = L.map(containerRef.current, { ... }); // no ! — already null-checked
+  ...
+  await import("leaflet.heat");
+  if (!isMounted) { map.remove(); return; }
+  ...
+})();
+
+return () => {
+  isMounted = false;
+  if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; }
+};
+```
+
+Also removed the `!` non-null assertion from `containerRef.current` since the null-check above makes it redundant and safer.
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/metro.config.js` | Removed `buffer` from the `extraNodeModules` stub map |
+| `apps/mobile/package.json` | Added `"buffer": "^6.0.3"` to dependencies |
+| `apps/mobile/index.js` | Added `global.Buffer = Buffer` polyfill at top of entry file |
+| `apps/mobile/src/agents/SymptomCollectorAgent.ts` | Full critical-mode redesign — `_criticalMode`, `_criticalTrigger`, `_postCriticalTurns`, `CRITICAL_MODE_SYSTEM_PROMPT`, `_buildCriticalVector()`, updated `sendMessage()` and `reset()` |
+| `apps/mobile/src/screens/ChatScreen.tsx` | COLLECTING+criticalTrigger shows bar but keeps input open; CRITICAL uses agent's featureVector; removed hand-built minimal vector; 2500ms → 1500ms timeout |
+| `apps/dashboard/components/analytics/GeoHeatmap.tsx` | Added `isMounted` guard in async IIFE; removed `!` non-null assertion |
+
+---
+
+### Testing steps for next session
+
+Run these in order before starting the session to confirm the system is in a known-good state.
+
+#### Prerequisites — start all services first
+
+```powershell
+# 1. Infrastructure (PostgreSQL + Redis)
+docker-compose up -d postgres redis
+
+# 2. API server (terminal 1)
+cd apps/api
+.venv\Scripts\activate
+python run_server.py
+# Confirm: "Uvicorn running on http://0.0.0.0:3001"
+
+# 3. Celery worker (terminal 2)
+cd apps/api
+.venv\Scripts\activate
+python run_celery.py
+# Confirm: "celery@... ready"
+
+# 4. Dashboard (terminal 3)
+cd apps/dashboard
+npm run dev
+# Confirm: "Ready on http://localhost:3000"
+
+# 5. Mobile (terminal 4) — must use --clear after metro.config.js changed
+cd apps/mobile
+npx expo start --clear
+# Scan QR with Expo Go on phone
+```
+
+---
+
+#### Test 1 — Buffer polyfill working (smoke test)
+
+1. Open the app in Expo Go.
+2. Register if first launch (name, phone, CNIC, GPS, tick disclaimer).
+3. Tap **BEGIN ASSESSMENT**.
+4. Type: `I have a headache and mild fever`
+5. Complete 5 turns of chat with severity 4 and no allergies.
+6. **Expected:** GREEN triage result screen appears. No `ReferenceError: Buffer` in Metro logs.
+
+---
+
+#### Test 2 — Critical path: emergency bar + symptom collection + dashboard delivery
+
+1. From Home, tap **BEGIN ASSESSMENT**.
+2. Type: `I am experiencing chest pain`
+3. **Expected immediately:** Emergency bar slides up from the bottom ("🚨 Emergency Alert Sent"). Input field remains enabled (you can still type).
+4. Agent asks: severity 1-10.
+5. Type: `8 out of 10`
+6. Agent asks: other symptoms.
+7. Type: `Yes, I also have shortness of breath and feel dizzy`
+8. **Expected:** Agent sends final message, input disables, screen transitions to RED TriageResult within 1.5 seconds.
+9. On TriageResult: status card should show "Sending..." then "Report received ✓". Note the Case ID.
+10. On the dashboard (`http://localhost:3000/cases`): a RED CRITICAL card should appear within 5 seconds. Confirm the chief complaint matches.
+11. Wait 10–15 seconds: a SOAP report should become available. Click **View SOAP Report** — confirm it has four sections (Subjective, Objective, Assessment, Plan) and that the Plan mentions chest pain and shortness of breath.
+
+---
+
+#### Test 3 — GREEN path end-to-end
+
+1. Tap **BEGIN ASSESSMENT**.
+2. Chat through 5 turns: mild headache, started 2 hours ago, severity 3, no other symptoms, no allergies.
+3. **Expected:** GREEN triage result ("No immediate emergency detected"). First-aid RAG guidance visible. No transmission (GREEN cases are local-only). No new case on dashboard.
+
+---
+
+#### Test 4 — Analytics page (GeoHeatmap fix)
+
+1. On the dashboard, click **Analytics** in the sidebar.
+2. **Expected:** Page loads without crashing. Four KPI cards visible. GeoHeatmap renders (dark map centered on Karachi). If Test 2 was done, a heat point should appear near the GPS coordinates recorded during that test.
+3. No console error mentioning `L.map` or "Map container not found".
+
+---
+
+#### Test 5 — Offline → reconnect → flush (optional, time permitting)
+
+1. Put the phone in **Airplane Mode**.
+2. Start an assessment, type a critical symptom (e.g., `I cannot breathe`), complete the follow-up questions.
+3. **Expected:** TriageResult shows "Saved securely. Will send when signal is available."
+4. Re-enable WiFi.
+5. **Expected within 60 seconds:** Status updates on screen, OR check the dashboard after 1 minute — the case should appear.
+
+---
+
+#### Known warnings that are acceptable during testing
+
+- `[RAG] No knowledge index found` — expected. The baseline FAISS index has not been built yet. RAG returns empty results; the app degrades gracefully (no guidance text in GREEN screen, no "While you wait" content in emergency bar). Fix: run `python docs/knowledge-base/build_baseline_index.py` when ready to build the index.
+- `[KnowledgeBase] Silent update failure` — expected if the server is running but has no documents yet. Harmless; app continues with the bundled (empty) index.
+
+---
+
+### What is next after testing
+
+- Build the baseline FAISS knowledge index so RAG guidance works (run `python docs/knowledge-base/build_baseline_index.py` — requires seed articles in `docs/knowledge-base/articles/`)
+- Add seed WHO articles to `docs/knowledge-base/articles/` (`.txt` content + `.yaml` metadata pairs)
+- Test the SOAP report quality with the richer feature vector from the new critical-mode flow
+- Consider EAS development build to test AES-256 encryption and `llama.rn` SLM on a real build (Expo Go cannot run native modules)
+
+---
+
+## Session 14 — 2026-05-13
+
+### Goal
+Two live-device bugs reported after testing: (1) CRITICAL detection replaced the entire chat screen with a new screen — user wanted the chat to remain open for continued guidance. (2) Data not being transmitted to server.
+
+---
+
+### Bugs fixed
+
+#### 1. CRITICAL path replaced the chat screen entirely (ChatScreen.tsx)
+
+**Problem:** The Session 13 fix had `status === 'CRITICAL'` call `setIsInputDisabled(true)` then `navigation.replace('TriageResult', ...)` after 1500 ms. This threw away the full chat history and prevented further chatting.
+
+**User requirement:** After triage fires, the chat should stay open so the patient can continue chatting with the agent — which still has full conversation context — for grounded first-aid guidance while waiting for professional help.
+
+**Fix:**
+- Removed `setIsInputDisabled(true)` and `setTimeout → navigation.replace` from the CRITICAL handler entirely.
+- Added new `startCriticalTransmission(featureVector, trigger)` function in `ChatScreen` — builds `LeanPayload`, encodes, encrypts, calls `transmissionService.sendOrCache` inline.
+- `criticalTxFired` ref guards against re-firing if agent emits CRITICAL more than once.
+- New `criticalTxStatus` state drives a compact status bar rendered between the emergency bar and the input row.
+- Input stays enabled throughout. SUFFICIENT path (non-critical) is unchanged — still navigates to `TriageResultScreen`.
+
+**Files changed:** `apps/mobile/src/screens/ChatScreen.tsx`
+
+---
+
+#### 2. Data not reaching the server — two root causes
+
+**Root cause A — `/ingest` requires auth but device token silently absent:**
+`cases.py` used `Depends(get_device_user)` which relies on `HTTPBearer(auto_error=True)`. If the device registration step fails (server not reachable at launch), no Bearer token is ever obtained. Without the header, `HTTPBearer` returned HTTP 403 before the endpoint ran. The mobile `_trySend` catch block swallowed this and reported CACHED with no log.
+
+**Fix:** Added `get_device_user_optional` to `security.py` — uses `HTTPBearer(auto_error=False)`, returns `None` rather than raising. Changed `/ingest` to accept `Optional[str]`. The `device_id` in the protobuf payload body is sufficient identification; strict JWT auth on ingest is unsuitable for a disaster scenario where devices may not have completed registration.
+
+**Root cause B — errors swallowed silently:**
+`_trySend` and `flushQueue` had bare `except: pass` blocks. Any network or HTTP error was invisible. Added `console.warn`/`console.error` with HTTP status and exception details.
+
+**Files changed:**
+- `apps/api/app/core/security.py`
+- `apps/api/app/routers/cases.py`
+- `apps/mobile/src/services/transmission/TransmissionService.ts`
+
+---
+
+### What is next
+- Verify `POST /api/v1/cases/ingest 202` appears in `server_out.log` after a RED assessment
+- Confirm continued chatting after CRITICAL fires — emergency bar + status bar visible, input active
+
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

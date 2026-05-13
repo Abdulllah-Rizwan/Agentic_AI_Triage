@@ -1,8 +1,10 @@
-import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
 import { LLMAdapter, ChatMessage, LLMUnavailableError } from './LLMAdapter.interface';
+import { logger } from '../../utils/logger';
 
-const API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY ?? '';
-const MODEL_NAME = 'gemini-2.0-flash';
+const TAG = 'CloudLLM';
+const API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY ?? '';
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const MODEL = 'llama-3.3-70b-versatile';
 const TIMEOUT_MS = 30_000;
 const MAX_RETRIES = 3;
 
@@ -23,47 +25,69 @@ async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 }
 
 export class CloudLLMAdapter implements LLMAdapter {
-  private genAI: GoogleGenerativeAI;
-
   constructor() {
-    this.genAI = new GoogleGenerativeAI(API_KEY);
+    if (!API_KEY) {
+      logger.error(TAG, 'EXPO_PUBLIC_GROQ_API_KEY is not set — cloud LLM will fail on every call');
+    }
   }
 
   async chat(messages: ChatMessage[], systemPrompt: string): Promise<string> {
-    const model = this.genAI.getGenerativeModel({
-      model: MODEL_NAME,
-      systemInstruction: systemPrompt,
-      safetySettings: [
-        { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
-        { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
-        { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
-        { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
+    logger.info(TAG, 'chat() called', { model: MODEL, turns: messages.length });
+
+    const body = {
+      model: MODEL,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...messages.map((m) => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content })),
       ],
-    });
-
-    const history = messages.slice(0, -1).map((m) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }],
-    }));
-
-    const lastMessage = messages[messages.length - 1];
+      temperature: 0.3,
+      max_tokens: 1024,
+    };
 
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       try {
-        const chat = model.startChat({ history });
-        const result = await withTimeout(
-          chat.sendMessage(lastMessage?.content ?? ''),
+        logger.debug(TAG, `attempt ${attempt + 1}/${MAX_RETRIES}`);
+
+        const response = await withTimeout(
+          fetch(GROQ_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${API_KEY}`,
+            },
+            body: JSON.stringify(body),
+          }),
           TIMEOUT_MS,
         );
-        return result.response.text();
+
+        if (!response.ok) {
+          const errText = await response.text().catch(() => '');
+          logger.error(TAG, `attempt ${attempt + 1} failed`, { status: response.status, body: errText });
+          throw new Error(`HTTP ${response.status}: ${errText}`);
+        }
+
+        const data = await response.json() as {
+          choices: Array<{ message: { content: string } }>;
+        };
+        const text = data.choices[0]?.message?.content ?? '';
+        logger.info(TAG, `success on attempt ${attempt + 1}`, { responseLength: text.length });
+        return text;
+
       } catch (err) {
+        logger.error(TAG, `attempt ${attempt + 1} failed`, {
+          error: String(err),
+          message: (err as Error)?.message,
+        });
+
         const isLast = attempt === MAX_RETRIES - 1;
         if (isLast) {
           throw new LLMUnavailableError(
             `Cloud LLM unavailable after ${MAX_RETRIES} attempts: ${String(err)}`,
           );
         }
-        await sleep(1000 * Math.pow(2, attempt));
+        const backoff = 1000 * Math.pow(2, attempt);
+        logger.debug(TAG, `retrying in ${backoff}ms`);
+        await sleep(backoff);
       }
     }
 
@@ -71,11 +95,22 @@ export class CloudLLMAdapter implements LLMAdapter {
   }
 
   async isAvailable(): Promise<boolean> {
+    if (!API_KEY) {
+      logger.warn(TAG, 'isAvailable() → false (no API key)');
+      return false;
+    }
     try {
-      const model = this.genAI.getGenerativeModel({ model: MODEL_NAME });
-      await withTimeout(model.generateContent('ping'), 5000);
-      return true;
-    } catch {
+      const response = await withTimeout(
+        fetch('https://api.groq.com/openai/v1/models', {
+          headers: { 'Authorization': `Bearer ${API_KEY}` },
+        }),
+        5000,
+      );
+      const available = response.ok;
+      logger.info(TAG, `isAvailable() → ${available}`, { status: response.status });
+      return available;
+    } catch (err) {
+      logger.warn(TAG, 'isAvailable() → false', { error: String(err) });
       return false;
     }
   }

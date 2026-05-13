@@ -10,10 +10,12 @@ interface Props {
   onClaim: (id: string) => void;
   onViewSoap: (id: string) => void;
   isNew?: boolean;
+  userRole?: string;
 }
 
-export function CaseCard({ case: c, onClaim, onViewSoap, isNew }: Props) {
+export function CaseCard({ case: c, onClaim, onViewSoap, isNew, userRole }: Props) {
   const isClaimed = c.status !== "PENDING";
+  const canClaim = userRole === "RESPONDER";
 
   return (
     <div
@@ -54,17 +56,19 @@ export function CaseCard({ case: c, onClaim, onViewSoap, isNew }: Props) {
             </button>
           )}
 
-          {c.status === "PENDING" ? (
-            <button
-              onClick={() => onClaim(c.id)}
-              className="rounded-md border border-green-700 px-2.5 py-1 text-xs text-green-400 transition hover:border-green-500 hover:text-green-300"
-            >
-              Claim
-            </button>
-          ) : (
-            <span className="rounded-md border border-gray-800 bg-gray-800 px-2.5 py-1 text-xs text-gray-500">
-              Claimed
-            </span>
+          {canClaim && (
+            c.status === "PENDING" ? (
+              <button
+                onClick={() => onClaim(c.id)}
+                className="rounded-md border border-green-700 px-2.5 py-1 text-xs text-green-400 transition hover:border-green-500 hover:text-green-300"
+              >
+                Claim
+              </button>
+            ) : (
+              <span className="rounded-md border border-gray-800 bg-gray-800 px-2.5 py-1 text-xs text-gray-500">
+                Claimed
+              </span>
+            )
           )}
         </div>
       </div>

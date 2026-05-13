@@ -1,5 +1,7 @@
 import { LLMAdapter, ChatMessage, LLMUnavailableError } from './LLMAdapter.interface';
+import { logger } from '../../utils/logger';
 
+const TAG = 'SLMAdapter';
 const IS_DEV = process.env.EXPO_PUBLIC_ENVIRONMENT === 'development';
 const OLLAMA_URL = process.env.EXPO_PUBLIC_OLLAMA_URL ?? 'http://localhost:11434';
 const OLLAMA_MODEL = 'llama3.2:1b';
@@ -29,6 +31,7 @@ export class SLMAdapter implements LLMAdapter {
 
     try {
       if (IS_DEV) {
+        logger.info(TAG, `dev mode — will route to Ollama`, { url: OLLAMA_URL, model: OLLAMA_MODEL });
         this.isReady = true;
         return;
       }
@@ -47,7 +50,7 @@ export class SLMAdapter implements LLMAdapter {
 
       this.isReady = true;
     } catch (err) {
-      console.error('[SLMAdapter] Failed to initialize model:', err);
+      logger.error(TAG, 'Failed to initialize model', { error: String(err) });
       this.isReady = false;
     } finally {
       this.isLoading = false;
@@ -80,6 +83,8 @@ export class SLMAdapter implements LLMAdapter {
       ...messages.map((m) => ({ role: m.role, content: m.content })),
     ];
 
+    logger.info(TAG, `calling Ollama`, { url: `${OLLAMA_URL}/api/chat`, model: OLLAMA_MODEL });
+
     try {
       const response = await fetch(`${OLLAMA_URL}/api/chat`, {
         method: 'POST',
@@ -93,12 +98,17 @@ export class SLMAdapter implements LLMAdapter {
       });
 
       if (!response.ok) {
-        throw new Error(`Ollama HTTP ${response.status}`);
+        const body = await response.text().catch(() => '');
+        logger.error(TAG, `Ollama HTTP error`, { status: response.status, body });
+        throw new Error(`Ollama HTTP ${response.status}: ${body}`);
       }
 
       const data = await response.json() as { message?: { content?: string } };
-      return data.message?.content ?? '';
+      const text = data.message?.content ?? '';
+      logger.info(TAG, `Ollama response received`, { length: text.length });
+      return text;
     } catch (err) {
+      logger.error(TAG, `Ollama call failed`, { error: String(err), url: OLLAMA_URL });
       throw new LLMUnavailableError(`Ollama unavailable: ${String(err)}`);
     }
   }

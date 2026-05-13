@@ -15,11 +15,14 @@ export function GeoHeatmap({ points }: Props) {
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    let L: typeof import("leaflet");
-    let cleanup: (() => void) | undefined;
+    // Guard against the async IIFE completing after the component unmounts.
+    // React StrictMode intentionally unmounts/remounts in development, which
+    // causes the cleanup to fire while the IIFE is still awaiting the import.
+    let isMounted = true;
 
     (async () => {
-      L = (await import("leaflet")).default;
+      const L = (await import("leaflet")).default;
+      if (!isMounted || !containerRef.current) return;
 
       // Fix default marker icons broken by webpack
       // @ts-expect-error leaflet internal — _getIconUrl is not in the type definition
@@ -30,7 +33,7 @@ export function GeoHeatmap({ points }: Props) {
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
-      const map = L.map(containerRef.current!, {
+      const map = L.map(containerRef.current, {
         center: [24.8607, 67.0011],
         zoom: 10,
         zoomControl: true,
@@ -44,9 +47,10 @@ export function GeoHeatmap({ points }: Props) {
 
       mapRef.current = map;
 
-      // Load leaflet.heat and add heatmap layer
       await import("leaflet.heat");
-      const heat = L.heatLayer(
+      if (!isMounted) { map.remove(); return; }
+
+      L.heatLayer(
         points.map((p) => [p.lat, p.lng, p.weight] as [number, number, number]),
         {
           radius: 25,
@@ -55,15 +59,15 @@ export function GeoHeatmap({ points }: Props) {
           gradient: { 0.4: "#3b82f6", 0.65: "#f59e0b", 1: "#ef4444" },
         }
       ).addTo(map);
-
-      cleanup = () => {
-        heat.remove();
-        map.remove();
-        mapRef.current = null;
-      };
     })();
 
-    return () => cleanup?.();
+    return () => {
+      isMounted = false;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
   }, []); // mount only — point updates handled below
 
   // Update heat layer when points change after initial mount

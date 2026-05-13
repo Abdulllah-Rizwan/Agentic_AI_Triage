@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
+    "platforms": ["ios", "android"],
     "splash": {
       "backgroundColor": "#0a0a0a"
     },

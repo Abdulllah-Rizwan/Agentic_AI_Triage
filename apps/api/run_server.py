@@ -55,9 +55,15 @@ try:
     import logging
     logging.basicConfig(
         stream=_logfile,
-        level=logging.WARNING,
+        level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
+    # Route uvicorn's own loggers to the same file handler
+    for _logger_name in ("uvicorn", "uvicorn.error", "uvicorn.access"):
+        _lg = logging.getLogger(_logger_name)
+        _lg.setLevel(logging.INFO)
+        if not _lg.handlers:
+            _lg.addHandler(logging.StreamHandler(_logfile))
     _log("logging configured")
 
     import uvicorn
@@ -66,11 +72,11 @@ try:
     _log("calling uvicorn.run ...")
     uvicorn.run(
         "app.main:socket_app",
-        host="127.0.0.1",
+        host="0.0.0.0",
         port=3001,
-        log_level="warning",
+        log_level="info",
         log_config=None,
-        access_log=False,
+        access_log=True,
     )
     _log("uvicorn.run returned (server stopped)")
 except Exception as e:

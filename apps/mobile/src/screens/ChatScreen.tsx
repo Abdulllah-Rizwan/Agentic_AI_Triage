@@ -10,13 +10,13 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import type { RootStackParamList } from '../../App';
@@ -27,6 +27,11 @@ import {
   type MedicalFeatureVector,
   type TriageResult,
 } from '../services/triage/TriageEngine';
+import { encodeLeanPayload, generateCaseId, type LeanPayload } from '../proto/triage';
+import { encryptLeanPayload } from '../services/encryption/AESEncryption';
+import { transmissionService } from '../services/transmission/TransmissionService';
+import { userStore } from '../store/userStore';
+import { networkStore } from '../store/networkStore';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -41,10 +46,13 @@ export default function ChatScreen({ navigation }: Props) {
   const [isInputDisabled, setIsInputDisabled]   = useState(false);
   const [turnCount, setTurnCount]               = useState(0);
   const [emergencyRag, setEmergencyRag]         = useState<string | undefined>();
+  const [criticalTxStatus, setCriticalTxStatus] = useState<'IDLE' | 'SENDING' | 'SENT' | 'CACHED' | 'ERROR'>('IDLE');
+  const [criticalCaseId, setCriticalCaseId]     = useState<string | null>(null);
 
-  const agentRef    = useRef<SymptomCollectorAgent | null>(null);
-  const flatListRef = useRef<FlatList<ChatMessage>>(null);
-  const unmounted   = useRef(false);
+  const agentRef          = useRef<SymptomCollectorAgent | null>(null);
+  const flatListRef       = useRef<FlatList<ChatMessage>>(null);
+  const unmounted         = useRef(false);
+  const criticalTxFired   = useRef(false);
 
   // Emergency bar — starts 220 px below visible area, springs to 0
   const barOffset = useRef(new Animated.Value(220)).current;
@@ -127,6 +135,53 @@ export default function ChatScreen({ navigation }: Props) {
     }
   }, [emergencyDetected, barOffset]);
 
+  // ── Critical-path inline transmission ─────────────────────────────────────
+
+  const startCriticalTransmission = useCallback(async (
+    featureVector: MedicalFeatureVector,
+    trigger: string,
+  ) => {
+    const id = generateCaseId();
+    setCriticalCaseId(id);
+    setCriticalTxStatus('SENDING');
+
+    try {
+      const { profile, deviceId } = userStore.getState();
+      if (!profile) { setCriticalTxStatus('ERROR'); return; }
+
+      const payload: LeanPayload = {
+        caseId: id,
+        patient: {
+          cnic:  profile.cnic,
+          name:  profile.full_name,
+          phone: profile.phone,
+          lat:   profile.lat ?? 0,
+          lng:   profile.lng ?? 0,
+        },
+        chiefComplaint:      featureVector.chiefComplaint,
+        symptoms:            featureVector.associatedSymptoms,
+        severity:            featureVector.severity,
+        triageLevel:         'RED',
+        triageReason:        `Critical symptom detected: ${trigger}. Immediate medical attention required.`,
+        conversationSummary: featureVector.conversationSummary,
+        timestampUnix:       Math.floor(Date.now() / 1000),
+        deviceId,
+        networkMode:         networkStore.getState().mode,
+      };
+
+      const payloadBytes   = encodeLeanPayload(payload);
+      const encryptedBlob  = await encryptLeanPayload(payloadBytes, profile.cnic, deviceId);
+      const result         = await transmissionService.sendOrCache(id, payload, encryptedBlob, 'RED');
+
+      if (!unmounted.current) {
+        setCriticalTxStatus(result === 'SENT' ? 'SENT' : 'CACHED');
+      }
+    } catch (err) {
+      console.error('[ChatScreen] Critical transmission failed:', err);
+      if (!unmounted.current) setCriticalTxStatus('ERROR');
+    }
+  }, []);
+
   // ── Send message ───────────────────────────────────────────────────────────
 
   const handleSend = useCallback(async () => {
@@ -172,36 +227,15 @@ export default function ChatScreen({ navigation }: Props) {
       setEmergencyRag(response.ragContext);
       setEmergencyDetected(response.criticalTrigger ?? 'emergency');
       setCollectionStatus('CRITICAL');
-      setIsInputDisabled(true);
-
-      // Build a minimal RED feature vector so TriageResultScreen can transmit the case.
-      // Note: when detectCriticalSymptom fires on the first message, conversationHistory
-      // is empty (the safety gate returns before appending). We use `text` directly.
-      const trigger = response.criticalTrigger ?? 'critical symptom';
-      const criticalVector: MedicalFeatureVector = {
-        chiefComplaint:      text,
-        onsetTime:           'Unknown',
-        severity:            9,
-        associatedSymptoms:  [trigger],
-        allergies:           [],
-        conversationSummary: `Patient reported: "${text}". Critical symptom: ${trigger}.`,
-        rawTranscript:       [{ role: 'user', content: text }],
-      };
-      const criticalTriageResult: TriageResult = {
-        level:            'RED',
-        reason:           `Critical symptom detected: ${trigger}. Immediate medical attention required.`,
-        triggeredKeyword: trigger,
-      };
-
-      // Allow the spring animation (~600 ms) to complete before replacing the screen.
-      setTimeout(() => {
-        if (!unmounted.current) {
-          navigation.replace('TriageResult', {
-            triageResult:  criticalTriageResult,
-            featureVector: criticalVector,
-          });
-        }
-      }, 2500);
+      // Input stays enabled — patient can keep chatting for guidance while waiting for help.
+      // Transmit exactly once: guard with a ref so repeat CRITICAL signals don't re-fire.
+      if (!criticalTxFired.current && response.featureVector) {
+        criticalTxFired.current = true;
+        startCriticalTransmission(
+          response.featureVector,
+          response.criticalTrigger ?? 'critical symptom',
+        );
+      }
 
     } else if (response.status === 'SUFFICIENT') {
       addMessage({
@@ -222,7 +256,7 @@ export default function ChatScreen({ navigation }: Props) {
   }, [
     input, isInputDisabled, isAgentTyping,
     addMessage, setAgentTyping, setEmergencyDetected,
-    setCollectionStatus, navigation,
+    setCollectionStatus, navigation, startCriticalTransmission,
   ]);
 
   // ── Render helpers ─────────────────────────────────────────────────────────
@@ -252,74 +286,95 @@ export default function ChatScreen({ navigation }: Props) {
   const step = Math.min(turnCount + 1, 5);
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* ── Header ── */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          disabled={isInputDisabled}
-          style={[styles.backBtn, isInputDisabled && styles.backBtnDisabled]}
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-        >
-          <Text style={[styles.backBtnText, isInputDisabled && styles.backBtnTextDisabled]}>
-            ←
-          </Text>
-        </TouchableOpacity>
-
-        <Text style={styles.headerTitle}>Medical Assessment</Text>
-
-        <Text style={styles.stepText}>Step {step} of ~5</Text>
-      </View>
-
-      {/* ── Chat messages ── */}
-      <FlatList
-        ref={flatListRef}
-        data={messages}
-        keyExtractor={(item) => item.id}
-        renderItem={renderMessage}
-        contentContainerStyle={styles.messageList}
-        onContentSizeChange={scrollToBottom}
-        onLayout={scrollToBottom}
-        showsVerticalScrollIndicator={false}
-      />
-
-      {/* ── Typing indicator ── */}
-      {isAgentTyping && (
-        <View style={styles.typingRow}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>M</Text>
-          </View>
-          <View style={styles.typingBubble}>
-            {[dot1, dot2, dot3].map((d, i) => (
-              <Animated.View key={i} style={[styles.dot, { opacity: d }]} />
-            ))}
-          </View>
-        </View>
-      )}
-
-      {/* ── Emergency notification bar — NOT dismissable ── */}
-      {emergencyDetected && (
-        <Animated.View
-          style={[styles.emergencyBar, { transform: [{ translateY: barOffset }] }]}
-        >
-          <Text style={styles.emergencyTitle}>🚨 Emergency Alert Sent</Text>
-          <Text style={styles.emergencySubtitle}>
-            Your location has been recorded. Help is being notified.
-          </Text>
-          {emergencyRag && (
-            <View style={styles.ragBox}>
-              <Text style={styles.ragLabel}>While you wait:</Text>
-              <Text style={styles.ragText}>{emergencyRag}</Text>
-            </View>
-          )}
-        </Animated.View>
-      )}
-
-      {/* ── Input area ── */}
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <KeyboardAvoidingView
+        style={styles.flex1}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={0}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 24 : 0}
       >
+        {/* ── Header ── */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            disabled={isInputDisabled}
+            style={[styles.backBtn, isInputDisabled && styles.backBtnDisabled]}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          >
+            <Text style={[styles.backBtnText, isInputDisabled && styles.backBtnTextDisabled]}>
+              ←
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={styles.headerTitle}>Medical Assessment</Text>
+
+          <Text style={styles.stepText}>Step {step} of ~5</Text>
+        </View>
+
+        {/* ── Chat messages ── */}
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          keyExtractor={(item) => item.id}
+          renderItem={renderMessage}
+          contentContainerStyle={styles.messageList}
+          onContentSizeChange={scrollToBottom}
+          onLayout={scrollToBottom}
+          showsVerticalScrollIndicator={false}
+        />
+
+        {/* ── Typing indicator ── */}
+        {isAgentTyping && (
+          <View style={styles.typingRow}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>M</Text>
+            </View>
+            <View style={styles.typingBubble}>
+              {[dot1, dot2, dot3].map((d, i) => (
+                <Animated.View key={i} style={[styles.dot, { opacity: d }]} />
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* ── Emergency notification bar — NOT dismissable ── */}
+        {emergencyDetected && (
+          <Animated.View
+            style={[styles.emergencyBar, { transform: [{ translateY: barOffset }] }]}
+          >
+            <Text style={styles.emergencyTitle}>🚨 Emergency Alert Sent</Text>
+            <Text style={styles.emergencySubtitle}>
+              Your location has been recorded. Help is being notified.
+            </Text>
+            {emergencyRag && (
+              <View style={styles.ragBox}>
+                <Text style={styles.ragLabel}>While you wait:</Text>
+                <Text style={styles.ragText}>{emergencyRag}</Text>
+              </View>
+            )}
+          </Animated.View>
+        )}
+
+        {/* ── Critical transmission status bar ── */}
+        {criticalTxStatus !== 'IDLE' && (
+          <View style={[
+            styles.txStatusBar,
+            criticalTxStatus === 'SENT'   && styles.txStatusBarSent,
+            criticalTxStatus === 'CACHED' && styles.txStatusBarCached,
+            criticalTxStatus === 'ERROR'  && styles.txStatusBarError,
+          ]}>
+            <Text style={styles.txStatusText}>
+              {criticalTxStatus === 'SENDING'
+                ? 'Transmitting emergency report...'
+                : criticalTxStatus === 'SENT'
+                ? `✓ Emergency report transmitted — Case ID: ${criticalCaseId?.slice(0, 8).toUpperCase()}`
+                : criticalTxStatus === 'CACHED'
+                ? '💾 Saved offline — will transmit when connected'
+                : '⚠ Could not transmit — report saved locally'}
+            </Text>
+          </View>
+        )}
+
+        {/* ── Input area ── */}
         <View style={styles.inputRow}>
           <TextInput
             style={[styles.textInput, isInputDisabled && styles.textInputDisabled]}
@@ -358,6 +413,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0a0a0a',
+  },
+  flex1: {
+    flex: 1,
   },
 
   // Header
@@ -545,5 +603,30 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 20,
     fontWeight: '700',
+  },
+
+  // Critical transmission status bar
+  txStatusBar: {
+    backgroundColor: '#1c1917',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#292524',
+  },
+  txStatusBarSent: {
+    backgroundColor: '#14532d',
+    borderTopColor: '#166534',
+  },
+  txStatusBarCached: {
+    backgroundColor: '#1c1917',
+  },
+  txStatusBarError: {
+    backgroundColor: '#450a0a',
+    borderTopColor: '#7f1d1d',
+  },
+  txStatusText: {
+    color: '#d1d5db',
+    fontSize: 12,
+    textAlign: 'center',
   },
 });
