@@ -1,12 +1,29 @@
+# Environment files — never commit secrets
 .env
 .env.local
-Apps/Mobile/.env
-Apps/Api/.env
-Apps/Api/uploads/
-Apps/Api/exports/
-Apps/Mobile/src/assets/models/
+**/.env
+**/.env.local
+
+# App-specific uploads and exports
+apps/api/uploads/
+apps/api/exports/
+
+# Large model and index files
+apps/mobile/src/assets/models/
 apps/mobile/src/assets/knowledge/*.faiss
 apps/mobile/src/assets/knowledge/*.pkl
-node_modules/
+apps/mobile/src/assets/knowledge/*.bin
+apps/mobile/src/assets/knowledge/knowledge_meta.json
+apps/mobile/src/assets/knowledge/knowledge_embeddings.json
+
+# Python
 __pycache__/
 .venv/
+*.pyc
+
+# Node
+node_modules/
+
+# Logs
+apps/api/celery_out.log
+apps/api/server_out.log
