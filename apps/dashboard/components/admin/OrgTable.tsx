@@ -5,6 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { X, Inbox } from "lucide-react";
 import { approveOrg, suspendOrg } from "@/lib/api";
 import type { OrgItem } from "@/lib/api";
+import { parseAPIDate } from "@/lib/dateUtils";
 
 interface Props {
   organizations: OrgItem[];
@@ -211,7 +212,7 @@ export function OrgTable({ organizations, onRefresh }: Props) {
                 <td className="px-4 py-3 text-gray-400">{org.user_count}</td>
                 <td className="px-4 py-3 text-gray-400">{org.case_count}</td>
                 <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
-                  {formatDistanceToNow(new Date(org.created_at), { addSuffix: true })}
+                  {formatDistanceToNow(parseAPIDate(org.created_at), { addSuffix: true })}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">

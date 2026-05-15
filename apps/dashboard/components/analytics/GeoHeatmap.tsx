@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { Map as LeafletMap } from "leaflet";
 import type { GeoResponse } from "@/lib/api";
 import "leaflet/dist/leaflet.css";
 
@@ -8,30 +9,41 @@ interface Props {
   points: GeoResponse["points"];
 }
 
+const HEAT_OPTIONS = {
+  radius: 25,
+  blur: 20,
+  maxZoom: 17,
+  gradient: { 0.4: "#3b82f6", 0.65: "#f59e0b", 1: "#ef4444" },
+};
+
+function removeHeatLayers(map: LeafletMap) {
+  map.eachLayer((layer) => {
+    if ("_latlngs" in layer || layer.constructor.name === "HeatLayer") {
+      map.removeLayer(layer);
+    }
+  });
+}
+
 export function GeoHeatmap({ points }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<ReturnType<typeof import("leaflet")["map"]> | null>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
+  // Keep a ref so async callbacks always read the latest points, not a stale closure.
+  const pointsRef = useRef(points);
+  pointsRef.current = points;
 
+  // Mount: initialise the Leaflet map once.
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    // Guard against the async IIFE completing after the component unmounts.
-    // React StrictMode intentionally unmounts/remounts in development, which
-    // causes the cleanup to fire while the IIFE is still awaiting the import.
     let isMounted = true;
 
     (async () => {
       const L = (await import("leaflet")).default;
       if (!isMounted || !containerRef.current) return;
 
-      // Fix default marker icons broken by webpack
-      // @ts-expect-error leaflet internal — _getIconUrl is not in the type definition
+      // @ts-expect-error leaflet internal
       delete L.Icon.Default.prototype._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-      });
+      L.Icon.Default.mergeOptions({ iconUrl: "", shadowUrl: "" });
 
       const map = L.map(containerRef.current, {
         center: [24.8607, 67.0011],
@@ -50,15 +62,13 @@ export function GeoHeatmap({ points }: Props) {
       await import("leaflet.heat");
       if (!isMounted) { map.remove(); return; }
 
-      L.heatLayer(
-        points.map((p) => [p.lat, p.lng, p.weight] as [number, number, number]),
-        {
-          radius: 25,
-          blur: 20,
-          maxZoom: 17,
-          gradient: { 0.4: "#3b82f6", 0.65: "#f59e0b", 1: "#ef4444" },
-        }
-      ).addTo(map);
+      // Use pointsRef so we pick up data that arrived while the import was in-flight.
+      if (pointsRef.current.length > 0) {
+        L.heatLayer(
+          pointsRef.current.map((p) => [p.lat, p.lng, p.weight] as [number, number, number]),
+          HEAT_OPTIONS
+        ).addTo(map);
+      }
     })();
 
     return () => {
@@ -68,31 +78,23 @@ export function GeoHeatmap({ points }: Props) {
         mapRef.current = null;
       }
     };
-  }, []); // mount only — point updates handled below
+  }, []);
 
-  // Update heat layer when points change after initial mount
+  // Update the heat layer whenever points change after mount.
   useEffect(() => {
-    if (!mapRef.current || points.length === 0) return;
+    if (!mapRef.current) return;
     const map = mapRef.current;
 
     (async () => {
       const L = (await import("leaflet")).default;
       await import("leaflet.heat");
-      map.eachLayer((layer) => {
-        // Remove existing heat layers (they have _latlngs)
-        if ("_latlngs" in layer || layer.constructor.name === "HeatLayer") {
-          map.removeLayer(layer);
-        }
-      });
-      L.heatLayer(
-        points.map((p) => [p.lat, p.lng, p.weight] as [number, number, number]),
-        {
-          radius: 25,
-          blur: 20,
-          maxZoom: 17,
-          gradient: { 0.4: "#3b82f6", 0.65: "#f59e0b", 1: "#ef4444" },
-        }
-      ).addTo(map);
+      removeHeatLayers(map);
+      if (points.length > 0) {
+        L.heatLayer(
+          points.map((p) => [p.lat, p.lng, p.weight] as [number, number, number]),
+          HEAT_OPTIONS
+        ).addTo(map);
+      }
     })();
   }, [points]);
 

@@ -9,5 +9,6 @@ declare module "next-auth" {
       org_name: string;
       access_token: string;
     } & DefaultSession["user"];
+    error?: string;
   }
 }

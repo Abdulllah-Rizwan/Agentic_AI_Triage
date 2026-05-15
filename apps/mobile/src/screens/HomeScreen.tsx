@@ -12,8 +12,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { format } from 'date-fns';
 import { useNetworkStore, NetworkMode } from '../store/networkStore';
 import { useUserStore } from '../store/userStore';
-import { getCompletedCases, CompletedCase } from '../db/queries';
+import { getCompletedCases, markCaseAcknowledged, CompletedCase } from '../db/queries';
 import type { RootStackParamList } from '../../App';
+
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -55,6 +57,22 @@ export default function HomeScreen({ navigation }: Props) {
   async function loadCases() {
     const cases = await getCompletedCases();
     setCompletedCases(cases);
+  }
+
+  async function checkAndUpdateCaseStatus(c: CompletedCase) {
+    if (c.acknowledged) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/v1/cases/${c.case_id}/status`);
+      if (!res.ok) return;
+      const data = (await res.json()) as { status?: string };
+      if (data.status === 'ACKNOWLEDGED' || data.status === 'RESOLVED') {
+        await markCaseAcknowledged(c.case_id);
+        await loadCases();
+        setSelectedCase((prev) => (prev ? { ...prev, acknowledged: 1 } : prev));
+      }
+    } catch {
+      // silent failure — no network or server unavailable
+    }
   }
 
   const netCfg = NETWORK_CONFIG[networkMode];
@@ -114,7 +132,10 @@ export default function HomeScreen({ navigation }: Props) {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.caseRow}
-                onPress={() => setSelectedCase(item)}
+                onPress={() => {
+                  setSelectedCase(item);
+                  checkAndUpdateCaseStatus(item);
+                }}
                 activeOpacity={0.7}
               >
                 <View style={[styles.triageDot, { backgroundColor: TRIAGE_COLORS[item.triage_level] ?? '#9ca3af' }]} />

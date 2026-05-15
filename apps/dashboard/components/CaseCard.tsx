@@ -4,6 +4,7 @@ import { formatDistanceToNow } from "date-fns";
 import { MapPin } from "lucide-react";
 import { TriageBadge } from "./TriageBadge";
 import type { CaseListItem } from "@/lib/api";
+import { parseAPIDate } from "@/lib/dateUtils";
 
 interface Props {
   case: CaseListItem;
@@ -27,7 +28,9 @@ export function CaseCard({ case: c, onClaim, onViewSoap, isNew, userRole }: Prop
       <div className="flex items-center justify-between">
         <TriageBadge level={c.triage_level} />
         <span className="text-xs text-gray-500">
-          {formatDistanceToNow(new Date(c.received_at), { addSuffix: true })}
+          {c.received_at && !isNaN(parseAPIDate(c.received_at).getTime())
+            ? formatDistanceToNow(parseAPIDate(c.received_at), { addSuffix: true })
+            : "just now"}
         </span>
       </div>
 

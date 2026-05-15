@@ -25,13 +25,15 @@ import { SymptomCollectorAgent } from '../agents/SymptomCollectorAgent';
 import {
   computeTriage,
   type MedicalFeatureVector,
-  type TriageResult,
 } from '../services/triage/TriageEngine';
 import { encodeLeanPayload, generateCaseId, type LeanPayload } from '../proto/triage';
 import { encryptLeanPayload } from '../services/encryption/AESEncryption';
 import { transmissionService } from '../services/transmission/TransmissionService';
+import { localRAG } from '../services/rag/LocalRAG';
 import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
+
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -49,10 +51,16 @@ export default function ChatScreen({ navigation }: Props) {
   const [criticalTxStatus, setCriticalTxStatus] = useState<'IDLE' | 'SENDING' | 'SENT' | 'CACHED' | 'ERROR'>('IDLE');
   const [criticalCaseId, setCriticalCaseId]     = useState<string | null>(null);
 
+  const [hasCompletedTriage, setHasCompletedTriage] = useState(false);
+
   const agentRef          = useRef<SymptomCollectorAgent | null>(null);
   const flatListRef       = useRef<FlatList<ChatMessage>>(null);
   const unmounted         = useRef(false);
   const criticalTxFired   = useRef(false);
+  const postTriagePollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Holds the post-triage function so handleSend can call it without it being
+  // a dependency of the useCallback — avoids a stale-closure trap.
+  const handlePostTriageRef = useRef<((fv: MedicalFeatureVector) => Promise<void>) | null>(null);
 
   // Emergency bar — starts 220 px below visible area, springs to 0
   const barOffset = useRef(new Animated.Value(220)).current;
@@ -94,9 +102,173 @@ export default function ChatScreen({ navigation }: Props) {
 
     return () => {
       unmounted.current = true;
+      if (postTriagePollRef.current) clearInterval(postTriagePollRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ── Post-triage pipeline (runs after SUFFICIENT) ───────────────────────────
+  // Defined outside useCallback and stored in a ref so handleSend can invoke
+  // the latest version without needing it as a dependency.
+
+  const _handlePostTriage = async (featureVector: MedicalFeatureVector) => {
+    const triageResult = computeTriage(featureVector);
+    const { level }   = triageResult;
+
+    // ── 1. Show triage verdict as a system card ──────────────────────────────
+    const badge =
+      level === 'RED'   ? '🔴 CRITICAL' :
+      level === 'AMBER' ? '🟡 URGENT'   : '🟢 SAFE';
+    addMessage({
+      id: `triage-${Date.now()}`,
+      role: 'agent',
+      type: 'system',
+      content: `${badge}\n${triageResult.reason}`,
+      timestamp: Date.now(),
+    });
+
+    // ── 2. Transmit report (skip if CRITICAL path already fired) ─────────────
+    let caseIdForPoll: string | null = null;
+
+    if (level !== 'GREEN' && !criticalTxFired.current) {
+      const id = generateCaseId();
+      caseIdForPoll = id;
+
+      addMessage({
+        id: `tx-start-${Date.now()}`,
+        role: 'agent',
+        type: 'system',
+        content: 'Sending your report to the relief network...',
+        timestamp: Date.now(),
+      });
+
+      try {
+        const { profile, deviceId } = userStore.getState();
+        if (!profile) throw new Error('No user profile');
+
+        const payload: LeanPayload = {
+          caseId:              id,
+          patient:             { cnic: profile.cnic, name: profile.full_name, phone: profile.phone, lat: profile.lat ?? 0, lng: profile.lng ?? 0 },
+          chiefComplaint:      featureVector.chiefComplaint,
+          symptoms:            featureVector.associatedSymptoms,
+          severity:            featureVector.severity,
+          triageLevel:         level,
+          triageReason:        triageResult.reason,
+          conversationSummary: featureVector.conversationSummary,
+          timestampUnix:       Math.floor(Date.now() / 1000),
+          deviceId,
+          networkMode:         networkStore.getState().mode,
+        };
+
+        const bytes = encodeLeanPayload(payload);
+        const blob  = await encryptLeanPayload(bytes, profile.cnic, deviceId);
+        const result = await transmissionService.sendOrCache(id, payload, blob, level);
+
+        if (!unmounted.current) {
+          addMessage({
+            id: `tx-done-${Date.now()}`,
+            role: 'agent',
+            type: 'system',
+            content: result === 'SENT'
+              ? `✓ Report transmitted — Case ID: ${id.slice(0, 8).toUpperCase()}\nHelp is being dispatched to your location.`
+              : `💾 Report saved — Case ID: ${id.slice(0, 8).toUpperCase()}\nWill send automatically when signal is restored.`,
+            timestamp: Date.now(),
+          });
+        }
+      } catch {
+        if (!unmounted.current) {
+          addMessage({
+            id: `tx-err-${Date.now()}`,
+            role: 'agent',
+            type: 'system',
+            content: '⚠ Could not transmit report. It has been saved locally and will retry.',
+            timestamp: Date.now(),
+          });
+        }
+      }
+    } else if (level !== 'GREEN' && criticalTxFired.current && criticalCaseId) {
+      // Emergency report was already sent via the CRITICAL path
+      caseIdForPoll = criticalCaseId;
+      addMessage({
+        id: `tx-ref-${Date.now()}`,
+        role: 'agent',
+        type: 'system',
+        content: `✓ Emergency report already sent — Case ID: ${criticalCaseId.slice(0, 8).toUpperCase()}`,
+        timestamp: Date.now(),
+      });
+    }
+
+    // ── 3. RAG guidance with citation ─────────────────────────────────────────
+    // Only runs after triage is complete so the agent has the full symptom picture.
+    // Uses the triggered keyword as the primary query — it maps directly to article
+    // topics (e.g. "snake bite" → snake_bites_guidelines). Falls back to chief
+    // complaint. Skips guidance if score is below threshold or no citation is available.
+    try {
+      const MIN_SCORE = 0.3;
+
+      // Primary query: the exact keyword that triggered the triage (or chief complaint for GREEN)
+      const primaryQuery = triageResult.triggeredKeyword ?? featureVector.chiefComplaint;
+      let results = await localRAG.query(primaryQuery, 1);
+
+      // Secondary fallback: try chief complaint alone when keyword produced a weak match
+      if (
+        (results.length === 0 || results[0]!.score < MIN_SCORE) &&
+        triageResult.triggeredKeyword
+      ) {
+        results = await localRAG.query(featureVector.chiefComplaint, 1);
+      }
+
+      if (!unmounted.current && results.length > 0 && results[0]!.score >= MIN_SCORE) {
+        const r = results[0]!;
+        // Skip uncited guidance — if we can't say where it came from, don't show it
+        const hasSource = Boolean(r.articleTitle || r.articleSource);
+        if (hasSource) {
+          const citation =
+            `\n\n📚 Source: ${r.articleTitle ? `"${r.articleTitle}" — ` : ''}${r.articleSource ?? 'WHO'}`;
+          const intro =
+            level === 'GREEN'
+              ? 'Here are some care tips while you monitor your condition:\n\n'
+              : 'While waiting for help:\n\n';
+          addMessage({
+            id: `guidance-${Date.now()}`,
+            role: 'agent',
+            type: 'guidance',
+            content: `${intro}${r.content}${citation}`,
+            timestamp: Date.now(),
+          });
+        }
+      }
+    } catch { /* RAG unavailable — skip silently */ }
+
+    // ── 4. Poll for responder acknowledgement (RED / AMBER only) ─────────────
+    if (caseIdForPoll) {
+      postTriagePollRef.current = setInterval(async () => {
+        if (unmounted.current) { clearInterval(postTriagePollRef.current!); return; }
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/v1/cases/${caseIdForPoll}`);
+          if (!res.ok) return;
+          const data = (await res.json()) as { status?: string };
+          if (data.status === 'ACKNOWLEDGED' || data.status === 'RESOLVED') {
+            if (!unmounted.current) {
+              addMessage({
+                id: `ack-${Date.now()}`,
+                role: 'agent',
+                type: 'system',
+                content: '✓ A medical team has been dispatched to your location.',
+                timestamp: Date.now(),
+              });
+            }
+            clearInterval(postTriagePollRef.current!);
+          }
+        } catch { /* silent retry */ }
+      }, 10_000);
+    }
+
+    if (!unmounted.current) setHasCompletedTriage(true);
+  };
+
+  // Keep the ref in sync every render so handleSend always calls the latest closure.
+  handlePostTriageRef.current = _handlePostTriage;
 
   // ── Typing indicator animation ─────────────────────────────────────────────
 
@@ -238,30 +410,39 @@ export default function ChatScreen({ navigation }: Props) {
       }
 
     } else if (response.status === 'SUFFICIENT') {
+      setIsInputDisabled(true);
+      setCollectionStatus('SUFFICIENT');
       addMessage({
         id: `agent-${Date.now()}`,
         role: 'agent',
-        content: 'Processing your assessment...',
+        content: 'I have collected enough information. Let me assess your condition...',
         timestamp: Date.now(),
       });
-      setIsInputDisabled(true);
-      setCollectionStatus('SUFFICIENT');
-
-      const featureVector = response.featureVector!;
-      const triageResult  = computeTriage(featureVector);
-
-      // Replace ChatScreen so the back gesture cannot re-trigger submission
-      navigation.replace('TriageResult', { triageResult, featureVector });
+      handlePostTriageRef.current?.(response.featureVector!);
     }
   }, [
     input, isInputDisabled, isAgentTyping,
     addMessage, setAgentTyping, setEmergencyDetected,
-    setCollectionStatus, navigation, startCriticalTransmission,
+    setCollectionStatus, startCriticalTransmission,
   ]);
 
   // ── Render helpers ─────────────────────────────────────────────────────────
 
   const renderMessage = useCallback(({ item }: { item: ChatMessage }) => {
+    if (item.type === 'system') {
+      return (
+        <View style={styles.systemMsgContainer}>
+          <Text style={styles.systemMsgText}>{item.content}</Text>
+        </View>
+      );
+    }
+    if (item.type === 'guidance') {
+      return (
+        <View style={styles.guidanceContainer}>
+          <Text style={styles.guidanceText}>{item.content}</Text>
+        </View>
+      );
+    }
     const isUser = item.role === 'user';
     return (
       <View style={[styles.messageRow, isUser ? styles.rowRight : styles.rowLeft]}>
@@ -307,7 +488,9 @@ export default function ChatScreen({ navigation }: Props) {
 
           <Text style={styles.headerTitle}>Medical Assessment</Text>
 
-          <Text style={styles.stepText}>Step {step} of ~5</Text>
+          {!hasCompletedTriage && (
+            <Text style={styles.stepText}>Step {step} of ~5</Text>
+          )}
         </View>
 
         {/* ── Chat messages ── */}
@@ -320,6 +503,21 @@ export default function ChatScreen({ navigation }: Props) {
           onContentSizeChange={scrollToBottom}
           onLayout={scrollToBottom}
           showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            hasCompletedTriage ? (
+              <View style={styles.newAssessmentContainer}>
+                <TouchableOpacity
+                  style={styles.newAssessmentBtn}
+                  onPress={() => {
+                    clearChat();
+                    navigation.replace('Home');
+                  }}
+                >
+                  <Text style={styles.newAssessmentBtnText}>Start New Assessment</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null
+          }
         />
 
         {/* ── Typing indicator ── */}
@@ -628,5 +826,64 @@ const styles = StyleSheet.create({
     color: '#d1d5db',
     fontSize: 12,
     textAlign: 'center',
+  },
+
+  // System messages (triage verdict, transmission status, acknowledgement)
+  systemMsgContainer: {
+    alignSelf: 'center',
+    maxWidth: '90%',
+    backgroundColor: '#1f2937',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#374151',
+  },
+  systemMsgText: {
+    color: '#d1d5db',
+    fontSize: 13,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+
+  // Guidance / citation notes from the knowledge base
+  guidanceContainer: {
+    alignSelf: 'flex-start',
+    maxWidth: '92%',
+    backgroundColor: '#0d2439',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#1e4068',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 8,
+    marginLeft: 36,
+  },
+  guidanceText: {
+    color: '#93c5fd',
+    fontSize: 12,
+    lineHeight: 17,
+    fontStyle: 'italic',
+  },
+
+  // "Start New Assessment" footer button
+  newAssessmentContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  newAssessmentBtn: {
+    backgroundColor: '#374151',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderWidth: 1,
+    borderColor: '#4b5563',
+  },
+  newAssessmentBtnText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });

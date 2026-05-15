@@ -15,6 +15,7 @@ async def emit_new_case(
     lng: float,
     chief_complaint: str,
     org_id: str | None,
+    received_at: str | None = None,
 ) -> None:
     if _sio is None:
         return
@@ -24,6 +25,7 @@ async def emit_new_case(
         "lat": lat,
         "lng": lng,
         "chiefComplaint": chief_complaint,
+        "receivedAt": received_at,
     }
     if org_id:
         await _sio.emit("case:new", data, room=str(org_id))

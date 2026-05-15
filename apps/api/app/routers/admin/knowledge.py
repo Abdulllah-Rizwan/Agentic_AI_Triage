@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import CurrentUser, require_admin
 from app.models import schemas
@@ -143,6 +144,26 @@ async def get_document(
         processed_at=doc.processed_at,
         error_message=doc.error_message,
     )
+
+
+# ── GET /documents/{doc_id}/content ──────────────────────────────────────────
+
+
+@router.get("/documents/{doc_id}/content")
+async def get_document_content(
+    doc_id: str,
+    db: AsyncSession = Depends(get_db),
+    _admin: CurrentUser = Depends(require_admin),
+):
+    doc = await _get_doc_or_404(doc_id, db)
+    if not doc.file_path or not os.path.isfile(doc.file_path):
+        raise HTTPException(status_code=404, detail="File not found on disk")
+    try:
+        with open(doc.file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+    except OSError as e:
+        raise HTTPException(status_code=500, detail=f"Could not read file: {e}")
+    return {"content": content, "title": doc.title, "filename": doc.filename}
 
 
 # ── PATCH /documents/{doc_id}/archive ────────────────────────────────────────

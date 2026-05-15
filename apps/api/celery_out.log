@@ -7,63 +7,80 @@ It will be compatible before version 2.0.0.
 C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\google\adk\features\_feature_decorator.py:72: UserWarning: [EXPERIMENTAL] feature FeatureName.PLUGGABLE_AUTH is enabled.
   check_feature_enabled()
 worker created, starting...
-[2026-05-13 09:28:15,226: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-05-15 10:42:40,459: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-05-13 09:28:15,327: INFO/MainProcess] Connected to redis://localhost:6379/0
-[2026-05-13 09:28:15,329: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-05-15 10:42:40,486: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2026-05-15 10:42:40,488: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-05-13 09:28:15,417: INFO/MainProcess] mingle: searching for neighbors
-[2026-05-13 09:28:16,729: INFO/MainProcess] mingle: all alone
-[2026-05-13 09:28:17,913: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
-[2026-05-13 11:43:54,310: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[abff84f9-3376-40f0-a1d4-5bd04b11fe13] received
-[2026-05-13 11:45:05,197: WARNING/MainProcess] [92m11:45:05 - LiteLLM:INFO[0m: utils.py:4011 - 
+[2026-05-15 10:42:40,521: INFO/MainProcess] mingle: searching for neighbors
+[2026-05-15 10:42:41,633: INFO/MainProcess] mingle: all alone
+[2026-05-15 10:42:41,725: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
+[2026-05-15 11:01:33,555: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[5fa23d23-e45c-425f-83f7-cec556ff6f0d] received
+[2026-05-15 11:01:44,024: WARNING/MainProcess] [92m11:01:44 - LiteLLM:INFO[0m: utils.py:4011 - 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:45:05,196: INFO/MainProcess] 
+[2026-05-15 11:01:44,024: INFO/MainProcess] 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:45:06,650: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[abff84f9-3376-40f0-a1d4-5bd04b11fe13] succeeded in 72.29700000000594s: None
-[2026-05-13 11:45:06,798: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[be4a29d4-6f4d-4318-9dfe-0477463f9a4b] received
-[2026-05-13 11:45:06,856: WARNING/MainProcess] [92m11:45:06 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:45:06,856: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:45:08,086: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\litellm\litellm_core_utils\logging_worker.py:75: RuntimeWarning: coroutine 'Logging.async_success_handler' was never awaited
-  self._queue = None
-
-[2026-05-13 11:45:08,117: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[be4a29d4-6f4d-4318-9dfe-0477463f9a4b] succeeded in 1.3119999999908032s: None
-[2026-05-13 11:45:08,129: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[2b96d522-b60b-40fa-8082-eeb4bd9a6aec] received
-[2026-05-13 11:45:08,150: WARNING/MainProcess] [92m11:45:08 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:45:08,149: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:45:09,185: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[2b96d522-b60b-40fa-8082-eeb4bd9a6aec] succeeded in 1.062000000005355s: None
-[2026-05-13 11:45:09,194: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[e5a59c19-3d7b-4ce3-9b2d-9d2243f45910] received
-[2026-05-13 11:45:09,250: WARNING/MainProcess] [92m11:45:09 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:45:09,250: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:45:10,250: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[e5a59c19-3d7b-4ce3-9b2d-9d2243f45910] succeeded in 1.062999999994645s: None
-[2026-05-13 11:48:03,934: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[2d97872e-8eb6-4020-8b90-4763f0e6e2f1] received
-[2026-05-13 11:48:04,004: WARNING/MainProcess] [92m11:48:04 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:48:04,003: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 11:48:05,080: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[2d97872e-8eb6-4020-8b90-4763f0e6e2f1] succeeded in 1.1410000000032596s: None
-[2026-05-13 20:29:17,475: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[c6033900-c275-4330-ab9c-da4fb86b0ce0] received
-[2026-05-13 20:29:18,520: WARNING/MainProcess] [92m20:29:18 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 20:29:18,516: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 20:29:20,372: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[c6033900-c275-4330-ab9c-da4fb86b0ce0] succeeded in 2.7969999999913853s: None
-[2026-05-13 20:29:28,498: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[d5fa1a11-de74-42d3-9a39-a20fcfed52a0] received
-[2026-05-13 20:29:28,528: WARNING/MainProcess] [92m20:29:28 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-13 20:29:28,528: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-15 11:01:45,246: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[5fa23d23-e45c-425f-83f7-cec556ff6f0d] succeeded in 11.671000000002095s: None
+[2026-05-15 16:55:10,386: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[9abfe650-e5ac-496d-880a-3e6d82b1691d] received
+[2026-05-15 16:55:11,634: INFO/MainProcess] Use pytorch device_name: cpu
+[2026-05-15 16:55:11,638: INFO/MainProcess] Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+[2026-05-15 16:55:22,538: INFO/MainProcess] Loading faiss with AVX2 support.
+[2026-05-15 16:55:25,859: INFO/MainProcess] Successfully loaded faiss with AVX2 support.
+[2026-05-15 16:55:26,615: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[9abfe650-e5ac-496d-880a-3e6d82b1691d] succeeded in 16.156000000002678s: None
+[2026-05-15 16:55:30,887: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[43ef322a-106e-44d6-a70e-bc0cf25a881f] received
+[2026-05-15 16:55:31,839: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[43ef322a-106e-44d6-a70e-bc0cf25a881f] succeeded in 0.9529999999940628s: None
+[2026-05-15 16:55:36,267: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[9efd8d1b-c190-45c1-8d17-c9d52c241161] received
+[2026-05-15 16:55:37,956: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[9efd8d1b-c190-45c1-8d17-c9d52c241161] succeeded in 1.687000000005355s: None
+[2026-05-15 16:55:42,004: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[097a475d-925a-4f95-b149-c7741ffbda0a] received
+[2026-05-15 16:55:45,185: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[097a475d-925a-4f95-b149-c7741ffbda0a] succeeded in 3.1719999999913853s: None
+[2026-05-15 16:55:53,107: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[04fd1255-17c6-41c1-9dd0-c6283f302e3b] received
+[2026-05-15 16:55:53,886: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[04fd1255-17c6-41c1-9dd0-c6283f302e3b] succeeded in 0.7810000000026776s: None
+[2026-05-15 16:55:58,412: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[2ee59b33-701a-4f9d-836d-ae45eadb893f] received
+[2026-05-15 16:55:59,503: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[2ee59b33-701a-4f9d-836d-ae45eadb893f] succeeded in 1.0940000000118744s: None
+[2026-05-15 16:56:03,744: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[8a9573db-47b6-4f47-8641-ab4fb8f9bf8c] received
+[2026-05-15 16:56:04,920: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[8a9573db-47b6-4f47-8641-ab4fb8f9bf8c] succeeded in 1.1719999999913853s: None
+[2026-05-15 16:56:09,047: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[3be92af1-7173-418f-a20a-a8b80b23b087] received
+[2026-05-15 16:56:10,209: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[3be92af1-7173-418f-a20a-a8b80b23b087] succeeded in 1.1560000000026776s: None
+[2026-05-15 16:56:14,469: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[0edea321-07bc-489d-8252-f98626031828] received
+[2026-05-15 16:56:16,064: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[0edea321-07bc-489d-8252-f98626031828] succeeded in 1.5939999999973224s: None
+[2026-05-15 16:56:19,827: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[e632acc6-8f40-4dbf-9583-5c543521d5df] received
+[2026-05-15 16:56:21,193: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[e632acc6-8f40-4dbf-9583-5c543521d5df] succeeded in 1.375s: None
+[2026-05-15 16:56:25,228: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[4ffde0f8-2012-49c4-aee9-b8dfa88c4056] received
+[2026-05-15 16:56:25,893: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[4ffde0f8-2012-49c4-aee9-b8dfa88c4056] succeeded in 0.6560000000026776s: None
+[2026-05-15 16:56:30,578: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[99762b0f-bf74-45e8-966b-e133ac1afdc3] received
+[2026-05-15 16:56:31,278: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[99762b0f-bf74-45e8-966b-e133ac1afdc3] succeeded in 0.7029999999940628s: None
+[2026-05-15 16:56:35,916: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[69b7764c-148a-464e-8ead-e2a3d2b7016b] received
+[2026-05-15 16:56:36,861: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[69b7764c-148a-464e-8ead-e2a3d2b7016b] succeeded in 0.9380000000091968s: None
+[2026-05-15 16:56:41,237: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[e51b457e-5662-44c6-98e1-f1e7eceae217] received
+[2026-05-15 16:56:42,599: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[e51b457e-5662-44c6-98e1-f1e7eceae217] succeeded in 1.360000000000582s: None
+[2026-05-15 16:56:46,518: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[7e2ee926-6930-42cf-a034-739efe0c2956] received
+[2026-05-15 16:56:48,142: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[7e2ee926-6930-42cf-a034-739efe0c2956] succeeded in 1.6090000000112923s: None
+[2026-05-15 16:56:51,747: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[0d446782-efb4-4592-a890-d5f9d824ee43] received
+[2026-05-15 16:56:55,540: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[0d446782-efb4-4592-a890-d5f9d824ee43] succeeded in 3.7969999999913853s: None
+[2026-05-15 16:57:02,102: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[1e9e4581-a636-4b46-b904-0458d6644068] received
+[2026-05-15 16:57:03,375: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[1e9e4581-a636-4b46-b904-0458d6644068] succeeded in 1.264999999999418s: None
+[2026-05-15 16:57:07,415: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[7837fd6b-aa70-4b4e-bc96-5a4abb3bd2a4] received
+[2026-05-15 16:57:08,455: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[7837fd6b-aa70-4b4e-bc96-5a4abb3bd2a4] succeeded in 1.0320000000065193s: None
+[2026-05-15 16:57:12,620: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[f5955d95-d3cb-4839-b1b8-3e8ac813eea1] received
+[2026-05-15 16:57:13,731: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[f5955d95-d3cb-4839-b1b8-3e8ac813eea1] succeeded in 1.110000000000582s: None
+[2026-05-15 16:57:17,977: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[6317a151-d0d4-4f89-99dc-333f188572d5] received
+[2026-05-15 16:57:19,049: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[6317a151-d0d4-4f89-99dc-333f188572d5] succeeded in 1.0619999999908032s: None
+[2026-05-15 16:57:23,496: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[8e3e2261-6d78-424c-a373-e42604077fae] received
+[2026-05-15 16:57:24,386: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[8e3e2261-6d78-424c-a373-e42604077fae] succeeded in 0.8910000000032596s: None
+[2026-05-15 16:57:28,914: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[ed3bd0dd-0561-4366-a4a3-9f0e8a6908a4] received
+[2026-05-15 16:57:30,433: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[ed3bd0dd-0561-4366-a4a3-9f0e8a6908a4] succeeded in 1.5160000000032596s: None
+[2026-05-15 16:57:34,320: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[5723349f-69de-4f55-b92d-ed74169dd121] received
+[2026-05-15 16:57:35,330: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[5723349f-69de-4f55-b92d-ed74169dd121] succeeded in 1.0s: None
+[2026-05-15 16:57:39,653: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[35305264-866a-46a5-b77a-8cdbc15eb0fc] received
+[2026-05-15 16:57:41,368: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[35305264-866a-46a5-b77a-8cdbc15eb0fc] succeeded in 1.7180000000080327s: None
+[2026-05-15 16:57:45,023: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[ac4a1565-b344-4c86-84da-d4766ef371e0] received
+[2026-05-15 16:57:46,535: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[ac4a1565-b344-4c86-84da-d4766ef371e0] succeeded in 1.514999999999418s: None
+[2026-05-15 16:57:50,332: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[df1692be-f94e-4d9b-9dfd-15f0a5689cc4] received

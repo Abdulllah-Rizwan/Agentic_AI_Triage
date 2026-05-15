@@ -5,6 +5,8 @@ export interface ChatMessage {
   role: 'user' | 'agent';
   content: string;
   timestamp: number;
+  /** 'system' messages are rendered as status cards; 'guidance' as citation notes. */
+  type?: 'system' | 'guidance';
 }
 
 export type CollectionStatus = 'IDLE' | 'COLLECTING' | 'SUFFICIENT' | 'CRITICAL';

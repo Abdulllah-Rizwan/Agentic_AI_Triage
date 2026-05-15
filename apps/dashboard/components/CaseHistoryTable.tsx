@@ -2,20 +2,24 @@
 
 import Link from "next/link";
 import { format } from "date-fns";
-import { FileText, Inbox } from "lucide-react";
+import { FileText, ClipboardList, Inbox } from "lucide-react";
 import { TriageBadge } from "@/components/TriageBadge";
 import type { CaseListItem } from "@/lib/api";
+import { parseAPIDate } from "@/lib/dateUtils";
 
 // The API returns resolved_at on list items even though the shared type omits it
 type CaseListItemWithResolved = CaseListItem & { resolved_at?: string | null };
 
 interface Props {
   cases: CaseListItem[];
+  onViewSoap?: (caseId: string) => void;
+  /** Alias — called when clicking anywhere on a row to open full case detail */
+  onViewDetails?: (caseId: string) => void;
 }
 
 function formatDuration(receivedAt: string, resolvedAt?: string | null): string {
   if (!resolvedAt) return "—";
-  const ms = new Date(resolvedAt).getTime() - new Date(receivedAt).getTime();
+  const ms = parseAPIDate(resolvedAt).getTime() - parseAPIDate(receivedAt).getTime();
   if (ms < 0) return "—";
   const totalMinutes = Math.floor(ms / 60_000);
   const hours = Math.floor(totalMinutes / 60);
@@ -38,7 +42,8 @@ function StatusPill({ status }: { status: CaseListItem["status"] }) {
   );
 }
 
-export function CaseHistoryTable({ cases }: Props) {
+export function CaseHistoryTable({ cases, onViewSoap, onViewDetails }: Props) {
+  const handleRowClick = onViewDetails ?? onViewSoap;
   if (cases.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center rounded-xl border border-gray-800 bg-gray-900">
@@ -69,9 +74,10 @@ export function CaseHistoryTable({ cases }: Props) {
           {(cases as CaseListItemWithResolved[]).map((c, i) => (
             <tr
               key={c.id}
+              onClick={() => handleRowClick?.(c.id)}
               className={`border-b border-gray-800 text-sm text-gray-300 transition-colors hover:bg-gray-800 ${
-                i % 2 === 1 ? "bg-gray-900/60" : "bg-gray-900"
-              }`}
+                handleRowClick ? "cursor-pointer" : ""
+              } ${i % 2 === 1 ? "bg-gray-900/60" : "bg-gray-900"}`}
             >
               <td className="px-4 py-3 font-mono text-gray-500">
                 {c.id.slice(0, 8)}
@@ -91,19 +97,32 @@ export function CaseHistoryTable({ cases }: Props) {
                 {c.lat.toFixed(4)}, {c.lng.toFixed(4)}
               </td>
               <td className="px-4 py-3 whitespace-nowrap text-gray-400">
-                {format(new Date(c.received_at), "MMM d, yyyy HH:mm")}
+                {format(parseAPIDate(c.received_at), "MMM d, yyyy HH:mm")}
               </td>
               <td className="px-4 py-3 text-gray-400">
                 {formatDuration(c.received_at, c.resolved_at)}
               </td>
-              <td className="px-4 py-3">
-                <Link
-                  href={`/cases/${c.id}`}
-                  className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors"
-                >
-                  <FileText size={12} />
-                  View Report
-                </Link>
+              <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                <div className="flex items-center gap-3">
+                  {c.has_soap && onViewSoap && (
+                    <button
+                      onClick={() => onViewSoap(c.id)}
+                      className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                      title="View SOAP Report"
+                    >
+                      <ClipboardList size={12} />
+                      SOAP
+                    </button>
+                  )}
+                  <Link
+                    href={`/cases/${c.id}`}
+                    className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                    title="Full case details page"
+                  >
+                    <FileText size={12} />
+                    Details
+                  </Link>
+                </div>
               </td>
             </tr>
           ))}

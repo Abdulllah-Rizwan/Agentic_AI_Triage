@@ -88,7 +88,13 @@
       "Bash(set EXPO_NO_DOCTOR=1)",
       "Bash(npx expo *)",
       "Bash(netstat -ano)",
-      "Bash(ipconfig)"
+      "Bash(ipconfig)",
+      "Bash(python build_baseline_index.py)",
+      "Bash(pip install *)",
+      "Bash(pip show *)",
+      "Bash(set TF_CPP_MIN_LOG_LEVEL=3)",
+      "Bash(python -c \"import sentence_transformers; print\\('OK'\\)\")",
+      "Bash(dir C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\src\\\\assets\\\\knowledge *)"
     ]
   }
 }

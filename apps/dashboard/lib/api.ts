@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -21,6 +21,12 @@ async function request<T>(
       ...(options.headers ?? {}),
     },
   });
+
+  if (res.status === 401) {
+    // Token rejected by the API — force sign-out so the middleware sends to /login
+    await signOut({ callbackUrl: "/login" });
+    throw new Error("Session expired. Redirecting to login.");
+  }
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: res.statusText }));
@@ -167,6 +173,10 @@ export const uploadDocument = (formData: FormData) =>
 
 export const getDocumentById = (id: string) =>
   request<DocumentItem>(`/api/v1/admin/knowledge/documents/${id}`);
+
+export interface DocumentContentResponse { content: string; title: string; filename: string }
+export const getDocumentContent = (id: string) =>
+  request<DocumentContentResponse>(`/api/v1/admin/knowledge/documents/${id}/content`);
 
 export const archiveDocument = (id: string) =>
   request<DocumentResponse>(`/api/v1/admin/knowledge/documents/${id}/archive`, { method: "PATCH" });

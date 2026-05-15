@@ -100,6 +100,7 @@ async def ingest_case(
         lng=payload.patient.lng,
         chief_complaint=payload.chief_complaint,
         org_id=None,  # no org zone assigned yet — broadcast to all
+        received_at=case.received_at.isoformat(),
     )
 
     return schemas.CaseIngestResponse(
@@ -172,6 +173,20 @@ async def list_cases(
         offset=offset,
         cases=[_case_to_list_item(c) for c in rows],
     )
+
+
+# ── GET /{case_id}/status (device-accessible, no auth required) ───────────────
+
+
+@router.get("/{case_id}/status")
+async def get_case_status(
+    case_id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    case: Case | None = await db.get(Case, case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+    return {"case_id": case.id, "status": case.status.value}
 
 
 # ── GET /{case_id} ────────────────────────────────────────────────────────────

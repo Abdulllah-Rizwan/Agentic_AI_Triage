@@ -1356,6 +1356,90 @@ Two live-device bugs reported after testing: (1) CRITICAL detection replaced the
 - Confirm continued chatting after CRITICAL fires — emergency bar + status bar visible, input active
 
 
+## Session 15 — 2026-05-14
+
+### Goal
+Fix a cluster of bugs discovered during live device testing across both the mobile app and the dashboard, covering: Babel/Metro bundling errors, SOAP button visibility, WebAssembly crash in LocalRAG, stale corrupted knowledge index file, full case details in the dashboard slide-over panel, and three RAG guidance quality problems (timing, citation, and relevance).
+
+---
+
+### Bugs fixed
+
+| # | File(s) | Bug | Fix |
+|---|---------|-----|-----|
+| 1 | `apps/mobile/babel.config.js` | `import.meta` syntax (used by some dependencies) caused Hermes JS engine to crash with a parse error during bundling | Added `unstable_transformImportMeta: true` to `babel-preset-expo` options |
+| 2 | `apps/dashboard/app/(dashboard)/cases/page.tsx` | `handleSoapReady` socket event only patched the `cases` (active) list; SOAP button never appeared on rows in `CaseHistoryTable` (history list) | Changed handler to update both `cases` and `historyCases` with `has_soap: true` |
+| 3 | `apps/dashboard/app/(dashboard)/cases/page.tsx` | SOAP button still never appeared for RED/AMBER cases even after the handler fix — the Celery SOAP worker runs in a separate process where `sio` is `None`, so `emit_soap_ready` is a no-op and the socket event never fires | Added self-rescheduling `setTimeout` that polls `getCases` every 5 seconds for any RED/AMBER cases missing `has_soap`; stops automatically once all cases are updated |
+| 4 | `apps/mobile/src/services/rag/LocalRAG.ts` | `@xenova/transformers` (ONNX embedding model) crashed with `Property 'WebAssembly' doesn't exist` — Hermes JS engine has no WebAssembly support; also caused ~80-second bundle time | Removed `@xenova/transformers` entirely; rewrote LocalRAG as pure-JS BM25-inspired keyword search. Query terms are tokenized, filtered through a stop-word set, and scored by term-overlap ratio (`hits/terms.length`) against chunk text. No ONNX, no native modules, works fully offline. |
+| 5 | `apps/mobile/src/services/rag/LocalRAG.ts` | `TypeError: this.metadata.map is not a function (it is undefined)` — `KnowledgeBaseUpdateService` called Expo's `downloadAsync` which, on a 404 response, writes the error body (`{"detail":"Not Found"}`) to the file. On next launch LocalRAG parsed this as valid JSON and assigned a plain object (not an array) to `this.metadata`. | Added `Array.isArray(parsed) && parsed.length > 0` guard in `_loadFromDocumentDirectory()`. Any non-array file (including 404 error bodies) is rejected and the bundled fallback is used instead. Also added the same guard in the `query()` method. |
+| 6 | `apps/mobile/src/services/knowledge/KnowledgeBaseUpdateService.ts` | After removing ONNX, the service still attempted to download `knowledge_embeddings.json` (a format LocalRAG no longer uses) | Removed `EMB_FILENAME` and the second download entirely; service now only downloads `knowledge_meta.json` from `/exports/` |
+| 7 | `apps/dashboard/components/SoapReportPanel.tsx` | Clicking a row in the Past Cases table opened the panel but it only showed the SOAP report — no patient info, severity, symptoms, or conversation summary visible | Upgraded `SoapReportPanel` to a full case detail panel: fetches `/api/v1/cases/{id}` for the complete `CaseDetailResponse`; adds `SeverityBar` (color-coded), expandable conversation summary with "Show more / less" toggle, symptoms as tag chips, chief complaint (prominent), all SOAP sections with color-coded left borders |
+| 8 | `apps/dashboard/components/CaseHistoryTable.tsx` | Past cases table rows were not clickable; the only way to open a case was via the explicit SOAP or Details buttons | Added `onViewDetails?: (caseId: string) => void` prop; `handleRowClick = onViewDetails ?? onViewSoap`; rows are now clickable (`cursor-pointer`); actions `<td>` has `stopPropagation()` to prevent row-click conflicts when clicking SOAP or Details buttons directly |
+| 9 | `apps/mobile/src/store/chatStore.ts` | `ChatMessage.type` only accepted `'system'`; guidance messages from RAG had no distinct render type | Extended `type` to `'system' \| 'guidance'`; guidance messages render as blue-tinted italic cards (`guidanceContainer` / `guidanceText` styles) |
+| 10 | `apps/mobile/src/screens/ChatScreen.tsx` | RAG guidance was shown during the COLLECTING conversation turns (while the agent was still asking questions) — user-reported as disruptive and irrelevant because the agent does not yet have the full symptom picture | Removed the `ragContext` display block from the `COLLECTING` branch entirely. Guidance now only appears after triage completes, in `_handlePostTriage`. |
+| 11 | `apps/mobile/src/screens/ChatScreen.tsx` | Guidance message lacked any source citation — `articleTitle` was conditionally appended but the condition silently dropped it when the field was empty, and `type: 'guidance'` was missing so it rendered as a plain agent bubble | Fixed citation to always render as `📚 Source: "Article Title" — Source Name`; added `type: 'guidance'` to the `addMessage` call; added `hasSource` check — if neither `articleTitle` nor `articleSource` is populated, the guidance message is skipped entirely rather than shown uncited |
+| 12 | `apps/mobile/src/screens/ChatScreen.tsx` | RAG guidance was irrelevant to the patient's actual condition — the query combined `triggeredKeyword + chiefComplaint + symptoms[0]` which diluted the signal with noise; generic level-based fallback queries ("emergency first aid bleeding wound breathing") matched unrelated chunks | Changed primary query to use **only** `triageResult.triggeredKeyword` — it maps directly to article topics (e.g. `"snake bite"` → `snake_bites_guidelines`, `"uncontrolled bleeding"` → `Bleeding_hemorrhage_guidelines`); secondary fallback is `chiefComplaint` alone (not generic phrases); added minimum score threshold `MIN_SCORE = 0.3` — guidance is skipped if no chunk scores above 30% term overlap |
+
+---
+
+### Key decisions made
+
+#### DEC-015 — Pure-JS keyword search replaces ONNX embedding in mobile LocalRAG
+- **Date:** 2026-05-14
+- **Decision:** `LocalRAG.ts` uses BM25-inspired keyword scoring instead of `all-MiniLM-L6-v2` ONNX embeddings for on-device RAG.
+- **Reason:** Hermes (the React Native JS engine) has no WebAssembly support. `@xenova/transformers` requires WASM to run ONNX inference and always crashes with `Property 'WebAssembly' doesn't exist`. Keyword scoring is pure JavaScript, works offline, and is sufficient for medical-term retrieval from a ~300-chunk WHO corpus. Query terms are tokenized, stop-word filtered (length > 2 chars), and scored by term-overlap ratio against chunk content.
+- **Rejected alternative:** `@xenova/transformers` ONNX — works in browsers and Node.js but not in Hermes; also caused ~80-second bundle time.
+- **Status:** Final
+
+#### DEC-016 — RAG guidance only after triage, not during symptom collection
+- **Date:** 2026-05-14
+- **Decision:** Knowledge base guidance is never shown during the `COLLECTING` conversation phase. It is only surfaced in `_handlePostTriage()`, after the triage result is computed.
+- **Reason:** During symptom collection the agent only has partial information. Guidance shown mid-interview is contextually irrelevant (it cannot be matched to the final diagnosis), disrupts the clinical flow, and could confuse the patient before a triage verdict has been reached. The agent's full conversation context is required for meaningful guidance.
+- **Status:** Final
+
+#### DEC-017 — RAG primary query is triggered keyword alone, not a composite
+- **Date:** 2026-05-14
+- **Decision:** The post-triage RAG query uses `triageResult.triggeredKeyword` as the sole primary query. Falls back to `chiefComplaint` if the keyword produces a score below `0.3`. Guidance is skipped entirely if no result meets the threshold.
+- **Reason:** Combining `triggeredKeyword + chiefComplaint + symptoms[0]` diluted relevance — the BM25 scorer treated common words in the chief complaint equally to the specific medical keyword, returning unrelated chunks. The triggered keyword (e.g. `"snake bite"`, `"chest pain"`) maps precisely to an article topic. Generic fallback queries like `"emergency first aid bleeding wound breathing"` were too broad and matched everything.
+- **Rejected alternative:** Composite query with multiple parts — produced irrelevant matches in testing.
+- **Status:** Final
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/babel.config.js` | Added `unstable_transformImportMeta: true` to `babel-preset-expo` options |
+| `apps/mobile/src/services/rag/LocalRAG.ts` | Full rewrite — removed ONNX/`@xenova/transformers`; added `STOP_WORDS` set; implemented pure-JS `_keywordQuery()`; added `Array.isArray` validation guard in `_loadFromDocumentDirectory()` and `query()`; only requires `knowledge_meta.json` (no embeddings file) |
+| `apps/mobile/src/services/knowledge/KnowledgeBaseUpdateService.ts` | Removed `EMB_FILENAME` and embeddings download; only downloads `knowledge_meta.json` |
+| `apps/mobile/src/store/chatStore.ts` | Extended `ChatMessage.type` to include `'guidance'` |
+| `apps/mobile/src/screens/ChatScreen.tsx` | (1) Removed `ragContext` block from `COLLECTING` branch; (2) post-triage RAG query changed to `triggeredKeyword`-first with `MIN_SCORE = 0.3` threshold; (3) guidance message always includes citation; (4) added `type: 'guidance'`; (5) added `guidanceContainer` and `guidanceText` styles |
+| `apps/dashboard/app/(dashboard)/cases/page.tsx` | (1) `handleSoapReady` updates both `cases` and `historyCases`; (2) added SOAP polling `useEffect` (5-second self-rescheduling timer for RED/AMBER cases without SOAP); (3) passes `onViewDetails={setSelectedCaseId}` to `CaseHistoryTable`; (4) map unmounts when SOAP panel open |
+| `apps/dashboard/components/SoapReportPanel.tsx` | Upgraded to full case detail panel: severity bar, expandable summary, symptoms chips, SOAP sections with colored borders, patient info header |
+| `apps/dashboard/components/CaseHistoryTable.tsx` | Added `onViewDetails` prop; rows are clickable; actions cell has `stopPropagation()` |
+
+---
+
+### Test results after fixes
+
+- SOAP button appears on dashboard cards: **yes** — polling bridges the Celery cross-process socket gap
+- Past cases table rows open full detail panel: **yes** — full `CaseDetailResponse` rendered including severity, symptoms, SOAP
+- RAG loads successfully from bundled assets: **yes** — 304 chunks loaded (`[RAG] Ready — 304 chunks loaded`)
+- `metadata.map is not a function` error: **resolved** — array validation guard rejects stale 404 files
+- Guidance during conversation: **removed** — no guidance shown while agent is still collecting symptoms
+- Guidance after triage includes source citation: **yes** — `📚 Source: "Title" — WHO` always rendered when available
+- Guidance relevance: **improved** — keyword-first query + 0.3 threshold filters out low-signal matches
+
+---
+
+### What is next
+- Device test: verify post-triage guidance appears with correct citation for a RED (snake bite / chest pain) and GREEN (mild headache) case
+- Device test: verify no guidance messages appear during the 5-turn symptom collection interview
+- Consider building a physical EAS dev build to test real AES-256 encryption and `llama.rn` SLM (Expo Go cannot run those native modules)
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

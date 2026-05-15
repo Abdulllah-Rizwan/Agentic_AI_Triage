@@ -48,8 +48,8 @@ export default function CasesPage() {
       setLoading(true);
       const triage = filter === "ALL" ? "RED,AMBER,GREEN" : filter;
       const [activeRes, historyRes] = await Promise.all([
-        getCases({ triage_level: triage, sort }),
-        getCases({ status: "RESOLVED,CLOSED", limit: 20 }),
+        getCases({ triage_level: triage, status: "PENDING", sort }),
+        getCases({ status: "ACKNOWLEDGED,RESOLVED,CLOSED", limit: 20 }),
       ]);
       setCases(activeRes.cases);
       setHistoryCases(historyRes.cases);
@@ -64,6 +64,26 @@ export default function CasesPage() {
     loadCases();
   }, [loadCases]);
 
+  // Poll for has_soap updates on active RED/AMBER cases whose SOAP is still
+  // generating. The Celery worker runs in a separate process and cannot emit
+  // socket events directly, so we bridge the gap with a self-rescheduling poll.
+  useEffect(() => {
+    const needsPoll = cases.some(
+      (c) => (c.triage_level === "RED" || c.triage_level === "AMBER") && !c.has_soap
+    );
+    if (!needsPoll) return;
+
+    const timer = setTimeout(async () => {
+      try {
+        const triage = filter === "ALL" ? "RED,AMBER,GREEN" : filter;
+        const res = await getCases({ triage_level: triage, status: "PENDING", sort });
+        setCases(res.cases);
+      } catch {}
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [cases, filter, sort]);
+
   useEffect(() => {
     if (!socket) return;
 
@@ -73,7 +93,7 @@ export default function CasesPage() {
       lat: number;
       lng: number;
       chiefComplaint: string;
-      receivedAt: string;
+      receivedAt?: string;
     }) => {
       const newCase: CaseListItem = {
         id: data.caseId,
@@ -84,7 +104,7 @@ export default function CasesPage() {
         lat: data.lat,
         lng: data.lng,
         severity: 0,
-        received_at: data.receivedAt,
+        received_at: data.receivedAt ?? new Date().toISOString(),
         has_soap: false,
         claimed_by_org_id: null,
       };
@@ -101,12 +121,15 @@ export default function CasesPage() {
 
     const handleSoapReady = ({ caseId }: { caseId: string }) => {
       setCases((prev) => prev.map((c) => (c.id === caseId ? { ...c, has_soap: true } : c)));
+      setHistoryCases((prev) => prev.map((c) => (c.id === caseId ? { ...c, has_soap: true } : c)));
     };
 
     const handleClaimed = ({ caseId }: { caseId: string }) => {
-      setCases((prev) =>
-        prev.map((c) => (c.id === caseId ? { ...c, status: "ACKNOWLEDGED" } : c))
-      );
+      // Remove from active (PENDING-only) list; refresh history to pick it up
+      setCases((prev) => prev.filter((c) => c.id !== caseId));
+      getCases({ status: "ACKNOWLEDGED,RESOLVED,CLOSED", limit: 20 })
+        .then((res) => setHistoryCases(res.cases))
+        .catch(() => {});
     };
 
     socket.on("case:new", handleNewCase);
@@ -123,11 +146,10 @@ export default function CasesPage() {
   const handleClaim = async (id: string) => {
     try {
       await claimCase(id);
-      setCases((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, status: "ACKNOWLEDGED" } : c))
-      );
+      // Full refresh so the case moves from active (PENDING) to history (ACKNOWLEDGED)
+      await loadCases();
     } catch {
-      // ignore optimistic update on error
+      // ignore on error
     }
   };
 
@@ -219,7 +241,11 @@ export default function CasesPage() {
         {loading ? (
           <div className="h-32 animate-pulse rounded-xl border border-gray-800 bg-gray-900" />
         ) : (
-          <CaseHistoryTable cases={historyCases} />
+          <CaseHistoryTable
+          cases={historyCases}
+          onViewSoap={setSelectedCaseId}
+          onViewDetails={setSelectedCaseId}
+        />
         )}
       </div>
 

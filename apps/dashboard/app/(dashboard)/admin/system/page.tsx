@@ -8,6 +8,7 @@ import { AlertTriangle } from "lucide-react";
 import { getSystemHealth, getQueueStats, getKBStats } from "@/lib/api";
 import type { HealthResponse, QueueResponse, StatsResponse } from "@/lib/api";
 import { SystemHealthCard } from "@/components/admin/SystemHealthCard";
+import { parseAPIDate } from "@/lib/dateUtils";
 
 const POLL_INTERVAL = 30_000;
 
@@ -74,7 +75,7 @@ export default function AdminSystemPage() {
   }, [fetchAll]);
 
   const checkedLabel = health
-    ? formatDistanceToNow(new Date(health.checked_at), { addSuffix: true })
+    ? formatDistanceToNow(parseAPIDate(health.checked_at), { addSuffix: true })
     : "—";
 
   const highQueue =

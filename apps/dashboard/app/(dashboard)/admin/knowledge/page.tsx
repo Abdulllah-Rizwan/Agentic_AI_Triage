@@ -6,8 +6,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getAdminDocuments, getKBStats } from "@/lib/api";
 import type { DocumentItem, StatsResponse } from "@/lib/api";
+import { parseAPIDate } from "@/lib/dateUtils";
 import { DocumentUploadForm } from "@/components/admin/DocumentUploadForm";
 import { DocumentTable } from "@/components/admin/DocumentTable";
+import { DocumentViewerPanel } from "@/components/admin/DocumentViewerPanel";
 import { useSocket } from "@/lib/socket";
 
 export default function AdminKnowledgePage() {
@@ -25,17 +27,20 @@ export default function AdminKnowledgePage() {
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [viewingDoc, setViewingDoc] = useState<DocumentItem | null>(null);
 
   const loadAll = useCallback(async () => {
     try {
-      const [docsRes, statsRes] = await Promise.all([
+      const [docsResult, statsResult] = await Promise.allSettled([
         getAdminDocuments(),
         getKBStats(),
       ]);
-      setDocuments(docsRes.documents);
-      setStats(statsRes);
-    } catch {
-      // keep existing state on error
+      if (docsResult.status === "fulfilled") {
+        setDocuments(docsResult.value.documents);
+      }
+      if (statsResult.status === "fulfilled") {
+        setStats(statsResult.value);
+      }
     } finally {
       setLoading(false);
     }
@@ -73,6 +78,7 @@ export default function AdminKnowledgePage() {
             documents={documents}
             onRefresh={loadAll}
             isLoading={loading}
+            onView={setViewingDoc}
           />
 
           {/* Stats footer */}
@@ -88,12 +94,14 @@ export default function AdminKnowledgePage() {
                 {stats.total_chunks.toLocaleString()} chunks
                 {" · "}
                 Last updated{" "}
-                {formatDistanceToNow(new Date(stats.last_updated), { addSuffix: true })}
+                {formatDistanceToNow(parseAPIDate(stats.last_updated), { addSuffix: true })}
               </p>
             </div>
           )}
         </div>
       </div>
+
+      <DocumentViewerPanel doc={viewingDoc} onClose={() => setViewingDoc(null)} />
 
       {/* Mobile sync note */}
       <div className="rounded-xl border border-blue-900/40 bg-blue-950/20 px-5 py-3">

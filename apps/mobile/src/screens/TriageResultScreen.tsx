@@ -19,6 +19,7 @@ import { localRAG, type RAGResult } from '../services/rag/LocalRAG';
 import { encodeLeanPayload, generateCaseId, type LeanPayload } from '../proto/triage';
 import { encryptLeanPayload } from '../services/encryption/AESEncryption';
 import { transmissionService } from '../services/transmission/TransmissionService';
+import { markCaseAcknowledged } from '../db/queries';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -65,8 +66,10 @@ export default function TriageResultScreen({ navigation, route }: Props) {
         : featureVector.chiefComplaint;
     const topK = level === 'GREEN' ? 2 : 1;
 
+    const RAG_MIN_SCORE = 0.3;
     localRAG.query(queryText, topK).then((results) => {
-      if (!unmounted.current) setRagResults(results);
+      if (!unmounted.current)
+        setRagResults(results.filter((r) => r.score >= RAG_MIN_SCORE));
     });
 
     // GREEN cases require no transmission
@@ -154,12 +157,15 @@ export default function TriageResultScreen({ navigation, route }: Props) {
         return;
       }
       try {
-        const res = await fetch(`${API_BASE_URL}/api/v1/cases/${id}`);
+        const res = await fetch(`${API_BASE_URL}/api/v1/cases/${id}/status`);
         if (!res.ok) return;
         const data = (await res.json()) as { status?: string };
         if (data.status === 'ACKNOWLEDGED' || data.status === 'RESOLVED') {
-          setAcknowledged(true);
-          if (pollRef.current) clearInterval(pollRef.current);
+          await markCaseAcknowledged(id);
+          if (!unmounted.current) {
+            setAcknowledged(true);
+            if (pollRef.current) clearInterval(pollRef.current);
+          }
         }
       } catch {
         /* network error — silently retry on next tick */
@@ -192,7 +198,14 @@ export default function TriageResultScreen({ navigation, route }: Props) {
             ragResults.map((r, i) => (
               <View key={i} style={styles.bulletRow}>
                 <Text style={styles.bullet}>•</Text>
-                <Text style={styles.bulletText}>{r.content}</Text>
+                <View style={styles.bulletContent}>
+                  <Text style={styles.bulletText}>{r.content}</Text>
+                  {(r.articleTitle || r.articleSource) && (
+                    <Text style={styles.citationText}>
+                      📚 {r.articleTitle ?? r.articleSource}
+                    </Text>
+                  )}
+                </View>
               </View>
             ))
           ) : (
@@ -254,14 +267,14 @@ export default function TriageResultScreen({ navigation, route }: Props) {
         </View>
       )}
 
-      {/* ── RED: RAG emergency guidance ── */}
-      {isRed && ragResults.length > 0 && (
+      {/* ── RED: RAG emergency guidance (only shown when a citable source exists) ── */}
+      {isRed && ragResults.length > 0 && (ragResults[0]!.articleTitle || ragResults[0]!.articleSource) && (
         <View style={styles.ragCard}>
           <Text style={styles.ragCardHeading}>While waiting for help:</Text>
           <Text style={styles.ragCardText}>{ragResults[0]!.content}</Text>
-          {ragResults[0]!.articleSource && (
-            <Text style={styles.ragCardSource}>Source: {ragResults[0]!.articleSource}</Text>
-          )}
+          <Text style={styles.ragCardSource}>
+            📚 {ragResults[0]!.articleTitle ?? ragResults[0]!.articleSource}
+          </Text>
         </View>
       )}
 
@@ -403,7 +416,9 @@ const styles = StyleSheet.create({
   // Bullet list (GREEN first-aid)
   bulletRow: { flexDirection: 'row', marginBottom: 8 },
   bullet:    { color: '#4ade80', fontSize: 14, marginRight: 8, marginTop: 1 },
-  bulletText: { color: '#d1d5db', fontSize: 14, flex: 1, lineHeight: 20 },
+  bulletContent: { flex: 1 },
+  bulletText: { color: '#d1d5db', fontSize: 14, lineHeight: 20 },
+  citationText: { color: '#86efac', fontSize: 11, marginTop: 3, fontStyle: 'italic' },
   monitorRow: { marginTop: 4 },
 
   // Transmission status row

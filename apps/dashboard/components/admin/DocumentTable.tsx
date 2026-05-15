@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Loader2, Archive, RefreshCw, Trash2, Inbox } from "lucide-react";
+import { Loader2, Archive, RefreshCw, Trash2, Inbox, Eye } from "lucide-react";
+import { parseAPIDate } from "@/lib/dateUtils";
 import {
   archiveDocument,
   reprocessDocument,
@@ -15,6 +16,7 @@ interface Props {
   documents: DocumentItem[];
   onRefresh: () => void;
   isLoading: boolean;
+  onView: (doc: DocumentItem) => void;
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -57,7 +59,7 @@ function formatSize(bytes: number): string {
   return `${(bytes / 1024).toFixed(1)} KB`;
 }
 
-export function DocumentTable({ documents, onRefresh, isLoading }: Props) {
+export function DocumentTable({ documents, onRefresh, isLoading, onView }: Props) {
   const pollingRef = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
 
   // Start/stop polling for each PROCESSING document
@@ -132,13 +134,22 @@ export function DocumentTable({ documents, onRefresh, isLoading }: Props) {
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-800 bg-gray-900">
-      <table className="w-full text-left">
+      <table className="w-full table-fixed text-left">
+        <colgroup>
+          <col style={{ width: "24%" }} />
+          <col style={{ width: "12%" }} />
+          <col style={{ width: "7%" }} />
+          <col style={{ width: "7%" }} />
+          <col style={{ width: "14%" }} />
+          <col style={{ width: "16%" }} />
+          <col style={{ width: "20%" }} />
+        </colgroup>
         <thead>
           <tr className="border-b border-gray-800 bg-gray-800">
             {["Title", "Status", "Chunks", "Size", "Uploaded by", "Date", "Actions"].map((h) => (
               <th
                 key={h}
-                className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-400"
+                className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-400 whitespace-nowrap"
               >
                 {h}
               </th>
@@ -153,30 +164,45 @@ export function DocumentTable({ documents, onRefresh, isLoading }: Props) {
                 i === documents.length - 1 ? "border-0" : ""
               }`}
             >
-              <td className="max-w-[180px] px-4 py-3">
-                <p className="truncate font-medium text-white">{doc.title}</p>
-                <p className="truncate text-xs text-gray-500">{doc.filename}</p>
+              <td className="px-4 py-3">
+                <button
+                  onClick={() => onView(doc)}
+                  className="group w-full min-w-0 text-left"
+                  title="Read document"
+                >
+                  <p className="truncate font-medium text-white group-hover:text-blue-400 transition-colors">
+                    {doc.title}
+                  </p>
+                  <p className="truncate text-xs text-gray-500">{doc.filename}</p>
+                </button>
               </td>
               <td className="px-4 py-3">
                 <StatusBadge status={doc.status} />
               </td>
-              <td className="px-4 py-3 text-gray-400">
+              <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">
                 {doc.chunk_count != null ? doc.chunk_count.toLocaleString() : "—"}
               </td>
-              <td className="px-4 py-3 text-gray-400">
+              <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">
                 {formatSize(doc.file_size_bytes)}
               </td>
-              <td className="max-w-[140px] px-4 py-3">
+              <td className="px-4 py-3 overflow-hidden">
                 <p className="truncate text-xs text-gray-400">{doc.uploaded_by_email}</p>
               </td>
-              <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
-                {formatDistanceToNow(new Date(doc.uploaded_at), { addSuffix: true })}
+              <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap overflow-hidden">
+                {formatDistanceToNow(parseAPIDate(doc.uploaded_at), { addSuffix: true })}
               </td>
-              <td className="px-4 py-3">
+              <td className="px-4 py-3 overflow-hidden">
                 {doc.status === "PROCESSING" ? (
                   <Loader2 size={14} className="animate-spin text-gray-500" />
                 ) : (
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <button
+                      onClick={() => onView(doc)}
+                      title="Read content"
+                      className="rounded border border-blue-800 px-2 py-1 text-xs text-blue-400 transition-colors hover:border-blue-600 hover:text-blue-300"
+                    >
+                      <Eye size={12} />
+                    </button>
                     {doc.status === "ACTIVE" && (
                       <button
                         onClick={() => handleArchive(doc.id)}

@@ -43,7 +43,7 @@ Rules you MUST follow:
 When you have: chief complaint, onset, severity score, at least 2 associated symptoms or confirmation there are none, and allergy status — you have enough information.
 
 Signal completion by responding ONLY with this exact JSON (nothing else, no text before or after):
-{"status":"SUFFICIENT","summary":"<2 sentence summary of the patient's condition>"}
+{"status":"SUFFICIENT","chief_complaint":"<concise medical chief complaint in 3-8 words, e.g. 'Severe chest pain with shortness of breath'>","summary":"<2 sentence clinical summary of the patient's condition>"}
 
 If the patient mentions ANY of these critical symptoms, respond ONLY with this exact JSON immediately:
 chest pain, difficulty breathing, cannot breathe, uncontrolled bleeding, unconscious, seizure, crush injury, snake bite, stroke, severe burn, choking, amputation, electric shock:
@@ -81,6 +81,15 @@ const FORCE_SUFFICIENT_SUFFIX =
   '\n\nYou have asked enough questions. Now respond with the SUFFICIENT JSON.';
 
 const MAX_TURNS_BEFORE_FORCE = 8;
+
+// Minimum BM25 score to include RAG context in the LLM's message (avoids
+// polluting the AI with unrelated medical information).
+const LLM_RAG_MIN_SCORE = 0.25;
+
+// Minimum BM25 score AND a citation (articleTitle or articleSource) are both
+// required to show guidance in the emergency bar.  Higher bar because this text
+// is patient-facing and must be verifiably relevant.
+const EMERGENCY_RAG_MIN_SCORE = 0.4;
 // Minimum number of follow-up turns in critical mode before CRITICAL JSON is
 // accepted from the LLM. Ensures at least 3 questions are asked (severity,
 // onset/location, associated symptoms) before the report is transmitted.
@@ -148,13 +157,17 @@ export class SymptomCollectorAgent {
     // ── 2. RAG augmentation ────────────────────────────────────────────────────
     const queryText = this._criticalTrigger ?? userMessage;
     const ragResults = await queryKnowledgeBase(queryText, 1);
-    const ragContext = ragResults[0]?.content;
+    const ragItem = ragResults[0];
+    // Only inject into the LLM context when the chunk is genuinely relevant —
+    // irrelevant context degrades response quality more than no context at all.
+    const llmRagContext =
+      ragItem && ragItem.score >= LLM_RAG_MIN_SCORE ? ragItem.content : undefined;
 
     const messagesForLLM: LLMChatMessage[] = this.conversationHistory.map(
       (entry, idx) => {
         const isLast = idx === this.conversationHistory.length - 1;
-        const augment = isLast && ragContext
-          ? `\n\n[Medical Context: ${ragContext}]`
+        const augment = isLast && llmRagContext
+          ? `\n\n[Medical Context: ${llmRagContext}]`
           : '';
         return { role: entry.role, content: entry.content + augment };
       },
@@ -191,11 +204,14 @@ export class SymptomCollectorAgent {
     const parsed = _tryParseJSON(llmResponse);
 
     if (parsed?.status === 'SUFFICIENT') {
-      const summary: string = parsed.summary ?? 'Assessment complete.';
+      const summary = parsed.summary ?? 'Assessment complete.';
+      const chiefComplaint = (typeof parsed.chief_complaint === 'string' && parsed.chief_complaint.trim())
+        ? parsed.chief_complaint.trim()
+        : '';
       return {
         message: summary,
         status: 'SUFFICIENT',
-        featureVector: this.buildFeatureVector(summary),
+        featureVector: this.buildFeatureVector(summary, chiefComplaint),
       };
     }
 
@@ -210,12 +226,11 @@ export class SymptomCollectorAgent {
           const emittedTrigger = parsed.trigger ?? this._criticalTrigger ?? 'critical symptom';
           const message = parsed.message ?? 'Your information has been recorded. Stay calm — help is on the way.';
           this.conversationHistory.push({ role: 'assistant', content: message });
-          const triggerRagResults = await queryKnowledgeBase(emittedTrigger, 1);
           return {
             message,
             status: 'CRITICAL',
             criticalTrigger: emittedTrigger,
-            ragContext: triggerRagResults[0]?.content,
+            ragContext: await this._emergencyRagContext(emittedTrigger),
             featureVector: this._buildCriticalVector(emittedTrigger),
           };
         }
@@ -226,37 +241,56 @@ export class SymptomCollectorAgent {
           message: followUp,
           status: 'COLLECTING',
           criticalTrigger: this._criticalTrigger ?? undefined,
-          ragContext,
+          ragContext: llmRagContext,
         };
       }
 
-      // LLM returned a natural question
-      this.conversationHistory.push({ role: 'assistant', content: llmResponse });
+      // LLM returned a natural question (sanitize to strip any accidental JSON)
+      const safeCriticalResponse = _safeMessage(llmResponse, 'Can you describe what is happening?');
+      this.conversationHistory.push({ role: 'assistant', content: safeCriticalResponse });
 
       // Force-emit CRITICAL after MAX turns regardless
       if (this._postCriticalTurns >= MAX_POST_CRITICAL_TURNS) {
         const finalTrigger = this._criticalTrigger ?? 'critical symptom';
-        const finalRag = await queryKnowledgeBase(finalTrigger, 1);
         return {
           message: 'Thank you. Your information has been recorded and emergency help is being contacted. Stay calm.',
           status: 'CRITICAL',
           criticalTrigger: finalTrigger,
-          ragContext: finalRag[0]?.content,
+          ragContext: await this._emergencyRagContext(finalTrigger),
           featureVector: this._buildCriticalVector(finalTrigger),
         };
       }
 
       // Still collecting — keep input open
       return {
-        message: llmResponse,
+        message: safeCriticalResponse,
         status: 'COLLECTING',
         criticalTrigger: this._criticalTrigger ?? undefined,
-        ragContext,
+        ragContext: llmRagContext,
       };
     }
 
     // ── 8. Normal conversational response (non-critical mode) ─────────────────
-    this.conversationHistory.push({ role: 'assistant', content: llmResponse });
+    // Always sanitize before storing/returning — prevents raw JSON leaking to the UI.
+    const safeResponse = _safeMessage(llmResponse, 'Can you tell me more about your condition?');
+    this.conversationHistory.push({ role: 'assistant', content: safeResponse });
+
+    // LLM emitted CRITICAL JSON but _criticalMode was not set (user text didn't match keywords).
+    // Enter critical mode now so future turns use CRITICAL_MODE_SYSTEM_PROMPT.
+    if (parsed?.status === 'CRITICAL') {
+      const trigger = (typeof parsed.trigger === 'string' && parsed.trigger.trim())
+        ? parsed.trigger.trim()
+        : detectCriticalSymptom(llmResponse) ?? 'critical symptom';
+      this._criticalMode = true;
+      this._criticalTrigger = trigger;
+      const triggerRagResults = await queryKnowledgeBase(trigger, 1);
+      return {
+        message: safeResponse,
+        status: 'COLLECTING',
+        criticalTrigger: trigger,
+        ragContext: triggerRagResults[0]?.content,
+      };
+    }
 
     // Safety check on the LLM's own text (catches prose descriptions of critical symptoms)
     const responseTrigger = detectCriticalSymptom(llmResponse);
@@ -265,7 +299,7 @@ export class SymptomCollectorAgent {
       this._criticalTrigger = responseTrigger;
       const triggerRagResults = await queryKnowledgeBase(responseTrigger, 1);
       return {
-        message: llmResponse,
+        message: safeResponse,
         status: 'COLLECTING',
         criticalTrigger: responseTrigger,
         ragContext: triggerRagResults[0]?.content,
@@ -273,9 +307,9 @@ export class SymptomCollectorAgent {
     }
 
     return {
-      message: llmResponse,
+      message: safeResponse,
       status: 'COLLECTING',
-      ragContext,
+      ragContext: llmRagContext,
     };
   }
 
@@ -283,12 +317,14 @@ export class SymptomCollectorAgent {
    * Build a feature vector from whatever conversation history exists.
    * Used for the SUFFICIENT path where history is complete.
    */
-  buildFeatureVector(summary: string): MedicalFeatureVector {
+  buildFeatureVector(summary: string, extractedChiefComplaint = ''): MedicalFeatureVector {
     const userMessages = this.conversationHistory
       .filter((m) => m.role === 'user')
       .map((m) => m.content);
 
-    const chiefComplaint = userMessages[0] ?? 'Not provided';
+    // Prefer the LLM-extracted chief complaint (clinically worded);
+    // fall back to the user's first raw message only if not available.
+    const chiefComplaint = extractedChiefComplaint.trim() || userMessages[0] || 'Not provided';
 
     // Severity — last standalone digit 1–10 anywhere in user messages
     let severity = 5;
@@ -362,7 +398,7 @@ export class SymptomCollectorAgent {
       .filter((m) => m.role === 'user')
       .map((m) => m.content);
 
-    const chiefComplaint = userMessages[0] ?? trigger;
+    const chiefComplaint = `Emergency: ${trigger.charAt(0).toUpperCase() + trigger.slice(1)}`;
 
     // Extract severity from any user message; default to 7 if never reported
     let severity = 7;
@@ -397,6 +433,21 @@ export class SymptomCollectorAgent {
     };
   }
 
+  /**
+   * Returns emergency-bar guidance text only when the top RAG result is both
+   * above the relevance threshold AND has a citable source.
+   * Returns undefined if the knowledge base has nothing genuinely useful to say —
+   * it is always better to show nothing than to show irrelevant medical advice.
+   */
+  private async _emergencyRagContext(trigger: string): Promise<string | undefined> {
+    const results = await queryKnowledgeBase(trigger, 1);
+    const item = results[0];
+    if (!item || item.score < EMERGENCY_RAG_MIN_SCORE) return undefined;
+    const source = item.articleTitle ?? item.articleSource;
+    if (!source) return undefined;
+    return `${item.content}\n\n📚 Source: ${source}`;
+  }
+
   reset(): void {
     this.conversationHistory = [];
     this.turnCount = 0;
@@ -418,4 +469,17 @@ function _tryParseJSON(
   } catch {
     return null;
   }
+}
+
+/**
+ * Returns the human-readable `message` field from a JSON string, or the
+ * original string if it is not JSON. Prevents raw JSON blobs from leaking
+ * into the chat UI when the LLM emits a status token in an unexpected turn.
+ */
+function _safeMessage(text: string, fallback: string): string {
+  const p = _tryParseJSON(text);
+  if (!p) return text;
+  return typeof p.message === 'string' && p.message.trim().length > 0
+    ? p.message.trim()
+    : fallback;
 }
