@@ -84,3 +84,4 @@ LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
 [2026-05-15 16:57:45,023: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[ac4a1565-b344-4c86-84da-d4766ef371e0] received
 [2026-05-15 16:57:46,535: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[ac4a1565-b344-4c86-84da-d4766ef371e0] succeeded in 1.514999999999418s: None
 [2026-05-15 16:57:50,332: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[df1692be-f94e-4d9b-9dfd-15f0a5689cc4] received
+[2026-05-15 16:57:51,262: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[df1692be-f94e-4d9b-9dfd-15f0a5689cc4] succeeded in 0.9220000000059372s: None

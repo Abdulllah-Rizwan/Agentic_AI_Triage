@@ -94,7 +94,16 @@
       "Bash(pip show *)",
       "Bash(set TF_CPP_MIN_LOG_LEVEL=3)",
       "Bash(python -c \"import sentence_transformers; print\\('OK'\\)\")",
-      "Bash(dir C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\src\\\\assets\\\\knowledge *)"
+      "Bash(dir C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\src\\\\assets\\\\knowledge *)",
+      "Bash(git restore *)",
+      "Bash(cp \"C:/Users/ABDULLAH RIZWAN/Desktop/api_env_backup.txt\" \"C:/Users/ABDULLAH RIZWAN/OneDrive/Desktop/FYP Project/Agentic_AI_Triage/apps/api/.env\")",
+      "Bash(cp \"C:/Users/ABDULLAH RIZWAN/Desktop/mobile_env_backup.txt\" \"C:/Users/ABDULLAH RIZWAN/OneDrive/Desktop/FYP Project/Agentic_AI_Triage/apps/mobile/.env\")",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Node:', d.get\\('engines',{}\\).get\\('node','not specified'\\)\\); print\\('Scripts:', list\\(d.get\\('scripts',{}\\).keys\\(\\)\\)\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Scripts:', list\\(d.get\\('scripts',{}\\).keys\\(\\)\\)\\); deps=d.get\\('dependencies',{}\\); print\\('Expo version:', deps.get\\('expo','?'\\)\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); e=d.get\\('expo',{}\\); print\\('Name:', e.get\\('name'\\)\\); print\\('Slug:', e.get\\('slug'\\)\\); print\\('Android pkg:', e.get\\('android',{}\\).get\\('package','?'\\)\\)\")",
+      "Bash(git commit *)"
     ]
   }
 }
