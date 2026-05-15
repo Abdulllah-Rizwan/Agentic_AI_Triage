@@ -1440,6 +1440,107 @@ Fix a cluster of bugs discovered during live device testing across both the mobi
 
 ---
 
+## Session 16 — 2026-05-15
+
+### Goal
+Fix the admin knowledge base page (showing only an upload form with no document list), add a document content viewer, fix table column overflow, fix authentication session expiry, make the sidebar collapsible, fix a GitHub push-protection block caused by committed `.env` secrets, and write a comprehensive setup guide for the project.
+
+---
+
+### Bugs fixed
+
+| # | File(s) | Bug | Fix |
+|---|---------|-----|-----|
+| 1 | `apps/api/app/routers/admin/knowledge.py` | `get_stats` endpoint used `settings.FAISS_EXPORT_DIR` but `from app.core.config import settings` was missing from the imports → `NameError` → 500 response | Added the missing import |
+| 2 | `apps/dashboard/app/(dashboard)/admin/knowledge/page.tsx` | `loadAll` used `Promise.all([getAdminDocuments(), getKBStats()])` — if the stats call failed (due to bug #1), both results were discarded and the document list rendered empty via a silent `catch` block | Changed to `Promise.allSettled` so each result is handled independently; document list loads even if stats fails |
+| 3 | `apps/dashboard/components/admin/DocumentTable.tsx` | Long article titles bled into the Status, Chunks, and Size columns | Root cause: `max-w-[x]` on `<td>` has no effect without `table-fixed`; Tailwind `w-[x%]` on `<col>` elements is unreliable across browsers. Fixed by: adding `table-fixed` to `<table>`, switching to inline `style={{ width: "x%" }}` on `<col>` elements, adding `whitespace-nowrap` to all `<th>` headers, adding `overflow-hidden` to Date and Actions cells |
+| 4 | `apps/dashboard/auth.ts` | `jwt` callback never refreshed the access token — the same 15-minute API token was reused indefinitely, causing all API calls to fail with 401 after the first 15 minutes | Added `access_token_expires_at` tracking; on each `jwt` call checks expiry and calls `POST /api/v1/auth/refresh`; on refresh failure sets `error: "RefreshTokenExpired"` |
+| 5 | `apps/dashboard/middleware.ts` | Expired sessions were not detected — NextAuth's 30-day session cookie kept users "logged in" even after the API token expired; visiting `/login` redirected back to `/cases` | Added `RefreshTokenExpired` check; wipes the session cookie and redirects to `/login` when detected |
+| 6 | `apps/dashboard/lib/api.ts` | A 401 response from any API call was silently thrown as a generic error with no logout | Added explicit `res.status === 401` check that calls `signOut({ callbackUrl: "/login" })` before throwing |
+| 7 | `.gitignore` | Root `.gitignore` listed `Apps/Api/.env` (capital A) while the real path is `apps/api/.env` (lowercase); on Windows git treated these as different paths, causing both `.env` files to be tracked and committed into history | Removed case-wrong entries; replaced with `**/.env` and `**/.env.local` glob patterns that match at any depth regardless of case |
+
+---
+
+### Features added
+
+#### Document content viewer (click to read articles)
+- **New API endpoint:** `GET /api/v1/admin/knowledge/documents/{doc_id}/content` — reads the `.txt` file from disk and returns `{ content, title, filename }`
+- **New component:** `apps/dashboard/components/admin/DocumentViewerPanel.tsx` — slide-over panel that fetches and displays the full article text with a metadata strip (chunk count, file size, word count, upload date) and footer (uploader email, indexed date)
+- **`DocumentTable.tsx`:** Article title is now a clickable button (turns blue on hover); a blue eye icon button was added to the Actions column; both open the viewer panel
+- **`api.ts`:** Added `getDocumentContent(id)` function and `DocumentContentResponse` type
+
+#### Collapsible sidebar
+- **`apps/dashboard/app/(dashboard)/layout.tsx`:** Added `collapsed` boolean state; sidebar transitions between `w-60` (full labels) and `w-16` (icon-only) with `transition-all duration-200`; a circular toggle button is pinned to the sidebar's right edge; all nav links show `title` tooltips when collapsed; added a **Sign out** button at the bottom of the sidebar (was previously missing)
+
+#### SETUP.md — project setup guide
+- **New file:** `SETUP.md` at project root — 11-section guide covering: prerequisites (Git, Python 3.11, Node 20, Docker Desktop, Android Studio, Expo CLI), cloning the repo, obtaining free API keys (Groq + JWT secret generation), Docker database startup, API server setup (venv, migrations, Celery worker), dashboard setup, mobile app setup (LAN IP, Ollama for dev mode, emulator/device), knowledge base seeding, first login and admin registration order, "running everything together" table with quick checklist, and a troubleshooting section with 9 common problems
+
+---
+
+### Key decisions made
+
+#### DEC-018 — `Promise.allSettled` over `Promise.all` for independent data fetches
+- **Date:** 2026-05-15
+- **Decision:** `loadAll` in the admin knowledge page uses `Promise.allSettled` so the document list and stats load independently
+- **Reason:** `Promise.all` fails atomically — a single endpoint failure (e.g. stats 500) silently drops all data. For a page where the document table and the stats footer are unrelated, each fetch should fail independently. This pattern should be followed for any page that loads from multiple unrelated endpoints.
+- **Status:** Final
+
+#### DEC-019 — `style={{ width: "x%" }}` on `<col>` for reliable table column widths
+- **Date:** 2026-05-15
+- **Decision:** Table column widths use inline `style` props on `<col>` elements, not Tailwind `w-[x%]` classes
+- **Reason:** Tailwind's `w-[x%]` utilities on `<col>` elements are unreliable — some browsers do not apply them consistently. The HTML `width` attribute (or inline `style`) on `<col>` is the spec-compliant way to declare fixed column widths and works universally. `table-fixed` on `<table>` is also required to activate the fixed layout algorithm.
+- **Status:** Final — apply this pattern to any future fixed-layout table
+
+#### DEC-020 — Token refresh inside NextAuth `jwt` callback
+- **Date:** 2026-05-15
+- **Decision:** The API access token is refreshed proactively inside the NextAuth `jwt` callback, 1 minute before the server's 15-minute expiry. If the refresh token has expired, `error: "RefreshTokenExpired"` is set on the JWT, which the middleware detects and handles by clearing the session cookie and redirecting to `/login`.
+- **Reason:** Without this, the NextAuth session cookie (30-day lifetime) kept users permanently "logged in" at the Next.js layer even after the underlying API access token expired. All API calls would silently return 401. The three-layer defence (jwt callback → middleware → api.ts 401 handler) ensures no code path can make API calls with a stale token.
+- **Status:** Final
+
+#### DEC-021 — `**/.env` glob in `.gitignore` instead of explicit paths
+- **Date:** 2026-05-15
+- **Decision:** `.gitignore` uses `**/.env` and `**/.env.local` to catch environment files at any depth, replacing the previous case-sensitive explicit paths (`Apps/Api/.env`, `Apps/Mobile/.env`)
+- **Reason:** The previous entries used capital-A `Apps/` while the real directories use lowercase `apps/`. On Windows, git is case-sensitive for `.gitignore` matching, so the files slipped through and were committed. A `**/.env` glob matches regardless of directory depth or casing and is proof against future directory renames.
+- **Status:** Final
+
+---
+
+### Git history rewrite
+- Both `.env` files (containing a Groq API key) had been committed into git history in commits `6f70892` and `2e8c0e6`
+- GitHub Push Protection blocked the push and detected the secret
+- Used `git filter-repo --path apps/api/.env --path apps/mobile/.env --invert-paths --force` to strip both files from the entire commit history
+- Force-pushed the rewritten history to `main`
+- Both `.env` files were backed up to Desktop before the rewrite and restored afterward — local files were not affected
+- **Action required:** The exposed Groq API key must be revoked at https://console.groq.com and replaced with a new key in `apps/api/.env` and `apps/mobile/.env`
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/api/app/routers/admin/knowledge.py` | Added `from app.core.config import settings` import; added `GET /documents/{doc_id}/content` endpoint |
+| `apps/dashboard/app/(dashboard)/admin/knowledge/page.tsx` | `Promise.all` → `Promise.allSettled`; added `viewingDoc` state; added `DocumentViewerPanel` |
+| `apps/dashboard/app/(dashboard)/layout.tsx` | Full rewrite — added `collapsed` sidebar state, toggle button, icon-only mode, sign-out button, smooth transition |
+| `apps/dashboard/components/admin/DocumentTable.tsx` | `table-fixed` + `<colgroup>` with inline `style` widths; `whitespace-nowrap` on all `<th>` and on Chunks/Size cells; `overflow-hidden` on Date/Actions cells; title is clickable button; eye icon added to Actions; `flex-wrap` on action buttons |
+| `apps/dashboard/components/admin/DocumentViewerPanel.tsx` | New file — slide-over panel for reading article content |
+| `apps/dashboard/lib/api.ts` | Added `getDocumentContent()` + `DocumentContentResponse`; added `signOut` on 401 responses |
+| `apps/dashboard/auth.ts` | Full rewrite — `jwt` callback now tracks `access_token_expires_at`, refreshes via `POST /api/v1/auth/refresh`, sets `error: "RefreshTokenExpired"` on failure |
+| `apps/dashboard/middleware.ts` | Added `RefreshTokenExpired` detection with session cookie clear and `/login` redirect |
+| `apps/dashboard/types/next-auth.d.ts` | Added `error?: string` to `Session` type |
+| `.gitignore` | Replaced case-wrong explicit paths with `**/.env` and `**/.env.local` globs; added log files and lowercase app paths |
+| `SETUP.md` | New file — full project setup guide (11 sections, ~700 lines) |
+
+---
+
+### What is next
+- Rotate the Groq API key (the old key was exposed in git history before the rewrite)
+- Test the full auth flow: let the 15-minute access token expire and verify the app silently refreshes; let the 7-day refresh token expire and verify redirect to `/login`
+- Run the mobile app against the seeded knowledge base and verify post-triage RAG guidance appears with correct WHO citations
+- Consider building an EAS dev build for physical device testing of native modules (`llama.rn`, AES encryption)
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
