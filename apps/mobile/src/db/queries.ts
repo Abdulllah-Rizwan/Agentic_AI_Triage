@@ -134,3 +134,26 @@ export async function setMetadata(key: string, value: string): Promise<void> {
     [key, value],
   );
 }
+
+// ── Active Chat Session ───────────────────────────────────────────────────────
+
+const ACTIVE_CHAT_KEY = 'active_chat_session';
+
+export async function saveActiveSession(session: unknown): Promise<void> {
+  await setMetadata(ACTIVE_CHAT_KEY, JSON.stringify(session));
+}
+
+export async function loadActiveSession<T = unknown>(): Promise<T | null> {
+  const raw = await getMetadata(ACTIVE_CHAT_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
+
+export async function clearActiveSession(): Promise<void> {
+  const db = getDb();
+  await db.runAsync(`DELETE FROM app_metadata WHERE key = ?`, [ACTIVE_CHAT_KEY]);
+}

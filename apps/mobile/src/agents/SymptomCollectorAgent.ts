@@ -14,6 +14,14 @@ import type { ChatMessage as LLMChatMessage } from '../services/llm/LLMAdapter.i
 
 export type AgentStatus = 'COLLECTING' | 'SUFFICIENT' | 'CRITICAL';
 
+export interface AgentSerializableState {
+  history: Array<{ role: 'user' | 'assistant'; content: string }>;
+  turnCount: number;
+  criticalMode: boolean;
+  criticalTrigger: string | null;
+  postCriticalTurns: number;
+}
+
 export interface AgentResponse {
   message: string;
   status: AgentStatus;
@@ -446,6 +454,24 @@ export class SymptomCollectorAgent {
     const source = item.articleTitle ?? item.articleSource;
     if (!source) return undefined;
     return `${item.content}\n\n📚 Source: ${source}`;
+  }
+
+  getSerializableState(): AgentSerializableState {
+    return {
+      history: [...this.conversationHistory],
+      turnCount: this.turnCount,
+      criticalMode: this._criticalMode,
+      criticalTrigger: this._criticalTrigger,
+      postCriticalTurns: this._postCriticalTurns,
+    };
+  }
+
+  restoreState(state: AgentSerializableState): void {
+    this.conversationHistory = state.history ?? [];
+    this.turnCount = state.turnCount ?? 0;
+    this._criticalMode = state.criticalMode ?? false;
+    this._criticalTrigger = state.criticalTrigger ?? null;
+    this._postCriticalTurns = state.postCriticalTurns ?? 0;
   }
 
   reset(): void {

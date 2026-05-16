@@ -21,7 +21,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import type { RootStackParamList } from '../../App';
 import { useChatStore, type ChatMessage } from '../store/chatStore';
-import { SymptomCollectorAgent } from '../agents/SymptomCollectorAgent';
+import { SymptomCollectorAgent, type AgentSerializableState } from '../agents/SymptomCollectorAgent';
+import { saveActiveSession, loadActiveSession, clearActiveSession } from '../db/queries';
 import {
   computeTriage,
   type MedicalFeatureVector,
@@ -34,6 +35,21 @@ import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
+const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000; // sessions older than 24 h start fresh
+
+interface SavedChatSession {
+  messages: ChatMessage[];
+  agentState: AgentSerializableState;
+  screenState: {
+    turnCount: number;
+    emergencyRag: string | undefined;
+    criticalTxStatus: 'IDLE' | 'SENDING' | 'SENT' | 'CACHED' | 'ERROR';
+    criticalCaseId: string | null;
+    criticalTxFired: boolean;
+    emergencyTrigger: string | null;
+  };
+  savedAt: number;
+}
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -71,34 +87,57 @@ export default function ChatScreen({ navigation }: Props) {
   const dot3 = useRef(new Animated.Value(0)).current;
 
   // Zustand
-  const messages            = useChatStore((s) => s.messages);
-  const isAgentTyping       = useChatStore((s) => s.isAgentTyping);
-  const emergencyDetected   = useChatStore((s) => s.emergencyDetected);
-  const addMessage          = useChatStore((s) => s.addMessage);
-  const setAgentTyping      = useChatStore((s) => s.setAgentTyping);
+  const messages             = useChatStore((s) => s.messages);
+  const isAgentTyping        = useChatStore((s) => s.isAgentTyping);
+  const emergencyDetected    = useChatStore((s) => s.emergencyDetected);
+  const emergencyTrigger     = useChatStore((s) => s.emergencyTrigger);
+  const addMessage           = useChatStore((s) => s.addMessage);
+  const setMessages          = useChatStore((s) => s.setMessages);
+  const setAgentTyping       = useChatStore((s) => s.setAgentTyping);
   const setEmergencyDetected = useChatStore((s) => s.setEmergencyDetected);
-  const clearChat           = useChatStore((s) => s.clearChat);
-  const setCollectionStatus = useChatStore((s) => s.setCollectionStatus);
+  const clearChat            = useChatStore((s) => s.clearChat);
+  const setCollectionStatus  = useChatStore((s) => s.setCollectionStatus);
 
-  // ── Startup ────────────────────────────────────────────────────────────────
+  // ── Startup — restore saved session or start fresh ────────────────────────
 
   useEffect(() => {
     unmounted.current = false;
     navigation.setOptions({ headerShown: false });
-    clearChat();
 
     const agent = new SymptomCollectorAgent();
     agentRef.current = agent;
 
-    agent.start().then((response) => {
+    (async () => {
+      const saved = await loadActiveSession<SavedChatSession>();
+
       if (unmounted.current) return;
-      addMessage({
-        id: `agent-${Date.now()}`,
-        role: 'agent',
-        content: response.message,
-        timestamp: Date.now(),
-      });
-    });
+
+      if (saved && (saved.messages?.length ?? 0) > 0 && Date.now() - saved.savedAt < SESSION_MAX_AGE_MS) {
+        // Restore existing in-progress session
+        setMessages(saved.messages);
+        agent.restoreState(saved.agentState);
+        setTurnCount(saved.screenState.turnCount ?? 0);
+        setEmergencyRag(saved.screenState.emergencyRag);
+        setCriticalTxStatus(saved.screenState.criticalTxStatus ?? 'IDLE');
+        setCriticalCaseId(saved.screenState.criticalCaseId ?? null);
+        criticalTxFired.current = saved.screenState.criticalTxFired ?? false;
+        if (saved.screenState.emergencyTrigger) {
+          setEmergencyDetected(saved.screenState.emergencyTrigger);
+          barOffset.setValue(0); // show bar immediately without animation on restore
+        }
+      } else {
+        // Fresh start
+        clearChat();
+        const response = await agent.start();
+        if (unmounted.current) return;
+        addMessage({
+          id: `agent-${Date.now()}`,
+          role: 'agent',
+          content: response.message,
+          timestamp: Date.now(),
+        });
+      }
+    })();
 
     return () => {
       unmounted.current = true;
@@ -106,6 +145,32 @@ export default function ChatScreen({ navigation }: Props) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ── Persist session to SQLite on every message change ─────────────────────
+  // hasCompletedTriageRef lets the save effect skip writing after assessment ends
+  // without needing hasCompletedTriage in the dependency array (avoids stale closure).
+
+  const hasCompletedTriageRef = useRef(false);
+  useEffect(() => { hasCompletedTriageRef.current = hasCompletedTriage; }, [hasCompletedTriage]);
+
+  useEffect(() => {
+    if (messages.length === 0 || hasCompletedTriageRef.current || !agentRef.current) return;
+    const session: SavedChatSession = {
+      messages,
+      agentState: agentRef.current.getSerializableState(),
+      screenState: {
+        turnCount,
+        emergencyRag,
+        criticalTxStatus,
+        criticalCaseId,
+        criticalTxFired: criticalTxFired.current,
+        emergencyTrigger: emergencyTrigger ?? null,
+      },
+      savedAt: Date.now(),
+    };
+    saveActiveSession(session).catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages, turnCount, emergencyRag, criticalTxStatus, criticalCaseId, emergencyTrigger]);
 
   // ── Post-triage pipeline (runs after SUFFICIENT) ───────────────────────────
   // Defined outside useCallback and stored in a ref so handleSend can invoke
@@ -264,6 +329,8 @@ export default function ChatScreen({ navigation }: Props) {
       }, 10_000);
     }
 
+    // Session is complete — remove from SQLite so next mount starts fresh
+    clearActiveSession().catch(() => {});
     if (!unmounted.current) setHasCompletedTriage(true);
   };
 
@@ -509,6 +576,7 @@ export default function ChatScreen({ navigation }: Props) {
                 <TouchableOpacity
                   style={styles.newAssessmentBtn}
                   onPress={() => {
+                    clearActiveSession().catch(() => {});
                     clearChat();
                     navigation.replace('Home');
                   }}

@@ -100,7 +100,10 @@ async function _trySend(caseId: string): Promise<boolean> {
       // Proceed without auth token — server may accept unauthenticated ingests
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/v1/cases/ingest`, {
+    const ingestUrl = `${API_BASE_URL}/api/v1/cases/ingest`;
+    console.log(`[Transmission] POST ${ingestUrl} (${payloadBytes.length} bytes, token=${!!token})`);
+
+    const response = await fetch(ingestUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/octet-stream',
@@ -110,6 +113,7 @@ async function _trySend(caseId: string): Promise<boolean> {
     });
 
     if (response.ok || response.status === 202) {
+      console.log(`[Transmission] Case ${caseId} accepted by server (HTTP ${response.status})`);
       await deletePendingPayload(caseId);
       await saveCompletedCase({
         case_id: caseId,
@@ -120,10 +124,12 @@ async function _trySend(caseId: string): Promise<boolean> {
       return true;
     }
 
-    console.warn(`[Transmission] Ingest rejected: HTTP ${response.status} for case ${caseId}`);
+    const body = await response.text().catch(() => '');
+    console.warn(`[Transmission] Ingest rejected: HTTP ${response.status} — ${body} — case ${caseId}`);
     return false;
   } catch (err) {
-    console.error(`[Transmission] _trySend failed for case ${caseId}:`, err);
+    console.error(`[Transmission] _trySend network error for case ${caseId}: ${String(err)}`);
+    console.error(`[Transmission] Target URL was: ${API_BASE_URL}/api/v1/cases/ingest`);
     return false;
   }
 }

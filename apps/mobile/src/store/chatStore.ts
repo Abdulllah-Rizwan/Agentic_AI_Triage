@@ -18,6 +18,7 @@ interface ChatState {
   emergencyTrigger: string | null;
   collectionStatus: CollectionStatus;
   addMessage: (message: ChatMessage) => void;
+  setMessages: (messages: ChatMessage[]) => void;
   setAgentTyping: (typing: boolean) => void;
   setEmergencyDetected: (trigger: string) => void;
   setCollectionStatus: (status: CollectionStatus) => void;
@@ -32,6 +33,7 @@ export const useChatStore = create<ChatState>((set) => ({
   collectionStatus: 'IDLE',
   addMessage: (message) =>
     set((state) => ({ messages: [...state.messages, message] })),
+  setMessages: (messages) => set({ messages }),
   setAgentTyping: (isAgentTyping) => set({ isAgentTyping }),
   setEmergencyDetected: (trigger) =>
     set({ emergencyDetected: true, emergencyTrigger: trigger }),

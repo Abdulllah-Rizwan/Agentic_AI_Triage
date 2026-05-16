@@ -67,7 +67,11 @@ export class SLMAdapter implements LLMAdapter {
 
   async chat(messages: ChatMessage[], systemPrompt: string): Promise<string> {
     if (!this.isReady) {
-      throw new LLMUnavailableError('SLM is not ready');
+      const IS_DEV_MODE = process.env.EXPO_PUBLIC_ENVIRONMENT === 'development';
+      const reason = IS_DEV_MODE
+        ? 'Cannot reach Ollama. Check that Ollama is running and EXPO_PUBLIC_OLLAMA_URL is correct.'
+        : 'The on-device AI model is not loaded. This build does not include the offline model file. Please connect to WiFi to use the cloud AI.';
+      throw new LLMUnavailableError(reason);
     }
 
     if (IS_DEV) {

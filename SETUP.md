@@ -7,9 +7,11 @@ By the end you will have three things running simultaneously:
 |---|---|---|
 | **API Server** | FastAPI backend + Socket.IO | `http://localhost:3001` |
 | **Dashboard** | Next.js web app for responders | `http://localhost:3000` |
-| **Mobile App** | React Native patient app | Android device or emulator |
+| **Mobile App** | React Native patient app | Android device (real APK) |
 
 Estimated setup time: **45–60 minutes** (most of it is downloading tools and dependencies).
+
+> **Testing on a physical device (recommended):** The mobile app uses native modules (`llama.rn` for offline AI, `react-native-aes-crypto` for encryption) that cannot run in Expo Go. For full functionality — including offline mode and transmission — you must build and install a real APK via EAS. See [Section 7](#7-set-up-the-mobile-app) for the development mode setup and [Section 12](#12-building-a-real-apk-with-eas) for the full APK build.
 
 ---
 
@@ -21,11 +23,12 @@ Estimated setup time: **45–60 minutes** (most of it is downloading tools and d
 4. [Start the Database and Redis](#4-start-the-database-and-redis)
 5. [Set Up the API Server](#5-set-up-the-api-server)
 6. [Set Up the Dashboard](#6-set-up-the-dashboard)
-7. [Set Up the Mobile App](#7-set-up-the-mobile-app)
+7. [Set Up the Mobile App (Development Mode)](#7-set-up-the-mobile-app)
 8. [Seed the Knowledge Base](#8-seed-the-knowledge-base)
 9. [First Login and Admin Setup](#9-first-login-and-admin-setup)
 10. [Running Everything Together](#10-running-everything-together)
 11. [Troubleshooting](#11-troubleshooting)
+12. [Building a Real APK with EAS (for Physical Device Testing)](#12-building-a-real-apk-with-eas)
 
 ---
 
@@ -607,7 +610,9 @@ Now that you have an admin account, go back to Section 8.2 and run the seeding s
 
 ## 10. Running Everything Together
 
-Every time you want to run the project, you need **5 things running simultaneously** in separate terminal windows:
+Every time you want to run the project, you need the following things running simultaneously.
+
+### Development mode (Expo Go / no physical device testing of native modules)
 
 | # | Terminal | Command | Directory |
 |---|---|---|---|
@@ -615,19 +620,32 @@ Every time you want to run the project, you need **5 things running simultaneous
 | 2 | API Server | `python run_server.py` | `apps/api/` (with `.venv` active) |
 | 3 | Celery Worker | `python run_celery.py` | `apps/api/` (with `.venv` active) |
 | 4 | Dashboard | `npm run dev` | `apps/dashboard/` |
-| 5 | Mobile | `npm run android` | `apps/mobile/` |
-| 6 | Ollama | `ollama serve` | anywhere |
+| 5 | Ollama | `ollama serve` | anywhere |
+| 6 | Mobile (dev) | `npx expo start --lan` | `apps/mobile/` |
 
-### Quick checklist every session:
+### Preview APK mode (real APK on physical device — required for offline AI and encryption)
+
+| # | Terminal | Command | Directory |
+|---|---|---|---|
+| 1 | Docker | `docker compose up -d` | `Agentic_AI_Triage/` |
+| 2 | API Server | `python run_server.py` | `apps/api/` (with `.venv` active) |
+| 3 | Celery Worker | `python run_celery.py` | `apps/api/` (with `.venv` active) |
+| 4 | Dashboard | `npm run dev` | `apps/dashboard/` |
+| 5 | ngrok | `ngrok http 3001` | anywhere |
+
+> No Ollama or Metro needed when running the preview APK — the app is fully standalone.
+
+### Quick checklist every session (preview APK):
 
 ```
 □ Docker Desktop is open and engine is running
 □ docker compose up -d (in project root)
-□ API server is running (see http://localhost:3001/docs)
+□ API server is running — confirm http://localhost:3001/api/v1/health returns {"status":"ok"}
 □ Celery worker is running
-□ Dashboard is running (see http://localhost:3000)
-□ Ollama is running (ollama serve)
-□ Mobile app started (npm run android)
+□ Dashboard is running — confirm http://localhost:3000 loads
+□ ngrok is running (ngrok http 3001) — copy the HTTPS URL
+□ If ngrok URL changed since last build: update EXPO_PUBLIC_API_BASE_URL in EAS dashboard and rebuild APK
+□ APK installed on phone (install once; reinstall only after a new EAS build)
 ```
 
 ---
@@ -689,6 +707,171 @@ The API server might be down. Open http://localhost:3001/docs — if that page d
 
 ### Android emulator is very slow
 Enable **Hardware Acceleration** in your BIOS (Intel VT-x or AMD-V). In Android Studio, go to **SDK Tools** and install **Intel HAXM** (Windows) or ensure **KVM** is enabled (Linux).
+
+### Mobile app (preview APK) shows "Saved securely" even when connected to WiFi
+The `EXPO_PUBLIC_API_BASE_URL` baked into the APK is stale — your PC's IP changed since the build.
+1. Run `ipconfig` and note your current IPv4 address
+2. Open the phone's Chrome browser and go to `http://<your-ip>:3001/api/v1/health` — if it times out, the IP changed
+3. Start ngrok: `ngrok http 3001` — copy the HTTPS URL
+4. Update `EXPO_PUBLIC_API_BASE_URL` in the EAS dashboard (Preview environment)
+5. Rebuild: `eas build --platform android --profile preview`
+
+### Mobile app (preview APK) shows "Device AI Unavailable" on splash screen
+The GGUF model was not included in the build. Check the EAS build log for the download step.
+- If it shows "Model download failed" — the HuggingFace URL changed. Update `MODEL_URL` in `apps/mobile/scripts/download-model.js`
+- If the download step never ran — check that `eas.json` has `"preBuildCommand"` under the preview profile
+
+### Chat agent says "having trouble connecting" in the preview APK
+The Groq API key is missing from the EAS environment variables.
+- Go to https://expo.dev → medireach-mobile → Environment Variables → Preview
+- Add `EXPO_PUBLIC_GROQ_API_KEY` with your Groq key (starts with `gsk_...`)
+- Rebuild the APK
+
+---
+
+## 12. Building a Real APK with EAS
+
+This section is for building a **standalone APK** that you can install on any Android phone without needing a PC or Expo Go. This is required to test:
+- Offline AI (the on-device Llama model via `llama.rn`)
+- AES-256 encryption (`react-native-aes-crypto`)
+- True offline → reconnect → transmit flow
+
+### 12.1 What EAS is
+
+EAS (Expo Application Services) is Expo's cloud build platform. You push your code to EAS servers, they compile the native Android/iOS app, and you download the `.apk` file. You do **not** need Android Studio or the Android SDK installed on your machine.
+
+There are two build profiles:
+- **`development`** — still requires Metro (your PC) to be running; use for debugging native modules
+- **`preview`** — fully standalone APK; installs and runs with no PC needed; this is what you distribute for testing
+
+### 12.2 Prerequisites for EAS
+
+**12.2.1 Expo account**
+
+Create a free account at https://expo.dev. The project is already linked under `abdullahrizwan354/medireach-mobile` — if you are a collaborator, ask the owner to add you.
+
+**12.2.2 EAS CLI**
+
+```powershell
+npm install -g eas-cli
+eas login
+```
+
+Enter your Expo account credentials.
+
+**12.2.3 ngrok (for a stable server URL)**
+
+The app's API URL is baked into the APK at build time. Your PC's LAN IP (`192.168.x.x`) changes whenever your router restarts. ngrok provides a stable HTTPS URL that survives IP changes.
+
+```powershell
+# Install ngrok
+winget install ngrok
+
+# Every time you start a dev session, run this in a separate terminal:
+ngrok http 3001
+```
+
+ngrok will print something like:
+```
+Forwarding  https://abc123.ngrok-free.app -> http://localhost:3001
+```
+
+Copy that HTTPS URL — you will use it as `EXPO_PUBLIC_API_BASE_URL` in the next step.
+
+> **Free tier limitation:** The ngrok URL changes every time you restart `ngrok http 3001`. When it changes, you must update the EAS environment variable and rebuild the APK. If you rebuild often, consider a paid ngrok plan ($8/month) which gives you a stable subdomain.
+
+### 12.3 Set environment variables in the EAS dashboard
+
+These variables are baked into the JavaScript bundle at build time. They must be set in the EAS dashboard — **not** in `.env` files (which are gitignored and never reach EAS servers).
+
+1. Go to https://expo.dev → sign in → click on `medireach-mobile`
+2. Click **Environment Variables** in the left sidebar
+3. Select the **Preview** environment
+4. Add the following variables:
+
+| Variable | Value | Notes |
+|---|---|---|
+| `EXPO_PUBLIC_API_BASE_URL` | `https://abc123.ngrok-free.app` | Your ngrok URL — no trailing slash |
+| `EXPO_PUBLIC_GROQ_API_KEY` | `gsk_your_groq_key` | From Step 3.1 of this guide |
+| `EXPO_PUBLIC_ENVIRONMENT` | `production` | Already set via `eas.json` — only add if overriding |
+
+> The `EXPO_PUBLIC_ENVIRONMENT=production` value is already hard-coded in `eas.json` for the preview profile. You only need to add `API_BASE_URL` and `GROQ_API_KEY`.
+
+### 12.4 Download the on-device AI model (first time only)
+
+The offline AI requires a 700MB model file. Download it once and place it in the correct folder before building. EAS will pick it up automatically via the pre-build download hook.
+
+**You only need to do this if the file is not already there:**
+
+```powershell
+# Check if the file exists
+ls "apps\mobile\src\assets\models\"
+```
+
+If `Llama-3.2-1B-Instruct-Q4_K_M.gguf` is NOT listed, download it:
+
+1. Go to `https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF`
+2. Find `Llama-3.2-1B-Instruct-Q4_K_M.gguf` (~807MB)
+3. Click the download icon and save the file to `apps/mobile/src/assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf`
+
+> **If you are using EAS cloud builds (not local builds):** The EAS pre-build hook in `eas.json` automatically downloads the model from HuggingFace if it is not already on the build server. You do not need to have the file locally for cloud builds to work — but the file must already be there locally if you run `eas build --local`.
+
+### 12.5 Build the preview APK
+
+From the `apps/mobile/` folder:
+
+```powershell
+cd apps/mobile
+eas build --platform android --profile preview
+```
+
+EAS will:
+1. Upload your project code
+2. Run `node scripts/download-model.js` (downloads the 807MB model — adds ~15 minutes)
+3. Run `expo prebuild` to generate native Android code
+4. Compile the native code with Gradle
+5. Print a download URL for the final `.apk` file
+
+**Total build time:** ~20–30 minutes on first build (model download + native compilation). Subsequent builds are faster if the model is cached.
+
+### 12.6 Install the APK on your device
+
+**Option A — adb (USB cable):**
+```powershell
+adb install path\to\medireach-preview.apk
+```
+
+**Option B — direct download:**
+Open the EAS build URL in your phone's browser and download the APK. You may need to enable "Install from unknown sources" in Android Settings → Apps → Special App Access.
+
+### 12.7 Verify the build works
+
+After installing:
+
+1. **Splash screen:** Should show "Device AI Ready" with a green dot within ~15 seconds (model loading). If it shows "Device AI Unavailable", the model file was not included — check the EAS build log for the download step.
+
+2. **Online assessment:** Ensure your ngrok tunnel is running (`ngrok http 3001`). Register, start an assessment, complete it with a RED symptom. The TriageResult screen should show "Report received ✓" (not "Saved securely").
+
+3. **Offline assessment:** Enable Airplane Mode. Start a new assessment. The badge should show "OFFLINE MODE". Complete an AMBER/RED assessment. Should show "Saved securely. Will send when signal is available." Re-enable WiFi — within 60 seconds the retry loop should flush the cached report to the server (check the dashboard).
+
+4. **Chat persistence:** Start an assessment, answer 2-3 questions, press the Android back button. Re-open the app. Tap **BEGIN ASSESSMENT** again — you should resume exactly where you left off (same messages visible).
+
+### 12.8 Common EAS build issues
+
+**"eas: command not found"**
+Run `npm install -g eas-cli` and try again.
+
+**"Invalid UUID" error during `eas init`**
+The `app.json` had a placeholder projectId. This was already fixed — the real project ID is `45e9db9e-eba6-4375-bd4c-ecffb0ac3fb3` and is already in `app.json`.
+
+**Build succeeds but app shows "Device AI Unavailable"**
+The GGUF model was not downloaded during the build. Check the EAS build log for the line starting with `Downloading Llama-3.2-1B-Instruct-Q4_K_M.gguf`. If it failed, verify the HuggingFace URL in `scripts/download-model.js` is still valid.
+
+**Reports show "Saved securely" even on WiFi**
+Your ngrok URL has changed or expired. Run `ngrok http 3001` again, update `EXPO_PUBLIC_API_BASE_URL` in the EAS dashboard, and rebuild.
+
+**APK installs but shows "having trouble connecting" in chat**
+The `EXPO_PUBLIC_GROQ_API_KEY` is missing or incorrect. Check the EAS dashboard environment variables for the Preview environment.
 
 ---
 

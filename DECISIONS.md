@@ -1541,6 +1541,280 @@ Fix the admin knowledge base page (showing only an upload form with no document 
 
 ---
 
+## Session 17 — 2026-05-16
+
+### Goal
+Set up EAS (Expo Application Services) to build real standalone APKs for physical device testing. Fix two bugs discovered after running the preview APK: (1) chat history was lost on navigation/app close, (2) after switching to the preview build, reports were not being transmitted to the server despite WiFi, and offline mode was completely broken.
+
+---
+
+### Context — what EAS is and why we moved to it
+
+Expo Go (the developer scanning app) cannot run native modules. `llama.rn` (the on-device LLM), `react-native-aes-crypto` (AES-256 encryption), and `expo-sqlite` with encryption all require compiled native code that Expo Go stubs out. To test these modules — and to test true offline behaviour — a **real APK** with all native code compiled in is required.
+
+**EAS (Expo Application Services)** is Expo's cloud build platform. It compiles the React Native project on Expo's servers and produces:
+- A `development` APK: like Expo Go but with all native modules compiled in; still requires Metro bundler running on your PC (dev mode)
+- A `preview` APK: fully standalone (no PC needed); uses `EXPO_PUBLIC_ENVIRONMENT=production`; installs directly on any Android device
+
+#### EAS setup steps taken this session
+
+1. **Installed EAS CLI:**
+   ```powershell
+   npm install -g eas-cli
+   ```
+
+2. **Logged in to Expo account:**
+   ```powershell
+   eas login
+   ```
+   Account: `abdullahrizwan354`
+
+3. **Fixed `app.json` placeholder projectId:**
+   The file had `"projectId": "REPLACE_WITH_EAS_PROJECT_ID"` which caused `eas init` to fail with `Invalid UUID`. Removed the entire `extra.eas` block from `app.json` so EAS could write the real UUID.
+   After `eas init`: projectId became `45e9db9e-eba6-4375-bd4c-ecffb0ac3fb3`, owner = `abdullahrizwan354`.
+
+4. **Set environment variables in EAS Dashboard:**
+   Go to https://expo.dev → your project → Environment Variables → Preview environment. Add:
+   - `EXPO_PUBLIC_API_BASE_URL` = your server URL (e.g. `http://192.168.18.34:3001` or ngrok URL)
+   - `EXPO_PUBLIC_GROQ_API_KEY` = your Groq API key
+
+   **Critical:** `.env` files are gitignored and are NOT uploaded to EAS. All `EXPO_PUBLIC_*` variables must be set in the EAS dashboard before building.
+
+5. **Built the preview APK:**
+   ```powershell
+   cd apps/mobile
+   eas build --platform android --profile preview
+   ```
+   Download the `.apk` from the URL EAS prints, install it via `adb install <file>.apk` or email it to your phone.
+
+---
+
+### Bug fix 1 — Chat history lost on navigation or app close
+
+**Problem:** Opening the chat, answering some questions, then switching apps or navigating back to Home cleared the entire conversation. The Zustand store (`chatStore`) is in-memory only — it resets every time the screen unmounts or the app restarts.
+
+**Fix — three files changed:**
+
+#### `apps/mobile/src/store/chatStore.ts`
+Added `setMessages` action to allow bulk restore of message array:
+```typescript
+setMessages: (messages: ChatMessage[]) => set({ messages }),
+```
+
+#### `apps/mobile/src/agents/SymptomCollectorAgent.ts`
+Added `AgentSerializableState` interface and two new methods:
+```typescript
+export interface AgentSerializableState {
+  history: Array<{ role: 'user' | 'assistant'; content: string }>;
+  turnCount: number;
+  criticalMode: boolean;
+  criticalTrigger: string | null;
+  postCriticalTurns: number;
+}
+
+getSerializableState(): AgentSerializableState { ... }
+restoreState(state: AgentSerializableState): void { ... }
+```
+These allow the full agent state (conversation history, turn counter, critical-mode flags) to be serialized to JSON and restored from JSON without loss.
+
+#### `apps/mobile/src/screens/ChatScreen.tsx`
+Added session persistence using the existing `app_metadata` SQLite table (no schema change needed):
+
+- **On every message change:** saves a `SavedChatSession` object to SQLite with key `active_chat_session`. The object contains: `messages`, `agentState`, `screenState` (emergencyBar, txStatus, caseId, criticalTxFired, emergencyTrigger), and `savedAt` timestamp.
+- **On mount:** loads the session from SQLite. If it exists and is less than 24 hours old, restores messages (`setMessages`), restores agent state (`agent.restoreState`), and restores screen state (re-shows emergency bar immediately if it was visible). If no session exists, does a fresh start as before.
+- **On triage completion and "Start New Assessment":** calls `clearActiveSession()` to wipe the saved session.
+
+Sessions older than 24 hours are discarded — a new assessment starts fresh.
+
+#### `apps/mobile/src/db/queries.ts`
+Three helper functions added (already existed in the file from this session):
+```typescript
+saveActiveSession(session: unknown): Promise<void>
+loadActiveSession<T = unknown>(): Promise<T | null>
+clearActiveSession(): Promise<void>
+```
+These wrap the existing `getMetadata`/`setMetadata` functions with the key `active_chat_session`.
+
+---
+
+### Bug fix 2 — Transmission failing on WiFi (preview build)
+
+**Root cause:** `EXPO_PUBLIC_API_BASE_URL` is a compile-time constant — it is baked into the JavaScript bundle at EAS build time. The value set in the EAS dashboard at the time of the build (`http://192.168.18.34:3001`) is the value embedded in every API call in that APK forever, regardless of what the server's IP becomes later.
+
+If the PC's IP changes (DHCP reassignment after router restart), every `fetch` call in the APK hits the wrong address, throws a network error, and `_trySend` catches the error silently — returning `false`. `sendOrCache` then returns `'CACHED'` and the app shows "Saved securely. Will send when signal is available." The user sees CACHED even on WiFi and has no way to tell the IP is wrong.
+
+**Fix applied — `TransmissionService.ts`:**
+Added explicit logging before and after the ingest fetch so the problem is visible when using `adb logcat`:
+```typescript
+console.log(`[Transmission] POST ${ingestUrl} (${payloadBytes.length} bytes, token=${!!token})`);
+// ...
+console.log(`[Transmission] Case ${caseId} accepted (HTTP ${response.status})`);
+// or:
+console.warn(`[Transmission] Ingest rejected: HTTP ${response.status} — ${body}`);
+// or:
+console.error(`[Transmission] _trySend network error: ${String(err)}`);
+console.error(`[Transmission] Target URL was: ${API_BASE_URL}/api/v1/cases/ingest`);
+```
+
+**Manual steps still required (as of end of this session):**
+
+**Step 1 — Verify the IP:**
+```powershell
+ipconfig
+```
+Look for IPv4 Address under your WiFi adapter. If it is NOT `192.168.18.34`, the IP has changed.
+
+**Step 2 — Test from the phone's browser:**
+Open Chrome on the phone and navigate to `http://192.168.18.34:3001/api/v1/health`. If it times out or gives an error, the IP has changed (or the firewall is blocking).
+
+**Step 3a — If IP changed: use ngrok for a stable URL (recommended):**
+```powershell
+# Install ngrok
+winget install ngrok
+
+# Start the tunnel (run this every session before using the app)
+ngrok http 3001
+```
+Ngrok prints a URL like `https://abc123.ngrok-free.app`. Go to https://expo.dev → your project → Environment Variables → Preview → update `EXPO_PUBLIC_API_BASE_URL` to the ngrok HTTPS URL. Then rebuild the APK.
+
+**Step 3b — If IP is the same:** Check the Windows Firewall rule for port 3001 still exists:
+```powershell
+netsh advfirewall firewall show rule name="MediReach API 3001"
+```
+If missing, re-add it (see Session 12 for the `netsh` command).
+
+**After fixing the URL:** Rebuild the preview APK:
+```powershell
+eas build --platform android --profile preview
+```
+
+---
+
+### Bug fix 3 — Offline mode completely broken (preview build)
+
+**Root cause:** The GGUF model file (`Llama-3.2-1B-Instruct-Q4_K_M.gguf`, ~807MB) is listed in `.gitignore`:
+```
+src/assets/models/*.gguf
+```
+
+EAS cloud builds archive the project from git. Gitignored files are excluded from the archive. The model file was never uploaded to EAS servers. The built APK had an empty/placeholder asset at the model path.
+
+At runtime, `SLMAdapter.initialize()` calls:
+```typescript
+const { initLlama } = await import('llama.rn');
+const modelAsset = require('../../assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf');
+this.llm = await initLlama({ model: modelAsset, ... });
+```
+`initLlama` fails because the asset is empty. `isReady` stays `false`. When the device is offline and `SLMAdapter.chat()` is called, it throws `LLMUnavailableError`. The app shows a generic "having trouble connecting" error with no explanation.
+
+**Note:** The GGUF file IS already downloaded and present locally at `apps/mobile/src/assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf` (807MB confirmed). The problem is getting it into EAS cloud builds.
+
+**Fix — two files added/changed:**
+
+#### `apps/mobile/scripts/download-model.js` (new file)
+A Node.js script that:
+1. Checks if `src/assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf` already exists — if yes, skips download
+2. If not, downloads the GGUF from HuggingFace (bartowski's GGUF repo) with redirect following and progress reporting
+3. On download failure: logs the error and exits 0 (so the build continues, just without offline AI)
+
+#### `apps/mobile/eas.json`
+Added `"preBuildCommand": "node scripts/download-model.js"` to both `preview` and `production` build profiles. This runs on the EAS server before the native build starts, ensuring the model is in place before Metro bundles the assets.
+
+**Important:** Verify the HuggingFace URL in `scripts/download-model.js` is still live before triggering a build. Open `https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF` in a browser and confirm `Llama-3.2-1B-Instruct-Q4_K_M.gguf` is listed. If the file moved, update `MODEL_URL` in the script.
+
+**Build time impact:** Each cloud build will take ~10–15 minutes longer due to the 807MB download on the EAS server. The script skips the download if the file is already present (which it never is on a fresh EAS server, so it always downloads for cloud builds).
+
+**Also improved — `SLMAdapter.ts` error message:**
+When `isReady = false`, the error message now distinguishes between dev and production mode:
+- Dev mode: `"Cannot reach Ollama. Check that Ollama is running and EXPO_PUBLIC_OLLAMA_URL is correct."`
+- Production (without model): `"The on-device AI model is not loaded. This build does not include the offline model file. Please connect to WiFi to use the cloud AI."`
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/app.json` | Removed placeholder `extra.eas.projectId`; `eas init` wrote real UUID (`45e9db9e-eba6-4375-bd4c-ecffb0ac3fb3`) |
+| `apps/mobile/src/store/chatStore.ts` | Added `setMessages` action for bulk restore |
+| `apps/mobile/src/agents/SymptomCollectorAgent.ts` | Added `AgentSerializableState` interface, `getSerializableState()`, `restoreState()` |
+| `apps/mobile/src/db/queries.ts` | Added `saveActiveSession`, `loadActiveSession`, `clearActiveSession` |
+| `apps/mobile/src/screens/ChatScreen.tsx` | Full session persistence: save on every message, restore on mount, clear on completion |
+| `apps/mobile/src/services/llm/SLMAdapter.ts` | Improved `LLMUnavailableError` message — distinguishes dev vs production missing-model failure |
+| `apps/mobile/src/services/transmission/TransmissionService.ts` | Added explicit URL logging, HTTP status logging, and network error logging in `_trySend` |
+| `apps/mobile/scripts/download-model.js` | New file — pre-build GGUF download script for EAS cloud builds |
+| `apps/mobile/eas.json` | Added `preBuildCommand` to `preview` and `production` profiles |
+
+---
+
+### Key decisions made
+
+#### DEC-022 — Chat session persisted to SQLite, not only Zustand memory
+- **Date:** 2026-05-16
+- **Decision:** Active chat sessions are serialized (messages + agent state + screen state) and stored in the existing `app_metadata` SQLite table with key `active_chat_session`. Restored on every `ChatScreen` mount. Sessions older than 24 hours are discarded.
+- **Reason:** Zustand state is in-memory only. Any navigation away from `ChatScreen` (including switching apps, Android back button, or OS killing the app) clears the state. In a disaster scenario, a user who accidentally exits the chat must be able to resume rather than start the entire interview over. 24-hour TTL balances resume capability against stale state showing up unexpectedly.
+- **Rejected alternative:** Navigation route params — works for hot navigation but does not survive app restarts.
+- **Status:** Final
+
+#### DEC-023 — EAS cloud builds download the GGUF via preBuildCommand
+- **Date:** 2026-05-16
+- **Decision:** The GGUF model file stays gitignored. EAS cloud builds run `node scripts/download-model.js` before the native build to download the model from HuggingFace if it is not already present.
+- **Reason:** The GGUF is 807MB — too large to commit to git without LFS, and LFS adds complexity. The file is already present locally for developers who placed it manually. EAS cloud builds need the file, so a download hook is the right seam. The script is idempotent (skips if present) so local builds are unaffected.
+- **Rejected alternative:** Commit the file to git directly — 807MB pushes are impractical; GitHub blocks files over 100MB without LFS.
+- **Rejected alternative:** `eas build --local` — requires Android SDK, NDK, and Java to be installed locally; adds significant setup overhead for every contributor.
+- **Status:** Final
+
+#### DEC-024 — EXPO_PUBLIC_API_BASE_URL must use ngrok (not LAN IP) for EAS builds
+- **Date:** 2026-05-16
+- **Decision:** Use ngrok (`ngrok http 3001`) to generate a stable HTTPS URL for the API server. Set `EXPO_PUBLIC_API_BASE_URL` in the EAS dashboard to the ngrok URL. Rebuild whenever the ngrok URL changes (free tier ngrok URLs change each session).
+- **Reason:** The LAN IP (`192.168.x.x`) is assigned by DHCP and can change whenever the router restarts or the lease expires. Because EAS bakes `EXPO_PUBLIC_API_BASE_URL` into the JS bundle at build time, a changed IP silently breaks all API calls in the already-installed APK. The only symptom is every report showing as CACHED even on WiFi. ngrok provides a stable HTTPS URL that survives IP changes.
+- **Tradeoff:** Free ngrok URLs change on every `ngrok http 3001` restart, so a new EAS build is needed each session. Paid ngrok ($8/month) provides a stable subdomain. For FYP testing, rebuilding occasionally is acceptable.
+- **Status:** Final for FYP; upgrade to paid ngrok or a deployed server URL for production
+
+---
+
+### What to do when you pick this up tomorrow
+
+#### Step 1 — Verify and fix the transmission IP (do this first)
+1. Check your current PC IP: `ipconfig` — look for IPv4 Address under WiFi adapter
+2. Open your phone's Chrome and go to `http://<that-ip>:3001/api/v1/health`
+   - If it responds with `{"status":"ok"}` — IP is correct, skip to Step 3
+   - If it times out — IP has changed, continue
+3. Start ngrok: `ngrok http 3001`
+4. Copy the HTTPS URL it prints (e.g. `https://abc123.ngrok-free.app`)
+5. Go to https://expo.dev → project `medireach-mobile` → Environment Variables → Preview
+6. Update `EXPO_PUBLIC_API_BASE_URL` to the ngrok URL (no trailing slash)
+
+#### Step 2 — Verify the HuggingFace model URL
+Open this in a browser: `https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF`
+Confirm `Llama-3.2-1B-Instruct-Q4_K_M.gguf` is listed. If the file moved, update `MODEL_URL` in `apps/mobile/scripts/download-model.js`.
+
+#### Step 3 — Rebuild the preview APK
+```powershell
+cd apps/mobile
+eas build --platform android --profile preview
+```
+This build will take ~15 minutes longer than usual (807MB model download on EAS server). Watch the build log for the download progress line.
+
+#### Step 4 — Install and test
+1. Install the APK on your device
+2. **Test online (WiFi) flow:** Complete an AMBER or RED assessment → should show "Report received ✓" (not CACHED)
+3. **Test offline flow:** Enable Airplane Mode → complete an AMBER/RED assessment → should show "Saved securely" → re-enable WiFi → within 60 seconds the retry loop should flush the queue (check the dashboard)
+4. **Test chat persistence:** Start an assessment, answer 2-3 questions, press the Android back button or switch apps → reopen the app → the chat should resume exactly where you left off
+
+#### Step 5 — If offline AI still shows an error
+The model loaded successfully if the Splash screen says "Device AI Ready". If it still says "Loading..." and times out (30s), the GGUF was not included in the build. Check the EAS build log for the download step — look for "Download complete: 807 MB".
+
+---
+
+### What is next after this
+- Test the full end-to-end flow with the new APK
+- Consider running `adb logcat | findstr Transmission` during tests to confirm the URL and HTTP status being used
+- Add Urdu localization (i18n) — `i18next` + `react-i18next`, RTL layout for Urdu
+- Add the `expo-background-fetch` background task so the retry loop runs even when the app is in the background (currently it only runs while the app is in the foreground)
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
