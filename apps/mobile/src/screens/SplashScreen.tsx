@@ -8,6 +8,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNetworkStore } from '../store/networkStore';
 import { useUserStore } from '../store/userStore';
+import { slmAdapter } from '../services/llm/SLMAdapter';
 import type { RootStackParamList } from '../../App';
 
 interface Props {
@@ -45,15 +46,16 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
   }, [isModelReady, timedOut, isRegistered, navigation]);
 
   function renderSLMStatus() {
-    if (timedOut && !isModelReady) {
+    if (!isModelReady) {
+      // Still initializing
       return (
         <View style={styles.statusRow}>
-          <View style={[styles.dot, styles.dotRed]} />
-          <Text style={styles.statusText}>Device AI Unavailable — Cloud Only</Text>
+          <Animated.View style={[styles.dot, styles.dotAmber, { opacity: pulseAnim }]} />
+          <Text style={styles.statusText}>Loading Device AI...</Text>
         </View>
       );
     }
-    if (isModelReady) {
+    if (slmAdapter.isModelReady()) {
       return (
         <View style={styles.statusRow}>
           <View style={[styles.dot, styles.dotGreen]} />
@@ -61,10 +63,11 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
         </View>
       );
     }
+    // Model not downloaded — cloud-only mode
     return (
       <View style={styles.statusRow}>
-        <Animated.View style={[styles.dot, styles.dotAmber, { opacity: pulseAnim }]} />
-        <Text style={styles.statusText}>Loading Device AI...</Text>
+        <View style={[styles.dot, styles.dotAmber]} />
+        <Text style={styles.statusText}>Cloud AI Mode</Text>
       </View>
     );
   }

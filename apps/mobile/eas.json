@@ -22,7 +22,6 @@
       "android": {
         "buildType": "apk"
       },
-      "preBuildCommand": "node scripts/download-model.js",
       "env": {
         "EXPO_PUBLIC_ENVIRONMENT": "production"
       }
@@ -31,7 +30,6 @@
       "android": {
         "buildType": "app-bundle"
       },
-      "preBuildCommand": "node scripts/download-model.js",
       "env": {
         "EXPO_PUBLIC_ENVIRONMENT": "production"
       }

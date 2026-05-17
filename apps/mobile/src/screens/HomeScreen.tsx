@@ -179,6 +179,22 @@ export default function HomeScreen({ navigation }: Props) {
                 </Text>
               </>
             )}
+            <TouchableOpacity
+              style={styles.modalViewChat}
+              onPress={() => {
+                setSelectedCase(null);
+                if (selectedCase) {
+                  navigation.navigate('Chat', {
+                    readonlySession: {
+                      caseId: selectedCase.case_id,
+                      triageLevel: selectedCase.triage_level,
+                    },
+                  });
+                }
+              }}
+            >
+              <Text style={styles.modalViewChatText}>View Conversation</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.modalClose} onPress={() => setSelectedCase(null)}>
               <Text style={styles.modalCloseText}>Close</Text>
             </TouchableOpacity>
@@ -248,6 +264,8 @@ const styles = StyleSheet.create({
   modalTitle: { color: '#ffffff', fontSize: 18, fontWeight: '700', marginBottom: 4 },
   modalField: { color: '#d1d5db', fontSize: 14, lineHeight: 22 },
   modalLabel: { color: '#9ca3af', fontWeight: '600' },
+  modalViewChat: { backgroundColor: '#dc2626', borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
+  modalViewChatText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
   modalClose: { backgroundColor: '#1f2937', borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
   modalCloseText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
 });

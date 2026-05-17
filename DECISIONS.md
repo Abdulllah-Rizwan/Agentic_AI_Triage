@@ -1815,6 +1815,232 @@ The model loaded successfully if the Splash screen says "Device AI Ready". If it
 
 ---
 
+---
+
+## Session 18 — 2026-05-17
+
+### Goal
+Fix three EAS build failures that blocked the APK build, complete several chat UX improvements, and add chat history read-back from the assessments history screen.
+
+---
+
+### Chat UX features added (completed before build failures were discovered)
+
+#### 1. Chat input locked after triage completes
+**Problem:** After triage fired and guidance was shown, the text input and send button were still active. Users could keep sending messages to an agent that had already finished.
+
+**Fix (`ChatScreen.tsx`):** `isInputDisabled` state is set to `true` when `collectionStatus` becomes `SUFFICIENT` or `CRITICAL`. The input row is replaced by a persistent bottom bar once triage is complete.
+
+---
+
+#### 2. "Start New Assessment" button moved to a persistent sticky bar
+**Problem:** The button was embedded in the `FlatList` `ListFooterComponent`, which meant it was only visible if the user scrolled to the bottom of the chat. On long conversations it was completely hidden.
+
+**Fix (`ChatScreen.tsx`):** Replaced the `ListFooterComponent` approach with a conditional bottom bar:
+- When `hasCompletedTriage` is `false`: the normal input row (TextInput + send button) is shown
+- When `hasCompletedTriage` is `true`: a full-width red "Start New Assessment" button replaces the input
+- When opened in read-only mode (`readonlySession` param): the button label changes to "← Back to History"
+
+---
+
+#### 3. Completed chats viewable in read-only mode from Home screen
+**Problem:** The "MY ASSESSMENTS" list on Home showed past cases with triage level and date, but tapping them had no way to replay the actual conversation.
+
+**Fix — three files changed:**
+
+**`App.tsx`:** Updated `Chat` route type to support an optional `readonlySession` param:
+```typescript
+Chat: { readonlySession?: { caseId: string; triageLevel: string } } | undefined;
+```
+
+**`HomeScreen.tsx`:** Added a "View Conversation" button to the case detail modal. Pressing it navigates to `Chat` with `readonlySession: { caseId, triageLevel }`.
+
+**`ChatScreen.tsx`:** On mount, detects `readonlySession` param. If present:
+- Sets `hasCompletedTriage = true` and `isInputDisabled = true` immediately
+- Loads the saved chat transcript from SQLite via `loadChatHistory(caseId)`
+- Shows "No conversation transcript was saved for this assessment." if no history exists
+- Input is permanently disabled; bottom bar shows "← Back to History"
+
+---
+
+#### 4. Chat messages saved per-case to SQLite
+**Problem:** Chat transcripts were only in Zustand memory. Once the app was restarted or the screen unmounted, the full conversation was gone.
+
+**Fix (`queries.ts`, `ChatScreen.tsx`):** Added `saveChatHistory(caseId, messages)` and `loadChatHistory(caseId)` using the `app_metadata` table with key `chat_history_<caseId>`. Called in `_handlePostTriage` after triage completes.
+
+---
+
+#### 5. GREEN cases now persisted to completed_cases
+**Problem:** GREEN triage results never called `saveCompletedCase()` — they only showed the result screen and then silently disappeared from history.
+
+**Fix (`ChatScreen.tsx`):** In `_handlePostTriage`, when `level === 'GREEN'`, a new UUID is generated, `saveCompletedCase()` and `saveChatHistory()` are both called with it.
+
+---
+
+#### 6. Silent LLM errors now show a visible message in chat
+**Problem:** When `CloudLLMAdapter` or `SLMAdapter` threw, the `catch` block in `handleSend` set `isAgentTyping = false` but showed nothing in the chat. The user had no indication anything went wrong.
+
+**Fix (`ChatScreen.tsx`):** The catch block now adds a system message bubble:
+- If offline: "⚠ Device AI is unavailable. The offline model may not be included in this build. Please connect to the internet to use cloud AI."
+- Otherwise: "⚠ Connection error. Please try again."
+
+---
+
+### EAS Build failures fixed
+
+Three separate bugs caused the EAS cloud build to crash, each with a different root cause.
+
+---
+
+#### Bug 1 — Metro crashes on `.gguf` file: "Cannot create a string longer than 0x1fffffe8 characters"
+
+**Root cause:** A previous session added `.gguf` to `metro.config.js` `assetExts` so that `require('...model.gguf')` would work. Metro's transform worker reads asset files as strings to compute hashes and identifiers. The GGUF model file is 807 MB — far beyond V8's ~512 MB string limit. Metro crashed immediately on the first bundle attempt.
+
+**The deeper problem:** There is no way to `require()` a 700+ MB binary file through Metro. The correct approach is runtime download to the device's filesystem.
+
+**Fix (`metro.config.js`):** Removed the entire `.gguf` `assetExts` block entirely.
+
+---
+
+#### Bug 2 — `SLMAdapter.ts` used `require()` to load the GGUF model
+
+**Root cause (linked to Bug 1):** `SLMAdapter.initialize()` called `require('../../assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf')` to get the asset URI. This is what triggered the Metro crash above. Even if Metro didn't crash, bundling an 807 MB binary into the JavaScript bundle is not viable.
+
+**Fix (`SLMAdapter.ts`):** Complete rewrite of model loading:
+- Removed the `require()` call entirely
+- Changed import from `expo-file-system` → `expo-file-system/legacy` (required for `documentDirectory`, `getInfoAsync`, etc. which were moved in expo-file-system v19)
+- Model path is now `FileSystem.documentDirectory + 'models/Llama-3.2-1B-Instruct-Q4_K_M.gguf'`
+- `initialize()` calls `FileSystem.getInfoAsync(MODEL_PATH)`: if the file does not exist, sets `isReady = false` and returns immediately (no crash); if it exists, loads it via `initLlama({ model: MODEL_PATH })`
+- Added `downloadModel(onProgress?)` method using `FileSystem.createDownloadResumable` — downloads the GGUF from HuggingFace to `documentDirectory/models/` at runtime, then calls `initialize()` automatically
+- Added `isModelDownloaded()` async helper for SplashScreen to check whether a download is needed
+- Exported `MODEL_PATH` constant so SplashScreen can display progress if needed
+
+**Consequence:** The GGUF is no longer bundled in the APK at all. On first launch the model file is not present; `initialize()` returns with `isReady = false`; the app runs in cloud-only mode. Offline AI only becomes available after calling `downloadModel()` (e.g. from a settings screen or a download prompt on SplashScreen). For the FYP build this is acceptable — cloud mode covers the demo; offline mode documentation explains the download step.
+
+**Also removed from `eas.json`:** `eas-build-post-install` and the old `preBuildCommand` download hook. These tried to download the model during the EAS cloud build so Metro could bundle it — now that Metro never sees the GGUF, this hook is no longer needed and was removed.
+
+---
+
+#### Bug 3 — `@expo/vector-icons@14.0.0` version mismatch
+
+**Root cause:** A previous session downgraded `@expo/vector-icons` to `^14.0.0` to fix an `expo-font` duplicate warning. But `expo@54` internally ships `@expo/vector-icons@15.1.1` and expects `^15.0.3` at project level. The downgrade created a different duplicate warning and left the project in an inconsistent state.
+
+**Fix (`package.json`):** Reverted `@expo/vector-icons` from `^14.0.0` back to `^15.0.3`. Ran `npm install` to regenerate the lock file.
+
+---
+
+#### Bug 4 — SplashScreen waited 30 seconds when model was absent
+
+**Root cause (consequence of Bug 2 fix):** `SLMAdapter.initialize()` now returns immediately with `isReady = false` when the model file does not exist (instead of spending 5–15 seconds loading it). But `App.tsx` was written to call `setIsModelReady(slmAdapter.isModelReady())` inside the `.then()` callback — which set `isModelReady` to `false`. The `SplashScreen` then waited the full 30-second timeout before navigating, because `isModelReady` never became `true`.
+
+**Fix (`App.tsx`):** Changed `.then(() => setIsModelReady(...))` to `.finally(() => setIsModelReady(true))`. Boot is complete either way; the SLM's actual loaded state is separate from whether the app can proceed past splash.
+
+**Fix (`SplashScreen.tsx`):** The `renderSLMStatus()` function now imports `slmAdapter` directly and calls `slmAdapter.isModelReady()` to determine the status dot color:
+- `isModelReady` prop is `false` (still initializing) → amber pulsing dot, "Loading Device AI..."
+- `isModelReady` prop is `true`, `slmAdapter.isModelReady()` is `true` → green dot, "Device AI Ready"
+- `isModelReady` prop is `true`, `slmAdapter.isModelReady()` is `false` → amber dot, "Cloud AI Mode" (model not downloaded)
+
+The `isModelReady` prop controls **only** navigation (when to leave the splash screen). The actual device AI status is read directly from the adapter.
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/metro.config.js` | Removed `.gguf` from `assetExts` — no longer needed now that SLMAdapter loads the model from the filesystem at runtime |
+| `apps/mobile/src/services/llm/SLMAdapter.ts` | Full rewrite of model loading: `require()` replaced with `expo-file-system/legacy` path-based loading; `downloadModel()` added; import changed to `/legacy`; `MODEL_PATH` exported |
+| `apps/mobile/package.json` | Reverted `@expo/vector-icons` from `^14.0.0` → `^15.0.3`; removed `eas-build-post-install` script |
+| `apps/mobile/App.tsx` | Changed `slmAdapter.initialize().then()` → `.finally()` so splash always navigates after init |
+| `apps/mobile/src/screens/SplashScreen.tsx` | Imports `slmAdapter` directly; `renderSLMStatus()` uses `slmAdapter.isModelReady()` for the status dot; `isModelReady` prop used only as navigation gate |
+| `apps/mobile/src/screens/ChatScreen.tsx` | Locked input after triage; persistent sticky bottom bar; read-only mode for replaying past chats; GREEN case persistence; LLM error messages now visible; chat history saved per-case |
+| `apps/mobile/src/screens/HomeScreen.tsx` | "View Conversation" button added to case detail modal; navigates to Chat with `readonlySession` param |
+| `apps/mobile/src/db/queries.ts` | Added `saveChatHistory()` and `loadChatHistory()` |
+| `apps/mobile/App.tsx` | Updated `Chat` route type to include optional `readonlySession` param |
+
+---
+
+### Key decisions made
+
+#### DEC-025 — GGUF model loaded from documentDirectory at runtime, not bundled
+- **Date:** 2026-05-17
+- **Decision:** The Llama GGUF model is never bundled through Metro. It lives in `FileSystem.documentDirectory + 'models/'` and is downloaded at runtime via `SLMAdapter.downloadModel()`.
+- **Reason:** Metro's transform worker reads every asset file as a string to compute hashes. An 807 MB file exceeds V8's ~512 MB string limit, crashing the build. There is no configuration that makes Metro handle files this large — the file must stay out of the asset pipeline entirely.
+- **Rejected alternative:** Bundle the file as a Metro asset — crashes every build regardless of `assetExts` config.
+- **Rejected alternative:** EAS `preBuildCommand` + Metro bundling — the download runs, but Metro still crashes on the file.
+- **Status:** Final — any model file > ~100 MB must follow this pattern.
+
+#### DEC-026 — Splash screen navigation gate decoupled from SLM ready state
+- **Date:** 2026-05-17
+- **Decision:** `App.tsx` sets `isModelReady = true` via `.finally()` after `SLMAdapter.initialize()` resolves, regardless of whether the model actually loaded. The SplashScreen status dot reads `slmAdapter.isModelReady()` directly from the adapter for accurate display.
+- **Reason:** Now that `initialize()` returns immediately when the model file is absent (instead of loading it), tying the navigation gate to `isModelReady()` would cause the splash screen to time out for 30 seconds on every launch when no model is downloaded. Boot completion is orthogonal to model availability — the app is usable in cloud-only mode.
+- **Status:** Final.
+
+---
+
+### What to do when you pick this up tomorrow
+
+#### Step 1 — Verify the transmission IP (same as before, do first)
+1. Run `ipconfig` on your PC, look for IPv4 Address under WiFi adapter
+2. Open Chrome on the phone and navigate to `http://<that-ip>:3001/api/v1/health`
+   - Responds with `{"status":"ok"}` → IP is fine, skip to Step 3
+   - Times out or errors → IP changed, run `ngrok http 3001` and update `EXPO_PUBLIC_API_BASE_URL` in the EAS dashboard
+
+#### Step 2 — Run the build (Metro GGUF crash is now fixed)
+```powershell
+cd apps/mobile
+eas build --platform android --profile preview
+```
+This build should complete **without** the `Cannot create a string longer than 0x1fffffe8` Metro crash. The build will be faster than before (~10–15 minutes instead of 25–30) because the 807 MB model is no longer downloaded during the build step.
+
+**What to expect on first launch of the new APK:**
+- SplashScreen shows amber dot → "Cloud AI Mode" (model not downloaded)
+- App proceeds immediately to Registration or Home (no 30-second timeout)
+- Online assessments work normally via Groq cloud AI
+- Offline mode shows: "The on-device AI model is not loaded. Please connect to the internet to use cloud AI."
+
+#### Step 3 — Test the chat UX features
+Run these tests in order to verify the work done this session:
+
+**Test A — Input locked after triage:**
+1. Start an assessment, chat through 5 turns, reach the GREEN result
+2. The input field and send button should disappear, replaced by a full-width red "Start New Assessment" button
+3. Tapping it should return to Home with a fresh chat state
+
+**Test B — Read-only past chat replay:**
+1. On Home, tap a past assessment in the "MY ASSESSMENTS" list
+2. The detail modal should open — tap "View Conversation"
+3. The Chat screen should open with the full transcript visible, input replaced by "← Back to History"
+4. Tapping "← Back to History" should return to Home
+
+**Test C — GREEN cases in history:**
+1. Complete a GREEN assessment (mild headache, severity 3, no allergies)
+2. Navigate back to Home
+3. The GREEN case should appear in "MY ASSESSMENTS" with a green dot
+
+**Test D — Error visibility:**
+1. Turn airplane mode ON
+2. Start a new assessment (this will use SLM — which is absent in this build)
+3. Send a message
+4. Should see: "⚠ Device AI is unavailable. The offline model may not be included in this build. Please connect to the internet to use cloud AI." as a message bubble in the chat
+
+#### Step 4 — Optional: add model download UX
+If you want offline mode to work on the physical device, you need to trigger `slmAdapter.downloadModel()` somewhere. The simplest approach:
+- Add a "Download Offline Model (807 MB)" button to the Home screen or a Settings screen
+- Wire it to `slmAdapter.downloadModel(onProgress)` and show a progress bar
+- After download, call `slmAdapter.initialize()` — the model will be ready from then on (persists across app restarts)
+
+This is optional for the FYP demo (cloud mode covers the demo case) but is needed to test the full offline flow on a real APK.
+
+#### Step 5 — Items still pending from earlier sessions
+These were not touched today but are still on the backlog:
+- Rotate the Groq API key if not done yet (was exposed in git history before Session 16 filter-repo rewrite)
+- Build the baseline knowledge index if RAG guidance is still showing nothing: `python docs/knowledge-base/build_baseline_index.py`
+- Test the auth token refresh (let 15-minute access token expire, verify silent refresh)
+- Add `expo-background-fetch` so the transmission retry loop runs while the app is backgrounded
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

@@ -28,7 +28,9 @@ export type RootStackParamList = {
   Splash: undefined;
   Registration: undefined;
   Home: undefined;
-  Chat: undefined;
+  // readonlySession is present when opening a completed past assessment for replay.
+  // Absent (or undefined) for a fresh live assessment.
+  Chat: { readonlySession?: { caseId: string; triageLevel: string } } | undefined;
   TriageResult: { triageResult: TriageResult; featureVector: MedicalFeatureVector };
 };
 
@@ -52,9 +54,10 @@ export default function App() {
       // 3. Load user profile — determines Registration vs Home routing
       await loadFromDatabase();
 
-      // 4. SLM load is ~5-15s — run in background, SplashScreen gates on isModelReady
-      slmAdapter.initialize().then(() => {
-        setIsModelReady(slmAdapter.isModelReady());
+      // 4. SLM init: loads model if file exists (~5-15s), skips instantly if not downloaded.
+      //    Always proceed past splash after init — cloud mode covers the no-model case.
+      slmAdapter.initialize().finally(() => {
+        setIsModelReady(true);
       });
 
       // 5. Pre-warm the local RAG index so first query is instant

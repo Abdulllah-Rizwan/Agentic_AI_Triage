@@ -1,3 +1,4 @@
+import * as FileSystem from 'expo-file-system/legacy';
 import { LLMAdapter, ChatMessage, LLMUnavailableError } from './LLMAdapter.interface';
 import { logger } from '../../utils/logger';
 
@@ -7,6 +8,13 @@ const OLLAMA_URL = process.env.EXPO_PUBLIC_OLLAMA_URL ?? 'http://localhost:11434
 const OLLAMA_MODEL = 'llama3.2:1b';
 const MAX_TOKENS = 512;
 const TEMPERATURE = 0.3;
+
+const MODEL_FILENAME = 'Llama-3.2-1B-Instruct-Q4_K_M.gguf';
+const MODEL_DIR = (FileSystem.documentDirectory ?? '') + 'models/';
+export const MODEL_PATH = MODEL_DIR + MODEL_FILENAME;
+// Primary: GGUF repo direct download. Falls back to main repo if CDN changes.
+const MODEL_URL =
+  'https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/' + MODEL_FILENAME;
 
 function formatLlama32Prompt(messages: ChatMessage[], systemPrompt: string): string {
   const parts: string[] = [];
@@ -31,24 +39,32 @@ export class SLMAdapter implements LLMAdapter {
 
     try {
       if (IS_DEV) {
-        logger.info(TAG, `dev mode — will route to Ollama`, { url: OLLAMA_URL, model: OLLAMA_MODEL });
+        logger.info(TAG, 'dev mode — routing to Ollama', { url: OLLAMA_URL, model: OLLAMA_MODEL });
         this.isReady = true;
         return;
       }
 
-      // Dynamic import so llama.rn is not required in dev/web builds
+      // Model lives in device storage (documentDirectory), never bundled via Metro.
+      // It is downloaded at runtime on first launch via downloadModel().
+      const info = await FileSystem.getInfoAsync(MODEL_PATH);
+      if (!info.exists) {
+        logger.warn(TAG, 'Model file not found — offline mode unavailable', { path: MODEL_PATH });
+        this.isReady = false;
+        return;
+      }
+
+      // Dynamic import keeps llama.rn out of the web/dev bundle
       const { initLlama } = await import('llama.rn');
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const modelAsset = require('../../assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf');
 
       this.llm = await initLlama({
-        model: modelAsset,
+        model: MODEL_PATH,
         use_mlock: true,
         n_ctx: 2048,
         n_threads: 4,
       });
 
       this.isReady = true;
+      logger.info(TAG, 'Model loaded', { path: MODEL_PATH });
     } catch (err) {
       logger.error(TAG, 'Failed to initialize model', { error: String(err) });
       this.isReady = false;
@@ -57,8 +73,48 @@ export class SLMAdapter implements LLMAdapter {
     }
   }
 
+  /**
+   * Download the GGUF model to device storage, then initialize.
+   * Call this from the SplashScreen when the model is not yet present.
+   * @param onProgress receives (bytesWritten, bytesTotal) — both may be 0 initially
+   */
+  async downloadModel(
+    onProgress?: (downloaded: number, total: number) => void,
+  ): Promise<void> {
+    const dirInfo = await FileSystem.getInfoAsync(MODEL_DIR);
+    if (!dirInfo.exists) {
+      await FileSystem.makeDirectoryAsync(MODEL_DIR, { intermediates: true });
+    }
+
+    const download = FileSystem.createDownloadResumable(
+      MODEL_URL,
+      MODEL_PATH,
+      {},
+      (progress) => {
+        onProgress?.(
+          progress.totalBytesWritten,
+          progress.totalBytesExpectedToWrite,
+        );
+      },
+    );
+
+    await download.downloadAsync();
+    logger.info(TAG, 'Model downloaded', { path: MODEL_PATH });
+
+    // Reset so initialize() re-runs the file-exists check
+    this.isReady = false;
+    this.isLoading = false;
+    await this.initialize();
+  }
+
+  /** True only after model file exists and llama.rn context is fully loaded. */
   isModelReady(): boolean {
     return this.isReady;
+  }
+
+  async isModelDownloaded(): Promise<boolean> {
+    const info = await FileSystem.getInfoAsync(MODEL_PATH);
+    return info.exists;
   }
 
   async isAvailable(): Promise<boolean> {
@@ -67,10 +123,9 @@ export class SLMAdapter implements LLMAdapter {
 
   async chat(messages: ChatMessage[], systemPrompt: string): Promise<string> {
     if (!this.isReady) {
-      const IS_DEV_MODE = process.env.EXPO_PUBLIC_ENVIRONMENT === 'development';
-      const reason = IS_DEV_MODE
+      const reason = IS_DEV
         ? 'Cannot reach Ollama. Check that Ollama is running and EXPO_PUBLIC_OLLAMA_URL is correct.'
-        : 'The on-device AI model is not loaded. This build does not include the offline model file. Please connect to WiFi to use the cloud AI.';
+        : 'The on-device AI model is not loaded. Please connect to the internet to use cloud AI.';
       throw new LLMUnavailableError(reason);
     }
 
@@ -87,7 +142,7 @@ export class SLMAdapter implements LLMAdapter {
       ...messages.map((m) => ({ role: m.role, content: m.content })),
     ];
 
-    logger.info(TAG, `calling Ollama`, { url: `${OLLAMA_URL}/api/chat`, model: OLLAMA_MODEL });
+    logger.info(TAG, 'calling Ollama', { url: `${OLLAMA_URL}/api/chat`, model: OLLAMA_MODEL });
 
     try {
       const response = await fetch(`${OLLAMA_URL}/api/chat`, {
@@ -103,16 +158,16 @@ export class SLMAdapter implements LLMAdapter {
 
       if (!response.ok) {
         const body = await response.text().catch(() => '');
-        logger.error(TAG, `Ollama HTTP error`, { status: response.status, body });
+        logger.error(TAG, 'Ollama HTTP error', { status: response.status, body });
         throw new Error(`Ollama HTTP ${response.status}: ${body}`);
       }
 
       const data = await response.json() as { message?: { content?: string } };
       const text = data.message?.content ?? '';
-      logger.info(TAG, `Ollama response received`, { length: text.length });
+      logger.info(TAG, 'Ollama response received', { length: text.length });
       return text;
     } catch (err) {
-      logger.error(TAG, `Ollama call failed`, { error: String(err), url: OLLAMA_URL });
+      logger.error(TAG, 'Ollama call failed', { error: String(err), url: OLLAMA_URL });
       throw new LLMUnavailableError(`Ollama unavailable: ${String(err)}`);
     }
   }

@@ -157,3 +157,21 @@ export async function clearActiveSession(): Promise<void> {
   const db = getDb();
   await db.runAsync(`DELETE FROM app_metadata WHERE key = ?`, [ACTIVE_CHAT_KEY]);
 }
+
+// ── Chat History (per-case conversation replay) ───────────────────────────────
+
+const CHAT_HISTORY_PREFIX = 'chat_history_';
+
+export async function saveChatHistory(caseId: string, messages: unknown[]): Promise<void> {
+  await setMetadata(`${CHAT_HISTORY_PREFIX}${caseId}`, JSON.stringify(messages));
+}
+
+export async function loadChatHistory(caseId: string): Promise<unknown[] | null> {
+  const raw = await getMetadata(`${CHAT_HISTORY_PREFIX}${caseId}`);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as unknown[];
+  } catch {
+    return null;
+  }
+}

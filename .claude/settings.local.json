@@ -104,7 +104,10 @@
       "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Scripts:', list\\(d.get\\('scripts',{}\\).keys\\(\\)\\)\\); deps=d.get\\('dependencies',{}\\); print\\('Expo version:', deps.get\\('expo','?'\\)\\)\")",
       "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); e=d.get\\('expo',{}\\); print\\('Name:', e.get\\('name'\\)\\); print\\('Slug:', e.get\\('slug'\\)\\); print\\('Android pkg:', e.get\\('android',{}\\).get\\('package','?'\\)\\)\")",
       "Bash(git commit *)",
-      "PowerShell(ls \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\src\\\\assets\\\\models\\\\\" 2>&1; Get-Content \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\.gitignore\" 2>&1; Get-Content \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\.gitignore\" 2>&1 | Select-Object -First 50)"
+      "PowerShell(ls \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\src\\\\assets\\\\models\\\\\" 2>&1; Get-Content \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\.gitignore\" 2>&1; Get-Content \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\.gitignore\" 2>&1 | Select-Object -First 50)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\src\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\mobile\\\\src\\\\assets\\\\models\\\\\" -ErrorAction SilentlyContinue | Select-Object Name, @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,1\\)}})"
     ]
   }
 }

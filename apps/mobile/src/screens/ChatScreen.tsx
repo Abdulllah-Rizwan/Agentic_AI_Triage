@@ -17,12 +17,15 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { RootStackParamList } from '../../App';
 import { useChatStore, type ChatMessage } from '../store/chatStore';
 import { SymptomCollectorAgent, type AgentSerializableState } from '../agents/SymptomCollectorAgent';
-import { saveActiveSession, loadActiveSession, clearActiveSession } from '../db/queries';
+import {
+  saveActiveSession, loadActiveSession, clearActiveSession,
+  saveChatHistory, loadChatHistory, saveCompletedCase,
+} from '../db/queries';
 import {
   computeTriage,
   type MedicalFeatureVector,
@@ -53,13 +56,11 @@ interface SavedChatSession {
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
-interface Props {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Chat'>;
-}
+type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 
 // ── Screen ────────────────────────────────────────────────────────────────────
 
-export default function ChatScreen({ navigation }: Props) {
+export default function ChatScreen({ navigation, route }: Props) {
   const [input, setInput]                       = useState('');
   const [isInputDisabled, setIsInputDisabled]   = useState(false);
   const [turnCount, setTurnCount]               = useState(0);
@@ -69,10 +70,13 @@ export default function ChatScreen({ navigation }: Props) {
 
   const [hasCompletedTriage, setHasCompletedTriage] = useState(false);
 
-  const agentRef          = useRef<SymptomCollectorAgent | null>(null);
-  const flatListRef       = useRef<FlatList<ChatMessage>>(null);
-  const unmounted         = useRef(false);
-  const criticalTxFired   = useRef(false);
+  const agentRef           = useRef<SymptomCollectorAgent | null>(null);
+  const flatListRef        = useRef<FlatList<ChatMessage>>(null);
+  const unmounted          = useRef(false);
+  const criticalTxFired    = useRef(false);
+  // Tracks the case ID generated in the CRITICAL path so _handlePostTriage can
+  // link the saved history to the same case that was transmitted.
+  const criticalCaseIdRef  = useRef<string | null>(null);
   const postTriagePollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   // Holds the post-triage function so handleSend can call it without it being
   // a dependency of the useCallback — avoids a stale-closure trap.
@@ -98,11 +102,34 @@ export default function ChatScreen({ navigation }: Props) {
   const clearChat            = useChatStore((s) => s.clearChat);
   const setCollectionStatus  = useChatStore((s) => s.setCollectionStatus);
 
-  // ── Startup — restore saved session or start fresh ────────────────────────
+  // ── Startup — restore saved session, open readonly, or start fresh ──────────
 
   useEffect(() => {
     unmounted.current = false;
     navigation.setOptions({ headerShown: false });
+
+    const readonlySession = route.params?.readonlySession;
+
+    if (readonlySession) {
+      // Readonly replay of a completed past assessment — no agent needed.
+      setHasCompletedTriage(true);
+      setIsInputDisabled(true);
+      setCollectionStatus('SUFFICIENT');
+      loadChatHistory(readonlySession.caseId).then((msgs) => {
+        if (msgs && !unmounted.current) {
+          setMessages(msgs as ChatMessage[]);
+        } else if (!unmounted.current) {
+          addMessage({
+            id: 'no-history',
+            role: 'agent',
+            type: 'system',
+            content: 'No conversation transcript was saved for this assessment.',
+            timestamp: Date.now(),
+          });
+        }
+      });
+      return () => { unmounted.current = true; };
+    }
 
     const agent = new SymptomCollectorAgent();
     agentRef.current = agent;
@@ -329,6 +356,28 @@ export default function ChatScreen({ navigation }: Props) {
       }, 10_000);
     }
 
+    // ── 5. Persist conversation history ──────────────────────────────────────
+    // GREEN cases are never queued for transmission so completed_cases only gets
+    // written by TransmissionService for RED/AMBER. Write the GREEN record here.
+    // For all levels, snapshot the messages so they can be replayed read-only.
+    const historySnapshot = useChatStore.getState().messages;
+    if (level === 'GREEN') {
+      const localId = generateCaseId();
+      saveCompletedCase({
+        case_id: localId,
+        triage_level: 'GREEN',
+        chief_complaint: featureVector.chiefComplaint,
+        completed_at: Date.now(),
+      }).catch(() => {});
+      saveChatHistory(localId, historySnapshot).catch(() => {});
+    } else {
+      // RED/AMBER — link history to whichever caseId was used for transmission
+      const txCaseId = criticalTxFired.current
+        ? criticalCaseIdRef.current
+        : caseIdForPoll;
+      if (txCaseId) saveChatHistory(txCaseId, historySnapshot).catch(() => {});
+    }
+
     // Session is complete — remove from SQLite so next mount starts fresh
     clearActiveSession().catch(() => {});
     if (!unmounted.current) setHasCompletedTriage(true);
@@ -382,6 +431,7 @@ export default function ChatScreen({ navigation }: Props) {
   ) => {
     const id = generateCaseId();
     setCriticalCaseId(id);
+    criticalCaseIdRef.current = id;
     setCriticalTxStatus('SENDING');
 
     try {
@@ -440,7 +490,19 @@ export default function ChatScreen({ navigation }: Props) {
     try {
       response = await agentRef.current.sendMessage(text);
     } catch {
-      if (!unmounted.current) setAgentTyping(false);
+      if (!unmounted.current) {
+        setAgentTyping(false);
+        const isOffline = networkStore.getState().mode === 'OFFLINE';
+        addMessage({
+          id: `err-${Date.now()}`,
+          role: 'agent',
+          type: 'system',
+          content: isOffline
+            ? '⚠ Device AI is unavailable. The offline model may not be included in this build. Please connect to the internet to use cloud AI.'
+            : '⚠ Connection error. Please try again.',
+          timestamp: Date.now(),
+        });
+      }
       return;
     }
 
@@ -570,22 +632,6 @@ export default function ChatScreen({ navigation }: Props) {
           onContentSizeChange={scrollToBottom}
           onLayout={scrollToBottom}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={
-            hasCompletedTriage ? (
-              <View style={styles.newAssessmentContainer}>
-                <TouchableOpacity
-                  style={styles.newAssessmentBtn}
-                  onPress={() => {
-                    clearActiveSession().catch(() => {});
-                    clearChat();
-                    navigation.replace('Home');
-                  }}
-                >
-                  <Text style={styles.newAssessmentBtnText}>Start New Assessment</Text>
-                </TouchableOpacity>
-              </View>
-            ) : null
-          }
         />
 
         {/* ── Typing indicator ── */}
@@ -640,34 +686,52 @@ export default function ChatScreen({ navigation }: Props) {
           </View>
         )}
 
-        {/* ── Input area ── */}
-        <View style={styles.inputRow}>
-          <TextInput
-            style={[styles.textInput, isInputDisabled && styles.textInputDisabled]}
-            value={input}
-            onChangeText={setInput}
-            placeholder="Describe your symptoms..."
-            placeholderTextColor="#6b7280"
-            multiline
-            maxLength={500}
-            editable={!isInputDisabled && !isAgentTyping}
-            blurOnSubmit={false}
-          />
-          <TouchableOpacity
-            style={[
-              styles.sendBtn,
-              (isAgentTyping || isInputDisabled) && styles.sendBtnDisabled,
-            ]}
-            onPress={handleSend}
-            disabled={isAgentTyping || isInputDisabled}
-          >
-            {isAgentTyping ? (
-              <ActivityIndicator size="small" color="#9ca3af" />
-            ) : (
-              <Text style={styles.sendBtnText}>→</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+        {/* ── Post-triage action bar OR live input ── */}
+        {hasCompletedTriage ? (
+          <View style={styles.postTriageBar}>
+            <TouchableOpacity
+              style={styles.newAssessmentBtn}
+              onPress={() => {
+                clearActiveSession().catch(() => {});
+                clearChat();
+                if (route.params?.readonlySession) {
+                  navigation.goBack();
+                } else {
+                  navigation.replace('Home');
+                }
+              }}
+            >
+              <Text style={styles.newAssessmentBtnText}>
+                {route.params?.readonlySession ? '← Back to History' : 'Start New Assessment'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.inputRow}>
+            <TextInput
+              style={styles.textInput}
+              value={input}
+              onChangeText={setInput}
+              placeholder="Describe your symptoms..."
+              placeholderTextColor="#6b7280"
+              multiline
+              maxLength={500}
+              editable={!isAgentTyping}
+              blurOnSubmit={false}
+            />
+            <TouchableOpacity
+              style={[styles.sendBtn, isAgentTyping && styles.sendBtnDisabled]}
+              onPress={handleSend}
+              disabled={isAgentTyping}
+            >
+              {isAgentTyping ? (
+                <ActivityIndicator size="small" color="#9ca3af" />
+              ) : (
+                <Text style={styles.sendBtnText}>→</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -851,9 +915,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     maxHeight: 100,
   },
-  textInputDisabled: {
-    opacity: 0.4,
-  },
   sendBtn: {
     backgroundColor: '#dc2626',
     borderRadius: 12,
@@ -935,23 +996,27 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 
-  // "Start New Assessment" footer button
-  newAssessmentContainer: {
-    paddingVertical: 20,
+  // Post-triage sticky bar — replaces the input row once assessment is done
+  postTriageBar: {
     paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#1f2937',
+    backgroundColor: '#0a0a0a',
     alignItems: 'center',
   },
   newAssessmentBtn: {
-    backgroundColor: '#374151',
+    backgroundColor: '#dc2626',
     borderRadius: 12,
     paddingVertical: 14,
-    paddingHorizontal: 32,
-    borderWidth: 1,
-    borderColor: '#4b5563',
+    paddingHorizontal: 48,
+    alignItems: 'center',
+    width: '100%',
   },
   newAssessmentBtnText: {
     color: '#ffffff',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
 });

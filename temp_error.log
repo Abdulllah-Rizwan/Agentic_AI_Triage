@@ -1,73 +1,54 @@
-Hey claude, the view soap report option still not appearning on the cases card. Please fix it. Also the response time has increased significantly ever since your recent changes and also I was not getting the cited guidance. On the expo server cli I received the following logs. The response time is hgih: 
+Build failed again. See the logs: 
 
-Logs for your project will appear below. Press Ctrl+C to exit.
-Android Bundled 80319ms index.js (1327 modules)
-Android Bundled 267ms index.js (1 module)
- LOG  [INFO] [NetworkOrchestrator] network state {"mode":"FULL","type":"wifi","isConnected":true,"isInternetReachable":true}
- LOG  [INFO] [NetworkOrchestrator] network state {"mode":"FULL","type":"wifi","isConnected":true,"isInternetReachable":true}
- LOG  [INFO] [NetworkOrchestrator] network state {"mode":"FULL","type":"wifi","isConnected":true,"isInternetReachable":true}
- LOG  [INFO] [SLMAdapter] dev mode — will route to Ollama {"url":"http://192.168.18.34:11434","model":"llama3.2:1b"}
- LOG  [RAG] Loaded baseline index from bundled assets.
- LOG  [RAG] Ready — 304 chunks loaded.
- WARN  [KnowledgeBase] Embeddings download failed: 404
-Android Bundled 21058ms node_modules\@xenova\transformers\src\transformers.js (46 modules)
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx": "TypeError: Network request failed"
- WARN  Aborted(no native wasm support detected)
- WARN  [RAG] Query failed silently: [Error: no available backend found. ERR: [wasm] ReferenceError: Property 'WebAssembly' doesn't exist]
- LOG  [INFO] [NetworkOrchestrator] getLLMAdapter() → CloudLLM (Gemini) {"mode":"FULL"}
- LOG  [INFO] [CloudLLM] chat() called {"model":"llama-3.3-70b-versatile","turns":1}       
- DEBUG  [DEBUG] [CloudLLM] attempt 1/3
- LOG  [INFO] [CloudLLM] success on attempt 1 {"responseLength":87}
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx": "TypeError: Network request failed"
- WARN  [RAG] Query failed silently: [Error: no available backend found. ERR: ]
- LOG  [INFO] [NetworkOrchestrator] getLLMAdapter() → CloudLLM (Gemini) {"mode":"FULL"}
- LOG  [INFO] [CloudLLM] chat() called {"model":"llama-3.3-70b-versatile","turns":3}
- DEBUG  [DEBUG] [CloudLLM] attempt 1/3
- LOG  [INFO] [CloudLLM] success on attempt 1 {"responseLength":44}
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx": "TypeError: Network request failed"
- WARN  [RAG] Query failed silently: [Error: no available backend found. ERR: ]
- LOG  [INFO] [NetworkOrchestrator] getLLMAdapter() → CloudLLM (Gemini) {"mode":"FULL"}
- LOG  [INFO] [CloudLLM] chat() called {"model":"llama-3.3-70b-versatile","turns":5}
- DEBUG  [DEBUG] [CloudLLM] attempt 1/3
- LOG  [INFO] [CloudLLM] success on attempt 1 {"responseLength":125}
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx": "TypeError: Network request failed"
- WARN  [RAG] Query failed silently: [Error: no available backend found. ERR: ]
- LOG  [INFO] [NetworkOrchestrator] getLLMAdapter() → CloudLLM (Gemini) {"mode":"FULL"}
- LOG  [INFO] [CloudLLM] chat() called {"model":"llama-3.3-70b-versatile","turns":7}
- DEBUG  [DEBUG] [CloudLLM] attempt 1/3
- LOG  [INFO] [CloudLLM] success on attempt 1 {"responseLength":126}
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx": "TypeError: Network request failed"
- WARN  [RAG] Query failed silently: [Error: no available backend found. ERR: ]
- LOG  [INFO] [NetworkOrchestrator] getLLMAdapter() → CloudLLM (Gemini) {"mode":"FULL"}
- LOG  [INFO] [CloudLLM] chat() called {"model":"llama-3.3-70b-versatile","turns":9}
- DEBUG  [DEBUG] [CloudLLM] attempt 1/3
- LOG  [INFO] [CloudLLM] success on attempt 1 {"responseLength":105}
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx": "TypeError: Network request failed"
- WARN  [RAG] Query failed silently: [Error: no available backend found. ERR: ]
- LOG  [INFO] [NetworkOrchestrator] getLLMAdapter() → CloudLLM (Gemini) {"mode":"FULL"}
- LOG  [INFO] [CloudLLM] chat() called {"model":"llama-3.3-70b-versatile","turns":11}
- DEBUG  [DEBUG] [CloudLLM] attempt 1/3
- LOG  [INFO] [CloudLLM] success on attempt 1 {"responseLength":248}
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/config.json": "TypeError: Network request failed"
- WARN  Unable to load from local path "/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx": "TypeError: Network request failed"
- WARN  [RAG] Query failed silently: [Error: no available backend found. ERR: ]
+Running "expo doctor"
+Running 17 checks on your project...
+15/17 checks passed. 2 checks failed. Possible issues detected:
+Use the --verbose flag to see more details about passed checks.
+
+✖ Check that no duplicate dependencies are installed
+Your project contains duplicate native module dependencies, which should be de-duplicated.
+Native builds may only contain one version of any given native module, and having multiple versions of a single Native module installed may lead to unexpected build errors.
+Found duplicates for @expo/vector-icons:
+  ├─ @expo/vector-icons@14.1.0 (at: node_modules/@expo/vector-icons)
+  └─ @expo/vector-icons@15.1.1 (at: node_modules/expo/node_modules/@expo/vector-icons)
+Advice:
+Resolve your dependency issues and deduplicate your dependencies. Learn more: https://expo.fyi/resolving-dependency-issues
+
+✖ Check that packages match versions required by installed Expo SDK
+❗ Major version mismatches
+package             expected  found   
+@expo/vector-icons  ^15.0.3   14.1.0  
+
+
+
+1 package out of date.
+Advice:
+Use 'npx expo install --check' to review and upgrade your dependencies.
+To ignore specific packages, add them to "expo.install.exclude" in package.json. Learn more: https://expo.fyi/dependency-validation
+2 checks failed, indicating possible issues with the project.
+Command "expo doctor" failed.
+
+
+Starting Metro Bundler
+Android ./index.js ▓▓▓▓▓░░░░░░░░░░░ 37.3% ( 54/144)
+Android ./index.js ▓▓▓▓▓░░░░░░░░░░░ 37.3% (252/721)
+Android ./index.js ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 72.4% ( 863/1014)
+Android Bundling failed 13138ms index.js (1213 modules)
+SyntaxError: src/assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf: Cannot create a string longer than 0x1fffffe8 characters
+Error: Cannot create a string longer than 0x1fffffe8 characters
+    at Object.slice (node:buffer:635:37)
+    at Buffer.toString (node:buffer:863:14)
+    at Object.transform (/home/expo/workingdir/build/apps/mobile/node_modules/expo/node_modules/@expo/metro-config/build/transform-worker/metro-transform-worker.js:547:29)
+    at Object.transform (/home/expo/workingdir/build/apps/mobile/node_modules/expo/node_modules/@expo/metro-config/build/transform-worker/transform-worker.js:178:19)
+    at transformFile (/home/expo/workingdir/build/apps/mobile/node_modules/@expo/metro/node_modules/metro/src/DeltaBundler/Worker.flow.js:67:36)
+    at Object.transform (/home/expo/workingdir/build/apps/mobile/node_modules/@expo/metro/node_modules/metro/src/DeltaBundler/Worker.flow.js:42:10)
+    at execFunction (/home/expo/workingdir/build/apps/mobile/node_modules/jest-worker/build/workers/processChild.js:149:17)
+    at execHelper (/home/expo/workingdir/build/apps/mobile/node_modules/jest-worker/build/workers/processChild.js:137:5)
+    at execMethod (/home/expo/workingdir/build/apps/mobile/node_modules/jest-worker/build/workers/processChild.js:140:5)
+    at process.messageListener (/home/expo/workingdir/build/apps/mobile/node_modules/jest-worker/build/workers/processChild.js:44:7)
+    at process.emit (node:events:524:28)
+    at emit (node:internal/child_process:950:14)
+
+
+Build failed
+
