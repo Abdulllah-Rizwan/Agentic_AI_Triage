@@ -2041,6 +2041,146 @@ These were not touched today but are still on the backlog:
 
 ---
 
+## Session 19 — 2026-05-18
+
+### Goal
+Fix the root cause of inaccurate post-triage guidance when on WiFi: on FULL network mode all guidance was still coming from the on-device BM25 keyword search instead of the server-side pgvector semantic search. Also rewrote encyclopedic articles to be purely actionable.
+
+---
+
+### Changes made
+
+#### DEC-027 — Network-aware RAG routing: server on FULL, LocalRAG on DEGRADED/OFFLINE
+- **Date:** 2026-05-18
+- **Decision:** Created `apps/mobile/src/services/rag/queryGuidance.ts` — a single routing function that checks `networkStore.getState().mode`. When `FULL`, it calls `POST /api/v1/knowledge/query` (pgvector cosine similarity via `all-MiniLM-L6-v2`). When `DEGRADED` or `OFFLINE`, it falls back to `localRAG.query()` (BM25 keyword scoring).
+- **Files changed:**
+  - `apps/mobile/src/services/rag/queryGuidance.ts` — new file, routing function
+  - `apps/mobile/src/screens/TriageResultScreen.tsx` — replaced `localRAG.query()` with `queryGuidance()`
+  - `apps/mobile/src/screens/ChatScreen.tsx` — replaced `localRAG.query()` in `_handlePostTriage` with `queryGuidance()`
+  - `apps/mobile/src/agents/SymptomCollectorAgent.ts` — replaced `queryKnowledgeBase()` in `_emergencyRagContext()` and the two inline trigger-RAG calls with `queryGuidance()`
+- **Why the LLM context injection still uses LocalRAG:** The `queryKnowledgeBase()` call at line 168 of `SymptomCollectorAgent.ts` injects context into the LLM's prompt during collection. This is not patient-facing, happens on every message, and a server round-trip per turn would add 500–2000ms latency to every chat response. BM25 is sufficient for LLM context injection.
+- **Fallback chain:** server 4xx/5xx → LocalRAG. Token fetch failure → LocalRAG. Network error → LocalRAG. Silent, no user-visible error.
+- **Status:** Final
+
+---
+
+#### Knowledge Base Article Rewrites — Encyclopedic → Actionable-Only
+- **Date:** 2026-05-18
+- **Articles rewritten (significant reduction):**
+  - `Bleeding_hemorrhage_guidelines.txt` — removed anatomy/causes, kept direct pressure, tourniquet, embedded objects, nosebleed, internal bleeding signs
+  - `cholera_guidelines.txt` — removed GTFCC/WHO policy/vaccine info, kept ORS recipe, when to go to hospital, prevention steps
+  - `Dengue_fever_symptoms_guidelines.txt` — removed diagnostic tests/vaccine FDA approval, kept paracetamol-not-ibuprofen rule, warning signs, prevention
+  - `Diarrhoeal_disease_guidelines.txt` — removed epidemiology/disease burden, kept ORS recipe, feeding during diarrhoea, when to seek hospital
+  - `Pneumonia_guidelines.txt` — removed causes/epidemiology/WHO policy, kept breathing rate thresholds, severity assessment, home care steps
+  - `Tetanus_guidelines.txt` — removed vaccination schedules/WHO estimates, kept wound cleaning steps, when to seek TIG injection, neonatal signs
+  - `malaria_prevention_guidelines.txt` — removed parasite species/drug resistance/global stats, kept fever management, severe symptoms → immediate hospital, prevention steps
+  - `Leptospirosis_infection_guidelines.txt` — removed diagnostic tests/lumbar puncture/pet care, kept flood exposure prevention, symptom recognition, when to go to hospital
+  - `triage_toolkit_guidelines.txt` — was hospital-staff-only triage protocol (MC-IITT), replaced with patient-facing explanation of what RED/AMBER/GREEN mean and what to do while waiting
+- **Why:** Articles with encyclopedic content (WHO statistics, parasite species, vaccine policy) never surface as relevant RAG results because patients describe symptoms, not epidemiology. All removed sections scored near 0 in any symptom-based query. Actionable-only articles surface correctly because they contain the same imperative vocabulary patients see in first-aid instructions.
+- **Status:** Final — do not revert to encyclopedic format
+
+---
+
+### What to do when you pick this up next
+
+Complete these steps in order. Steps 1–3 are mandatory before any testing — the code is ready but the indexes are stale (they still contain the old encyclopedic article content).
+
+---
+
+#### Step 1 — Rebuild the baseline mobile index (mandatory)
+
+The 9 rewritten articles are now in `docs/knowledge-base/articles/`. The bundled mobile index at `apps/mobile/src/assets/knowledge/knowledge_meta.json` still contains the old content. Rebuild it:
+
+```bash
+cd docs/knowledge-base
+pip install sentence-transformers faiss-cpu langchain langchain-community pyyaml
+python build_baseline_index.py
+```
+
+Expected output: `Baseline index built successfully — X chunks`. The two output files (`knowledge_index.faiss` + `knowledge_meta.json`) go directly into `apps/mobile/src/assets/knowledge/`. After this, LocalRAG (offline/degraded mode) returns actionable content.
+
+---
+
+#### Step 2 — Re-upload articles to the server (mandatory for WiFi mode)
+
+The server-side pgvector still contains embeddings of the old encyclopedic text. You must delete the old documents and re-upload the rewritten articles through the admin dashboard.
+
+**Start the backend stack first:**
+```powershell
+# Terminal 1 — API server
+cd apps/api
+uvicorn app.main:socket_app --reload --port 3001
+
+# Terminal 2 — Celery worker (required for ingestion jobs)
+cd apps/api
+celery -A app.workers.ingestion_worker.celery_app worker --loglevel=info
+```
+
+**Upload via dashboard:**
+1. Open `http://localhost:3000` → log in as admin
+2. Go to Admin → Knowledge Base
+3. Delete all existing documents (old encyclopedic embeddings)
+4. Upload each rewritten `.txt` file from `docs/knowledge-base/articles/`
+5. Wait for every document to move from `PROCESSING` → `ACTIVE`
+
+**Quick verify via curl:**
+```bash
+curl -X POST http://localhost:3001/api/v1/knowledge/query \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <device_token>" \
+  -d "{\"query\": \"chest pain\", \"top_k\": 1}"
+```
+The `content` field in the response must contain actionable first-aid steps, not epidemiology.
+
+---
+
+#### Step 3 — Build and install a new APK
+
+The `queryGuidance.ts` routing change is not yet in the installed APK. Build a new preview build:
+
+```powershell
+cd apps/mobile
+eas build --platform android --profile preview
+```
+
+Install the new APK on the test device when complete.
+
+---
+
+#### Step 4 — Test WiFi guidance (primary test, do first)
+
+On the test device connected to WiFi:
+1. Start a new assessment
+2. Report: "I have severe chest pain and difficulty breathing" → RED triage
+3. On `TriageResultScreen`: the "While waiting for help:" card must show actionable steps (e.g. "sit upright, loosen tight clothing, do not eat or drink") with a `📚 Source:` citation
+4. In `ChatScreen` after triage: the `guidance` bubble must also show cited actionable content
+
+**Pass criteria:** Guidance contains imperative sentences ("Apply pressure", "Call for help", "Do not remove"). Not global statistics. Not disease background.
+
+---
+
+#### Step 5 — Test offline fallback
+
+1. Enable airplane mode on the test device
+2. Start a new assessment → report "snake bite on my leg"
+3. Reach triage result → check the "While waiting for help:" card
+4. Guidance must still appear from LocalRAG (BM25), with content from `snake_bites_guidelines.txt`
+
+**Pass criteria:** At least one of these phrases appears: "do not cut", "do not apply tourniquet", "immobilize the limb", "go to hospital within 1–2 hours".
+
+---
+
+#### Step 6 — Remaining backlog (lower priority, do after testing passes)
+
+These are carry-forwards from earlier sessions and are not blocking the demo:
+
+- **Rotate the Groq API key** — it was exposed in git history before the Session 16 filter-repo rewrite. Generate a new key at `console.groq.com` and update the EAS environment variable `EXPO_PUBLIC_GROQ_API_KEY`.
+- **Add `expo-background-fetch`** — the `TransmissionService` retry loop currently only runs while the app is open in the foreground. Background fetch ensures offline-cached cases transmit even when the user closes the app.
+- **Test dashboard auth token refresh** — let the 15-minute JWT expire and verify `NextAuth` silently issues a new one without logging the user out.
+- **Add model download UX** — a "Download Offline Model (807 MB)" button on the Home screen wired to `slmAdapter.downloadModel(onProgress)` with a progress bar. Optional for FYP demo but required for a real offline flow on a physical device.
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

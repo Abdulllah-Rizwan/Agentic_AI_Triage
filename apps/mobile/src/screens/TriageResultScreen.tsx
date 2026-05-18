@@ -15,7 +15,8 @@ import type { RootStackParamList } from '../../App';
 import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
 import { useChatStore } from '../store/chatStore';
-import { localRAG, type RAGResult } from '../services/rag/LocalRAG';
+import type { RAGResult } from '../services/rag/LocalRAG';
+import { queryGuidance } from '../services/rag/queryGuidance';
 import { encodeLeanPayload, generateCaseId, type LeanPayload } from '../proto/triage';
 import { encryptLeanPayload } from '../services/encryption/AESEncryption';
 import { transmissionService } from '../services/transmission/TransmissionService';
@@ -67,7 +68,7 @@ export default function TriageResultScreen({ navigation, route }: Props) {
     const topK = level === 'GREEN' ? 2 : 1;
 
     const RAG_MIN_SCORE = 0.3;
-    localRAG.query(queryText, topK).then((results) => {
+    queryGuidance(queryText, topK).then((results) => {
       if (!unmounted.current)
         setRagResults(results.filter((r) => r.score >= RAG_MIN_SCORE));
     });

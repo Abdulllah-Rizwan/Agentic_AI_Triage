@@ -33,7 +33,7 @@ import {
 import { encodeLeanPayload, generateCaseId, type LeanPayload } from '../proto/triage';
 import { encryptLeanPayload } from '../services/encryption/AESEncryption';
 import { transmissionService } from '../services/transmission/TransmissionService';
-import { localRAG } from '../services/rag/LocalRAG';
+import { queryGuidance } from '../services/rag/queryGuidance';
 import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
 
@@ -300,14 +300,14 @@ export default function ChatScreen({ navigation, route }: Props) {
 
       // Primary query: the exact keyword that triggered the triage (or chief complaint for GREEN)
       const primaryQuery = triageResult.triggeredKeyword ?? featureVector.chiefComplaint;
-      let results = await localRAG.query(primaryQuery, 1);
+      let results = await queryGuidance(primaryQuery, 1);
 
       // Secondary fallback: try chief complaint alone when keyword produced a weak match
       if (
         (results.length === 0 || results[0]!.score < MIN_SCORE) &&
         triageResult.triggeredKeyword
       ) {
-        results = await localRAG.query(featureVector.chiefComplaint, 1);
+        results = await queryGuidance(featureVector.chiefComplaint, 1);
       }
 
       if (!unmounted.current && results.length > 0 && results[0]!.score >= MIN_SCORE) {

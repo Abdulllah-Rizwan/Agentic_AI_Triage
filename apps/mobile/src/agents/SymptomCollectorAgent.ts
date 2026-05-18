@@ -4,6 +4,7 @@
 
 import { networkOrchestrator } from '../services/network/NetworkOrchestrator';
 import { queryKnowledgeBase } from '../services/rag/LocalRAG';
+import { queryGuidance } from '../services/rag/queryGuidance';
 import {
   detectCriticalSymptom,
   type MedicalFeatureVector,
@@ -291,7 +292,7 @@ export class SymptomCollectorAgent {
         : detectCriticalSymptom(llmResponse) ?? 'critical symptom';
       this._criticalMode = true;
       this._criticalTrigger = trigger;
-      const triggerRagResults = await queryKnowledgeBase(trigger, 1);
+      const triggerRagResults = await queryGuidance(trigger, 1);
       return {
         message: safeResponse,
         status: 'COLLECTING',
@@ -305,7 +306,7 @@ export class SymptomCollectorAgent {
     if (responseTrigger && !this._criticalMode) {
       this._criticalMode = true;
       this._criticalTrigger = responseTrigger;
-      const triggerRagResults = await queryKnowledgeBase(responseTrigger, 1);
+      const triggerRagResults = await queryGuidance(responseTrigger, 1);
       return {
         message: safeResponse,
         status: 'COLLECTING',
@@ -448,7 +449,7 @@ export class SymptomCollectorAgent {
    * it is always better to show nothing than to show irrelevant medical advice.
    */
   private async _emergencyRagContext(trigger: string): Promise<string | undefined> {
-    const results = await queryKnowledgeBase(trigger, 1);
+    const results = await queryGuidance(trigger, 1);
     const item = results[0];
     if (!item || item.score < EMERGENCY_RAG_MIN_SCORE) return undefined;
     const source = item.articleTitle ?? item.articleSource;
