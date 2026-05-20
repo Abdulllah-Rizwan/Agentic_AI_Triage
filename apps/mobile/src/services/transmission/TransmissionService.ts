@@ -51,15 +51,15 @@ export async function getDeviceToken(): Promise<string> {
   const response = await fetch(`${API_BASE_URL}/api/v1/auth/device-register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ device_id: deviceId }),
+    body: JSON.stringify({ device_id: deviceId, device_model: 'Unknown', app_version: '1.0.0' }),
   });
 
   if (!response.ok) {
     throw new Error(`Device registration failed: ${response.status}`);
   }
 
-  const data = (await response.json()) as { token: string };
-  const token = data.token;
+  const data = (await response.json()) as { device_token: string };
+  const token = data.device_token;
 
   // Persist for next session
   try {

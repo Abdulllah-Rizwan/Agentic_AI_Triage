@@ -39,7 +39,16 @@
         {
           "locationAlwaysAndWhenInUsePermission": "MediReach needs your location to help responders find you in an emergency."
         }
-      ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      "./plugins/withAndroidCleartextHttp"
     ],
     "extra": {
       "eas": {

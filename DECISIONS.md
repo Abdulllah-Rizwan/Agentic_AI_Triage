@@ -2181,6 +2181,225 @@ These are carry-forwards from earlier sessions and are not blocking the demo:
 
 ---
 
+## Session 20 — 2026-05-19
+
+### Goal
+Two problems to solve: (1) reports were not reaching the server despite a 202-capable API and WiFi connectivity, and (2) offline mode chat was failing because the Llama GGUF model had never been downloaded to the device.
+
+---
+
+### Problem 1 — Transmission not reaching server (three root causes, all fixed)
+
+#### Root cause A — Android `isInternetReachable: false` on LAN WiFi
+
+**Problem:** `NetworkOrchestrator.classifyState()` checked `isInternetReachable === false` and returned `'OFFLINE'` even though the device was on WiFi with full LAN connectivity to the server.
+
+**Why it happened:** Android's `@react-native-community/netinfo` library pings `8.8.8.8` (Google DNS) to determine internet reachability. On a local WiFi network that has internet access through the router, but where Google's IP is transiently unreachable or slow, `isInternetReachable` returns `false`. Even though `http://192.168.18.34:3001` was reachable, the check failed and the whole app switched to OFFLINE mode — causing every payload to go to CACHED immediately.
+
+**Fix (`apps/mobile/src/services/network/NetworkOrchestrator.ts`):** Removed the `isInternetReachable === false` check from `classifyState()`. Mode is now determined solely by `state.isConnected` and `state.type`/`cellularGeneration`. LAN WiFi is now correctly classified as `FULL`.
+
+```typescript
+function classifyState(state: NetInfoState): NetworkMode {
+  if (!state.isConnected) return 'OFFLINE';
+  if (state.type === 'cellular') {
+    const effective = (state.details as { cellularGeneration?: string } | null)?.cellularGeneration;
+    if (effective === '2g' || effective === '3g') return 'DEGRADED';
+  }
+  return 'FULL';
+}
+```
+
+---
+
+#### Root cause B — Device registration body mismatch
+
+**Problem:** `getDeviceToken()` in `TransmissionService.ts` was sending only `{ device_id }` in the registration POST body. The server's `/api/v1/auth/device-register` endpoint required `device_id`, `device_model`, and `app_version`. Without those fields the endpoint returned HTTP 422, no token was issued, and the transmission attempted without auth.
+
+**Second problem:** After the registration was fixed, the code read `data.token` from the response but the server returns `data.device_token`. This caused `token` to be `undefined`, which meant every ingest request was sent without an Authorization header — the server rejected it.
+
+**Fix (`apps/mobile/src/services/transmission/TransmissionService.ts`):**
+```typescript
+// Before:
+body: JSON.stringify({ device_id: deviceId }),
+const token = data.token;
+
+// After:
+body: JSON.stringify({ device_id: deviceId, device_model: 'Unknown', app_version: '1.0.0' }),
+const token = data.device_token;
+```
+
+---
+
+#### Root cause C — Android cleartext HTTP blocked (Android 9+)
+
+**Problem:** Even with the network mode and auth fixed, the `fetch()` call to `http://192.168.18.34:3001/api/v1/cases/ingest` was silently blocked by Android's cleartext HTTP policy (Android 9+). The error appeared as a generic `TypeError: Network request failed` — no HTTP status, no server log entry.
+
+**Attempted fix 1 — `android.usesCleartextTraffic: true` in `app.json` directly:** Expo SDK 54 ignores this field at build time in the managed workflow. No effect.
+
+**Attempted fix 2 — `expo-build-properties` plugin:**
+```json
+["expo-build-properties", { "android": { "usesCleartextTraffic": true } }]
+```
+This applied `android:usesCleartextTraffic` to the `<application>` tag, but Android 9+ also requires a Network Security Config XML file when the policy differs from the default. With a cached build the change was not picked up.
+
+**Definitive fix — custom Expo config plugin (`apps/mobile/plugins/withAndroidCleartextHttp.js`):**
+
+Created a two-step config plugin:
+1. **`withDangerousMod`:** Writes `network_security_config.xml` directly into `android/app/src/main/res/xml/` at build time.
+2. **`withAndroidManifest`:** Adds `android:networkSecurityConfig="@xml/network_security_config"` to the `<application>` tag in `AndroidManifest.xml`.
+
+```javascript
+const NSC_XML = `<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+  <base-config cleartextTrafficPermitted="true">
+    <trust-anchors><certificates src="system" /></trust-anchors>
+  </base-config>
+</network-security-config>`;
+```
+
+This is the Android-spec-correct way to allow cleartext HTTP for all connections. Built with `eas build --clear-cache` to ensure the new plugin was applied.
+
+**`apps/mobile/app.json` changes:**
+- Added `expo-build-properties` plugin (belt-and-suspenders alongside the custom plugin)
+- Added `./plugins/withAndroidCleartextHttp` as a plugin entry
+- `EXPO_PUBLIC_API_BASE_URL` added to `eas.json` preview env (it was missing, causing `API_BASE_URL = ''` in all fetch calls)
+
+**Confirmed working:** Server log shows `192.168.18.95 - "POST /api/v1/cases/ingest HTTP/1.1" 202`. Report visible on dashboard.
+
+---
+
+### Problem 2 — Offline mode chat failing (model not downloaded)
+
+**Problem:** When the network badge showed `OFFLINE MODE`, starting a chat immediately produced: "⚠ Device AI is unavailable." No conversation was possible.
+
+**Root cause:** `SLMAdapter.initialize()` calls `FileSystem.getInfoAsync(MODEL_PATH)`. If the file does not exist (it never did — the model is 807MB and is not bundled), it sets `isReady = false` and returns silently. `SLMAdapter.chat()` then throws `LLMUnavailableError` on every call.
+
+**Fix — offline model download UI added to `HomeScreen`:**
+
+Added a model download card that appears below the "BEGIN ASSESSMENT" button whenever the model has not been downloaded:
+
+- **State:** `modelState: 'unknown' | 'not_downloaded' | 'downloading' | 'ready'` checked via `slmAdapter.isModelDownloaded()` on mount
+- **Card hidden** when `modelState === 'unknown'` (checking) or `modelState === 'ready'`
+- **Download button** (blue, "DOWNLOAD") shown when `not_downloaded`
+- **Progress bar** (amber) shown during download with percentage label
+- **Download guard:** blocked when `networkMode === 'OFFLINE'` (shows an Alert: "Connect to WiFi to download the offline AI model (807 MB).")
+- **`downloadingRef`:** prevents double-trigger if button tapped twice
+
+**ChatScreen error message updated:** The offline error now reads: "⚠ Offline AI model not downloaded. Go back to the Home screen and tap DOWNLOAD to get the offline model (807 MB). You need WiFi to download it." — instead of the previous message that said the model "may not be included in this build" (which was misleading and gave no actionable instruction).
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/services/network/NetworkOrchestrator.ts` | Removed `isInternetReachable === false` check; offline determined by `!isConnected` only |
+| `apps/mobile/src/services/transmission/TransmissionService.ts` | Added `device_model` + `app_version` to device registration body; changed `data.token` → `data.device_token` |
+| `apps/mobile/plugins/withAndroidCleartextHttp.js` | New file — custom Expo config plugin; writes NSC XML + wires into AndroidManifest |
+| `apps/mobile/app.json` | Added `expo-build-properties` plugin + custom cleartext plugin |
+| `apps/mobile/eas.json` | Added `EXPO_PUBLIC_API_BASE_URL` to preview profile env section |
+| `apps/mobile/src/screens/HomeScreen.tsx` | Added model download card (state, logic, JSX, StyleSheet) |
+| `apps/mobile/src/screens/ChatScreen.tsx` | Updated offline error message to direct user to HomeScreen download |
+
+---
+
+### Key decisions made
+
+#### DEC-028 — `isConnected` only for offline detection; drop `isInternetReachable`
+- **Date:** 2026-05-19
+- **Decision:** `NetworkOrchestrator` uses only `state.isConnected` to determine whether the device is offline. `isInternetReachable` is ignored.
+- **Reason:** Android's `isInternetReachable` pings 8.8.8.8 — it returns `false` on any LAN-only setup or when the ping transiently fails, even when the local API server is fully reachable. Using it caused the app to enter OFFLINE mode on perfectly functional WiFi, making all transmissions go to CACHED.
+- **Rejected alternative:** Keep `isInternetReachable` check — was the source of the bug.
+- **Status:** Final
+
+#### DEC-029 — Android cleartext HTTP via custom NSC config plugin
+- **Date:** 2026-05-19
+- **Decision:** Cleartext HTTP on Android is enabled via a custom Expo config plugin that writes `network_security_config.xml` and wires it into `AndroidManifest.xml`. `expo-build-properties` alone is insufficient in Expo SDK 54.
+- **Reason:** Android 9+ requires a Network Security Config XML file to allow cleartext traffic — `android:usesCleartextTraffic` in `app.json` is not reliably applied in the Expo managed workflow. The custom plugin is the spec-correct, deterministic approach.
+- **Status:** Final — must use `eas build --clear-cache` after changing any plugin.
+
+#### DEC-030 — Offline AI model downloaded at runtime from HomeScreen, not at install
+- **Date:** 2026-05-19
+- **Decision:** The 807MB Llama GGUF is not bundled in the APK. Users download it from a card on the HomeScreen with a visible progress bar. The card disappears once the model is present.
+- **Reason:** The model is too large to bundle (Metro crashes on files > ~512MB), too large to commit to git, and not all users need offline mode. A download-on-demand pattern gives users control and avoids bloating the APK. The download persists across app restarts in `documentDirectory`.
+- **Status:** Final
+
+---
+
+### What is next
+- Build a new preview APK (`eas build --platform android --profile preview`) with the cleartext and model changes
+- On the device: tap DOWNLOAD on HomeScreen over WiFi — verify progress bar fills to 100% and card disappears
+- Enable airplane mode, start a chat — verify Llama 3.2 1B handles the conversation
+- Verify transmission still works (server log shows 202) after the new build
+- Rotate the Groq API key if not yet done (was exposed in git history pre-Session 16)
+
+---
+
+## Session 21 — 2026-05-20
+
+### Goal
+Diagnose and fix the admin dashboard sign-in failure for `admin@medireach.app`.
+
+---
+
+### Problem — Admin login returning 401
+
+**Symptom:** Every attempt to sign in at `http://localhost:3000/login` with `admin@medireach.app` showed "Invalid email or password". The server log confirmed:
+
+```
+SELECT users ... WHERE users.email = 'admin@medireach.app'   ← user found in DB
+ROLLBACK
+POST /api/v1/auth/login HTTP/1.1" 401
+```
+
+The user record existed (the SELECT ran) but `verify_password` returned `false`, meaning the stored bcrypt hash did not match the password being entered.
+
+---
+
+### Root cause
+
+The `admin@medireach.app` account was originally seeded by `scripts/create_admin.py` with password `admin123`. However, at some point between seeding and this session, the password hash in the database became stale or mismatched. The most likely cause: the account was recreated via the dashboard registration form (`POST /api/v1/auth/register`) with a different password after a DB reset, and `create_admin.py`'s `get_or_create_user()` skipped re-creating it (it only inserts when the email is absent — it never updates an existing record's hash).
+
+**Evidence:** The `GET /api/v1/auth/dev/users` endpoint confirmed the account and org were present and ACTIVE, ruling out missing user or suspended org as causes. Only the hash was wrong.
+
+---
+
+### Fix
+
+Used the dev-only endpoint added in Session 12 to reset the password directly in the database:
+
+```
+POST /api/v1/auth/dev/reset-password
+{ "email": "admin@medireach.app", "new_password": "admin123" }
+→ 200 OK — "Password reset for admin@medireach.app. You can now log in."
+```
+
+Verified immediately by calling `POST /api/v1/auth/login` — returned 200 with a valid JWT, role `ADMIN`, org `MediReach System`.
+
+No server or dashboard restart was required — the hash is read from the DB on every login attempt.
+
+---
+
+### No files changed
+
+This was a data fix, not a code fix. No source files were modified.
+
+---
+
+### Current admin credentials
+
+| Email | Password | Role | Org |
+|-------|----------|------|-----|
+| `admin@medireach.app` | `admin123` | ADMIN | MediReach System (ACTIVE) |
+| `responder@test.com` | `test123` | RESPONDER | Test Hospital (ACTIVE) |
+
+---
+
+### What is next
+- Continue from Session 20's backlog: new EAS preview build, offline model download test, Groq API key rotation
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

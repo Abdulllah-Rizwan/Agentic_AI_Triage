@@ -12,7 +12,12 @@ type ModeChangeCallback = (mode: NetworkMode) => void;
 const CONNECTIVITY_RESTORED_CALLBACKS: Array<() => void> = [];
 
 function classifyState(state: NetInfoState): NetworkMode {
-  if (!state.isConnected || state.isInternetReachable === false) {
+  // Only treat as OFFLINE when there is no network connection at all.
+  // We deliberately ignore isInternetReachable because:
+  //   (a) In dev, the server is a local LAN IP — Android's internet check
+  //       (which pings 8.8.8.8) returns false even though the server IS reachable.
+  //   (b) In production the server is deployed publicly, so isConnected is sufficient.
+  if (!state.isConnected) {
     return 'OFFLINE';
   }
 

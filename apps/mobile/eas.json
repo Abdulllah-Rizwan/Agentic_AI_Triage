@@ -23,7 +23,8 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_ENVIRONMENT": "production"
+        "EXPO_PUBLIC_ENVIRONMENT": "production",
+        "EXPO_PUBLIC_API_BASE_URL": "http://192.168.18.34:3001"
       }
     },
     "production": {

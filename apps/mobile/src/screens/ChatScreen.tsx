@@ -498,7 +498,7 @@ export default function ChatScreen({ navigation, route }: Props) {
           role: 'agent',
           type: 'system',
           content: isOffline
-            ? '⚠ Device AI is unavailable. The offline model may not be included in this build. Please connect to the internet to use cloud AI.'
+            ? '⚠ Offline AI model not downloaded. Go back to the Home screen and tap DOWNLOAD to get the offline model (807 MB). You need WiFi to download it.'
             : '⚠ Connection error. Please try again.',
           timestamp: Date.now(),
         });

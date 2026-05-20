@@ -7,19 +7,19 @@ It will be compatible before version 2.0.0.
 C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\google\adk\features\_feature_decorator.py:72: UserWarning: [EXPERIMENTAL] feature FeatureName.PLUGGABLE_AUTH is enabled.
   check_feature_enabled()
 worker created, starting...
-[2026-05-17 16:00:20,229: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-05-20 15:19:06,741: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-05-17 16:00:21,467: INFO/MainProcess] Connected to redis://localhost:6379/0
-[2026-05-17 16:00:21,469: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-05-20 15:19:06,942: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2026-05-20 15:19:06,945: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-05-17 16:00:21,535: INFO/MainProcess] mingle: searching for neighbors
-[2026-05-17 16:00:24,142: INFO/MainProcess] mingle: all alone
-[2026-05-17 16:00:24,982: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
+[2026-05-20 15:19:07,083: INFO/MainProcess] mingle: searching for neighbors
+[2026-05-20 15:19:08,299: INFO/MainProcess] mingle: all alone
+[2026-05-20 15:19:08,522: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
