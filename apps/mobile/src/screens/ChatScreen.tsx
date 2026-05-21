@@ -16,7 +16,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { RootStackParamList } from '../../App';
@@ -50,6 +50,7 @@ interface SavedChatSession {
     criticalCaseId: string | null;
     criticalTxFired: boolean;
     emergencyTrigger: string | null;
+    hasCompletedTriage?: boolean;
   };
   savedAt: number;
 }
@@ -89,6 +90,9 @@ export default function ChatScreen({ navigation, route }: Props) {
   const dot1 = useRef(new Animated.Value(0)).current;
   const dot2 = useRef(new Animated.Value(0)).current;
   const dot3 = useRef(new Animated.Value(0)).current;
+
+  // Bottom inset — keeps input above phone navigation bar
+  const insets = useSafeAreaInsets();
 
   // Zustand
   const messages             = useChatStore((s) => s.messages);
@@ -140,17 +144,33 @@ export default function ChatScreen({ navigation, route }: Props) {
       if (unmounted.current) return;
 
       if (saved && (saved.messages?.length ?? 0) > 0 && Date.now() - saved.savedAt < SESSION_MAX_AGE_MS) {
-        // Restore existing in-progress session
         setMessages(saved.messages);
-        agent.restoreState(saved.agentState);
-        setTurnCount(saved.screenState.turnCount ?? 0);
-        setEmergencyRag(saved.screenState.emergencyRag);
-        setCriticalTxStatus(saved.screenState.criticalTxStatus ?? 'IDLE');
-        setCriticalCaseId(saved.screenState.criticalCaseId ?? null);
-        criticalTxFired.current = saved.screenState.criticalTxFired ?? false;
-        if (saved.screenState.emergencyTrigger) {
-          setEmergencyDetected(saved.screenState.emergencyTrigger);
-          barOffset.setValue(0); // show bar immediately without animation on restore
+        if (saved.screenState.hasCompletedTriage) {
+          // Completed session — restore in read-only completed state so the user
+          // still sees the "Start New Assessment" button and cannot keep chatting.
+          setHasCompletedTriage(true);
+          setIsInputDisabled(true);
+          setEmergencyRag(saved.screenState.emergencyRag);
+          setCriticalTxStatus(saved.screenState.criticalTxStatus ?? 'IDLE');
+          setCriticalCaseId(saved.screenState.criticalCaseId ?? null);
+          criticalTxFired.current = saved.screenState.criticalTxFired ?? false;
+          if (saved.screenState.emergencyTrigger) {
+            setEmergencyDetected(saved.screenState.emergencyTrigger);
+            barOffset.setValue(0);
+          }
+          // Agent stays un-started; input is locked so no messages can be sent.
+        } else {
+          // In-progress session — restore fully so the user can continue chatting.
+          agent.restoreState(saved.agentState);
+          setTurnCount(saved.screenState.turnCount ?? 0);
+          setEmergencyRag(saved.screenState.emergencyRag);
+          setCriticalTxStatus(saved.screenState.criticalTxStatus ?? 'IDLE');
+          setCriticalCaseId(saved.screenState.criticalCaseId ?? null);
+          criticalTxFired.current = saved.screenState.criticalTxFired ?? false;
+          if (saved.screenState.emergencyTrigger) {
+            setEmergencyDetected(saved.screenState.emergencyTrigger);
+            barOffset.setValue(0);
+          }
         }
       } else {
         // Fresh start
@@ -356,10 +376,7 @@ export default function ChatScreen({ navigation, route }: Props) {
       }, 10_000);
     }
 
-    // ── 5. Persist conversation history ──────────────────────────────────────
-    // GREEN cases are never queued for transmission so completed_cases only gets
-    // written by TransmissionService for RED/AMBER. Write the GREEN record here.
-    // For all levels, snapshot the messages so they can be replayed read-only.
+    // ── 5. Persist conversation history & completed-case record ──────────────
     const historySnapshot = useChatStore.getState().messages;
     if (level === 'GREEN') {
       const localId = generateCaseId();
@@ -371,15 +388,49 @@ export default function ChatScreen({ navigation, route }: Props) {
       }).catch(() => {});
       saveChatHistory(localId, historySnapshot).catch(() => {});
     } else {
-      // RED/AMBER — link history to whichever caseId was used for transmission
+      // RED / AMBER — link history and history-list record to the same case ID
+      // that was used for transmission (CRITICAL path fires first; SUFFICIENT
+      // path uses caseIdForPoll that was created during transmission above).
       const txCaseId = criticalTxFired.current
         ? criticalCaseIdRef.current
         : caseIdForPoll;
-      if (txCaseId) saveChatHistory(txCaseId, historySnapshot).catch(() => {});
+      if (txCaseId) {
+        saveChatHistory(txCaseId, historySnapshot).catch(() => {});
+        // Write to completed_cases immediately so the case appears in the Home
+        // screen history without waiting for the TransmissionService to confirm.
+        saveCompletedCase({
+          case_id: txCaseId,
+          triage_level: level,
+          chief_complaint: featureVector.chiefComplaint,
+          completed_at: Date.now(),
+        }).catch(() => {});
+      }
     }
 
-    // Session is complete — remove from SQLite so next mount starts fresh
-    clearActiveSession().catch(() => {});
+    // ── 6. Mark session completed in SQLite ───────────────────────────────────
+    // Save the completed session (with hasCompletedTriage: true) instead of
+    // clearing it. This way, if the user navigates away and comes back via
+    // "BEGIN ASSESSMENT" the completed chat is restored with the "Start New
+    // Assessment" button still visible — they cannot accidentally resume a
+    // finished conversation. The session is cleared only when the user
+    // explicitly presses "Start New Assessment".
+    if (agentRef.current) {
+      const completedSession: SavedChatSession = {
+        messages: useChatStore.getState().messages,
+        agentState: agentRef.current.getSerializableState(),
+        screenState: {
+          turnCount,
+          emergencyRag,
+          criticalTxStatus,
+          criticalCaseId: criticalCaseIdRef.current,
+          criticalTxFired: criticalTxFired.current,
+          emergencyTrigger: emergencyTrigger ?? null,
+          hasCompletedTriage: true,
+        },
+        savedAt: Date.now(),
+      };
+      saveActiveSession(completedSession).catch(() => {});
+    }
     if (!unmounted.current) setHasCompletedTriage(true);
   };
 
@@ -688,7 +739,7 @@ export default function ChatScreen({ navigation, route }: Props) {
 
         {/* ── Post-triage action bar OR live input ── */}
         {hasCompletedTriage ? (
-          <View style={styles.postTriageBar}>
+          <View style={[styles.postTriageBar, { paddingBottom: 14 + insets.bottom }]}>
             <TouchableOpacity
               style={styles.newAssessmentBtn}
               onPress={() => {
@@ -707,7 +758,7 @@ export default function ChatScreen({ navigation, route }: Props) {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.inputRow}>
+          <View style={[styles.inputRow, { paddingBottom: 12 + insets.bottom }]}>
             <TextInput
               style={styles.textInput}
               value={input}

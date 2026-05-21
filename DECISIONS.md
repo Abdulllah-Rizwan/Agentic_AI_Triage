@@ -2400,6 +2400,80 @@ This was a data fix, not a code fix. No source files were modified.
 
 ---
 
+## Session 22 — 2026-05-21
+
+### Goal
+Fix two UX bugs reported after live device testing: (1) the "Start New Assessment" button disappeared when the user closed the chat mid-completion and returned to it, allowing the conversation to be resumed after triage had already fired. (2) the chat text input was positioned so low it was hidden behind the phone's navigation bar.
+
+---
+
+### Bug 1 — "Start New Assessment" button gone after closing chat
+
+**Symptom:** After triage completed and the guidance was shown, the "Start New Assessment" button appeared correctly. But if the user pressed the Android back button or switched apps and then returned to the Chat screen via "BEGIN ASSESSMENT" on the Home screen, the completed conversation was gone and a fresh chat started — allowing the user to inadvertently continue a conversation that had already been assessed and transmitted.
+
+**Root cause:** At the end of `_handlePostTriage`, the code called `clearActiveSession()` — which deleted the saved session from SQLite. On the next mount, `loadActiveSession()` returned `null`, the startup effect fell through to the "fresh start" branch, called `clearChat()` and `agent.start()`, and presented a new welcome message. `hasCompletedTriage` started as `false`, so the input row was shown instead of the "Start New Assessment" button.
+
+**Fix — `apps/mobile/src/screens/ChatScreen.tsx`:**
+
+1. **Added `hasCompletedTriage?: boolean` to `SavedChatSession.screenState`** — this flag distinguishes a completed session (triage fired, guidance shown) from an in-progress one (agent still collecting symptoms).
+
+2. **`_handlePostTriage` now saves (not clears) the completed session.** Right before `setHasCompletedTriage(true)`, the function snapshots the current Zustand message state and saves the session to SQLite with `hasCompletedTriage: true`. The `agentRef.current.getSerializableState()` is included (for structural consistency) but is never used during restore.
+
+3. **Startup `useEffect` now branches on `hasCompletedTriage`.** If the restored session has `hasCompletedTriage: true`:
+   - Messages are restored as before
+   - `setHasCompletedTriage(true)` and `setIsInputDisabled(true)` are set immediately
+   - Emergency bar and critical TX status bar states are restored for display
+   - The agent is **not** started — input stays locked, "Start New Assessment" button appears
+   
+   If the restored session does NOT have `hasCompletedTriage` (in-progress session), behaviour is unchanged — agent state is restored and the user can continue chatting.
+
+4. **"Start New Assessment" button still calls `clearActiveSession()`.** This is the one intentional exit from a completed session. Pressing it clears the SQLite record and navigates to Home. The next "BEGIN ASSESSMENT" tap starts a genuinely fresh chat.
+
+**Bonus fix:** RED/AMBER cases now also call `saveCompletedCase()` inside `_handlePostTriage` (not just GREEN cases). Previously, RED/AMBER cases only appeared in "MY ASSESSMENTS" on the Home screen after the `TransmissionService` confirmed the send. Now they are written to `completed_cases` immediately when triage completes, with a linked `saveChatHistory` entry — so the "View Conversation" button works right away regardless of network state.
+
+---
+
+### Bug 2 — Chat input hidden behind phone navigation bar
+
+**Symptom:** The `TextInput` in `ChatScreen` was positioned so low on the screen that it was partially or fully hidden behind the Android gesture navigation bar (the swipe-home area at the bottom of the screen). Users had to blind-tap near the very bottom edge to focus it.
+
+**Root cause:** `SafeAreaView` was used with `edges={['top', 'left', 'right']}` (bottom excluded, intentionally, to avoid double-padding when the keyboard was open — `KeyboardAvoidingView` handles the keyboard offset). However, `KeyboardAvoidingView` only shifts the layout when the software keyboard appears. It does nothing about the phone's permanent gesture/button navigation bar inset. On devices with 3-button navigation or gesture navigation, `insets.bottom` is non-zero and the input row overlapped with the navigation area.
+
+**Fix — `apps/mobile/src/screens/ChatScreen.tsx`:**
+
+Added `useSafeAreaInsets` from `react-native-safe-area-context` (already installed) and applied `insets.bottom` as additional `paddingBottom` directly on both the live input row and the post-triage "Start New Assessment" bar via inline style merging:
+
+```typescript
+const insets = useSafeAreaInsets();
+
+// Input row (active chat)
+<View style={[styles.inputRow, { paddingBottom: 12 + insets.bottom }]}>
+
+// Post-triage bar (completed chat)
+<View style={[styles.postTriageBar, { paddingBottom: 14 + insets.bottom }]}>
+```
+
+On devices where `insets.bottom === 0` (older devices, full-screen apps with no nav bar) there is no change. On devices with a visible navigation bar the input lifts by the exact inset height.
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/screens/ChatScreen.tsx` | (1) Added `hasCompletedTriage?: boolean` to `SavedChatSession.screenState`; (2) startup `useEffect` branches on `hasCompletedTriage` when restoring; (3) `_handlePostTriage` saves completed session instead of clearing; (4) RED/AMBER cases now written to `completed_cases` immediately; (5) added `useSafeAreaInsets` and applied `insets.bottom` to input row and post-triage bar |
+
+---
+
+### What is next
+- On the test device, verify: complete a 5-turn GREEN assessment → press Android back → press "BEGIN ASSESSMENT" → the completed chat should restore with "Start New Assessment" button visible, input locked
+- Verify: press "Start New Assessment" → Home screen → "BEGIN ASSESSMENT" → fresh chat starts (not the old one)
+- Verify: RED/AMBER case appears in "MY ASSESSMENTS" immediately after triage (before a network send completes)
+- Verify: text input is no longer hidden behind the navigation bar on physical device
+- Carry-forwards from Sessions 19–21: rotate Groq API key; add `expo-background-fetch`; test token refresh; new EAS preview build after the ChatScreen changes
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
