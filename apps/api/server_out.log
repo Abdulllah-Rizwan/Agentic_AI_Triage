@@ -7,653 +7,44 @@ It will be compatible before version 2.0.0.
   from authlib.jose import ECKey
 C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\google\adk\features\_feature_decorator.py:72: UserWarning: [EXPERIMENTAL] feature FeatureName.PLUGGABLE_AUTH is enabled.
   check_feature_enabled()
-Started server process [16208]
-Started server process [16208]
-2026-05-21 17:04:20,441 INFO uvicorn.error: Started server process [16208]
+Started server process [5904]
+Started server process [5904]
+2026-05-23 20:35:30,132 INFO uvicorn.error: Started server process [5904]
 Waiting for application startup.
 Waiting for application startup.
-2026-05-21 17:04:20,441 INFO uvicorn.error: Waiting for application startup.
+2026-05-23 20:35:30,132 INFO uvicorn.error: Waiting for application startup.
 Application startup complete.
 Application startup complete.
-2026-05-21 17:04:20,444 INFO uvicorn.error: Application startup complete.
+2026-05-23 20:35:30,134 INFO uvicorn.error: Application startup complete.
 Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
 Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-2026-05-21 17:04:20,446 INFO uvicorn.error: Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
-2026-05-21 17:07:56,782 INFO sqlalchemy.engine.Engine select pg_catalog.version()
-2026-05-21 17:07:56,782 INFO sqlalchemy.engine.Engine: select pg_catalog.version()
-2026-05-21 17:07:56,782 INFO sqlalchemy.engine.Engine [raw sql] ()
-2026-05-21 17:07:56,782 INFO sqlalchemy.engine.Engine: [raw sql] ()
-2026-05-21 17:07:56,818 INFO sqlalchemy.engine.Engine select current_schema()
-2026-05-21 17:07:56,818 INFO sqlalchemy.engine.Engine: select current_schema()
-2026-05-21 17:07:56,818 INFO sqlalchemy.engine.Engine [raw sql] ()
-2026-05-21 17:07:56,818 INFO sqlalchemy.engine.Engine: [raw sql] ()
-2026-05-21 17:07:56,840 INFO sqlalchemy.engine.Engine show standard_conforming_strings
-2026-05-21 17:07:56,840 INFO sqlalchemy.engine.Engine: show standard_conforming_strings
-2026-05-21 17:07:56,841 INFO sqlalchemy.engine.Engine [raw sql] ()
-2026-05-21 17:07:56,841 INFO sqlalchemy.engine.Engine: [raw sql] ()
-2026-05-21 17:07:56,846 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:07:56,846 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:07:56,909 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
-FROM cases 
-WHERE cases.id = $1::VARCHAR
-2026-05-21 17:07:56,909 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
-FROM cases 
-WHERE cases.id = $1::VARCHAR
-2026-05-21 17:07:56,910 INFO sqlalchemy.engine.Engine [generated in 0.00073s] ('d0d22617-d199-41b8-8bac-3b0c8f63d0ab',)
-2026-05-21 17:07:56,910 INFO sqlalchemy.engine.Engine: [generated in 0.00073s] ('d0d22617-d199-41b8-8bac-3b0c8f63d0ab',)
-192.168.18.95:38092 - "GET /api/v1/cases/d0d22617-d199-41b8-8bac-3b0c8f63d0ab/status HTTP/1.1" 200
-192.168.18.95:38092 - "GET /api/v1/cases/d0d22617-d199-41b8-8bac-3b0c8f63d0ab/status HTTP/1.1" 200
-2026-05-21 17:07:57,397 INFO uvicorn.access: 192.168.18.95:38092 - "GET /api/v1/cases/d0d22617-d199-41b8-8bac-3b0c8f63d0ab/status HTTP/1.1" 200
-2026-05-21 17:07:57,398 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:07:57,398 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:34,799 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:34,799 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:34,805 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:34,805 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:34,806 INFO sqlalchemy.engine.Engine [generated in 0.00049s] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-2026-05-21 17:08:34,806 INFO sqlalchemy.engine.Engine: [generated in 0.00049s] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:34,842 INFO uvicorn.access: 127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:34,843 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:34,843 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:34,954 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:34,954 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:34,955 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:34,955 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:34,956 INFO sqlalchemy.engine.Engine [cached since 0.1504s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-2026-05-21 17:08:34,956 INFO sqlalchemy.engine.Engine: [cached since 0.1504s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:34,960 INFO uvicorn.access: 127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:34,961 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:34,961 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:35,046 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:35,046 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:35,047 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:35,047 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:35,047 INFO sqlalchemy.engine.Engine [cached since 0.2417s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-2026-05-21 17:08:35,047 INFO sqlalchemy.engine.Engine: [cached since 0.2417s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:35,053 INFO uvicorn.access: 127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:35,055 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:35,055 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:35,126 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:35,126 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:35,126 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:35,126 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:35,127 INFO sqlalchemy.engine.Engine [cached since 0.321s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-2026-05-21 17:08:35,127 INFO sqlalchemy.engine.Engine: [cached since 0.321s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:35,131 INFO uvicorn.access: 127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:35,132 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:35,132 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:35,205 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:35,205 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:35,205 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:35,205 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:35,206 INFO sqlalchemy.engine.Engine [cached since 0.4003s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-2026-05-21 17:08:35,206 INFO sqlalchemy.engine.Engine: [cached since 0.4003s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:35,210 INFO uvicorn.access: 127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:35,211 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:35,211 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:51400 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51400 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:35,212 INFO uvicorn.access: 127.0.0.1:51400 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51400 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:51400 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:35,218 INFO uvicorn.access: 127.0.0.1:51400 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:51400 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51400 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:35,224 INFO uvicorn.access: 127.0.0.1:51400 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:35,374 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:35,374 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:35,375 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:35,375 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
-FROM users 
-WHERE users.id = $1::UUID
-2026-05-21 17:08:35,375 INFO sqlalchemy.engine.Engine [cached since 0.5696s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-2026-05-21 17:08:35,375 INFO sqlalchemy.engine.Engine: [cached since 0.5696s ago] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:35,394 INFO uvicorn.access: 127.0.0.1:51393 - "POST /api/v1/auth/refresh HTTP/1.1" 200
-2026-05-21 17:08:35,395 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:35,395 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:51405 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:51405 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:08:35,421 INFO uvicorn.error: 127.0.0.1:51405 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:08:35,426 INFO uvicorn.error: connection open
-127.0.0.1:51407 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:51407 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:08:35,449 INFO uvicorn.error: 127.0.0.1:51407 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:08:35,455 INFO uvicorn.error: connection open
-2026-05-21 17:08:35,801 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:35,801 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:35,809 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:08:35,809 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:08:35,809 INFO sqlalchemy.engine.Engine [generated in 0.00102s] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:35,809 INFO sqlalchemy.engine.Engine: [generated in 0.00102s] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:36,045 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:36,045 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:36,047 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:08:36,047 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:08:36,047 INFO sqlalchemy.engine.Engine [generated in 0.00053s] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:36,047 INFO sqlalchemy.engine.Engine: [generated in 0.00053s] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:36,153 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:36,153 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:36,154 INFO sqlalchemy.engine.Engine [generated in 0.00215s] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:36,154 INFO sqlalchemy.engine.Engine: [generated in 0.00215s] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:36,162 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:36,162 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:36,162 INFO sqlalchemy.engine.Engine [generated in 0.00072s] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:36,162 INFO sqlalchemy.engine.Engine: [generated in 0.00072s] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:51400 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51400 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:36,312 INFO uvicorn.access: 127.0.0.1:51400 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:36,313 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:36,313 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:51402 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:51402 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:36,322 INFO uvicorn.access: 127.0.0.1:51402 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:36,323 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:36,323 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:36,340 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:36,340 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:36,341 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:08:36,341 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:08:36,341 INFO sqlalchemy.engine.Engine [cached since 0.5334s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:36,341 INFO sqlalchemy.engine.Engine: [cached since 0.5334s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:36,352 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:36,352 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:36,353 INFO sqlalchemy.engine.Engine [cached since 0.1919s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:36,353 INFO sqlalchemy.engine.Engine: [cached since 0.1919s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:51408 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51408 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:36,360 INFO uvicorn.access: 127.0.0.1:51408 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:36,362 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:36,362 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:36,371 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:36,371 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:36,372 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:08:36,372 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:08:36,372 INFO sqlalchemy.engine.Engine [cached since 0.3258s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:36,372 INFO sqlalchemy.engine.Engine: [cached since 0.3258s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:36,379 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:36,379 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:36,379 INFO sqlalchemy.engine.Engine [cached since 0.2273s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:36,379 INFO sqlalchemy.engine.Engine: [cached since 0.2273s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:51409 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:51409 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:36,391 INFO uvicorn.access: 127.0.0.1:51409 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:36,392 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:36,392 INFO sqlalchemy.engine.Engine: ROLLBACK
-connection closed
-connection closed
-2026-05-21 17:08:41,934 INFO uvicorn.error: connection closed
-connection closed
-connection closed
-2026-05-21 17:08:41,936 INFO uvicorn.error: connection closed
-2026-05-21 17:08:55,222 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:55,222 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:55,223 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
-FROM cases 
-WHERE cases.id = $1::VARCHAR
-2026-05-21 17:08:55,223 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
-FROM cases 
-WHERE cases.id = $1::VARCHAR
-2026-05-21 17:08:55,223 INFO sqlalchemy.engine.Engine [cached since 58.31s ago] ('8fbaf12e-3705-428e-b6ed-455d5893ed3a',)
-2026-05-21 17:08:55,223 INFO sqlalchemy.engine.Engine: [cached since 58.31s ago] ('8fbaf12e-3705-428e-b6ed-455d5893ed3a',)
-2026-05-21 17:08:55,225 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:55,225 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:55,227 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.org_id, users.created_at 
-FROM users 
-WHERE users.email = $1::VARCHAR
-2026-05-21 17:08:55,227 INFO sqlalchemy.engine.Engine: SELECT users.id, users.email, users.password_hash, users.role, users.org_id, users.created_at 
-FROM users 
-WHERE users.email = $1::VARCHAR
-2026-05-21 17:08:55,227 INFO sqlalchemy.engine.Engine [generated in 0.00057s] ('admin@medireach.app',)
-2026-05-21 17:08:55,227 INFO sqlalchemy.engine.Engine: [generated in 0.00057s] ('admin@medireach.app',)
-2026-05-21 17:08:55,494 INFO sqlalchemy.engine.Engine INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
-2026-05-21 17:08:55,494 INFO sqlalchemy.engine.Engine: INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
-2026-05-21 17:08:55,497 INFO sqlalchemy.engine.Engine [generated in 0.00128s] ('8fbaf12e-3705-428e-b6ed-455d5893ed3a', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah RIZWAN', '+92-341-2959275', 24.9622063, 67.0597128, 'Severe headache with nosebleed', ['Bhai urdu likho smhj nhe arha', 'Mjhe ek hafty se sir m dard hai aur blood pressure ka bhe me mareez rhta hon', 'Nhe aur koi masla nhe hai', 'Nhe mjhe kisi dawai se allergy nhe hai'], 10, 'RED', 'Severity score 8 or above — immediate medical attention required.', 'The patient has been experiencing a severe headache for a week, with a nosebleed, and has a history of high blood pressure, with no other symptoms and no known drug allergies.', 'PENDING', None, None, datetime.datetime(2026, 5, 21, 12, 8, 55, 494180), None, "samsung-abdullah's-a06", None)
-2026-05-21 17:08:55,497 INFO sqlalchemy.engine.Engine: [generated in 0.00128s] ('8fbaf12e-3705-428e-b6ed-455d5893ed3a', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah RIZWAN', '+92-341-2959275', 24.9622063, 67.0597128, 'Severe headache with nosebleed', ['Bhai urdu likho smhj nhe arha', 'Mjhe ek hafty se sir m dard hai aur blood pressure ka bhe me mareez rhta hon', 'Nhe aur koi masla nhe hai', 'Nhe mjhe kisi dawai se allergy nhe hai'], 10, 'RED', 'Severity score 8 or above — immediate medical attention required.', 'The patient has been experiencing a severe headache for a week, with a nosebleed, and has a history of high blood pressure, with no other symptoms and no known drug allergies.', 'PENDING', None, None, datetime.datetime(2026, 5, 21, 12, 8, 55, 494180), None, "samsung-abdullah's-a06", None)
-2026-05-21 17:08:55,974 INFO sqlalchemy.engine.Engine SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.type AS organizations_type, organizations.access_code AS organizations_access_code, organizations.status AS organizations_status, organizations.created_at AS organizations_created_at 
-FROM organizations 
-WHERE organizations.id = $1::UUID
-2026-05-21 17:08:55,974 INFO sqlalchemy.engine.Engine: SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.type AS organizations_type, organizations.access_code AS organizations_access_code, organizations.status AS organizations_status, organizations.created_at AS organizations_created_at 
-FROM organizations 
-WHERE organizations.id = $1::UUID
-2026-05-21 17:08:55,974 INFO sqlalchemy.engine.Engine [generated in 0.00035s] (UUID('61dbb1c1-b43b-4484-b69c-32f4703b7a6e'),)
-2026-05-21 17:08:55,974 INFO sqlalchemy.engine.Engine: [generated in 0.00035s] (UUID('61dbb1c1-b43b-4484-b69c-32f4703b7a6e'),)
-2026-05-21 17:08:55,991 INFO sqlalchemy.engine.Engine COMMIT
-2026-05-21 17:08:55,991 INFO sqlalchemy.engine.Engine: COMMIT
-192.168.18.95:54002 - "POST /api/v1/cases/ingest HTTP/1.1" 202
-192.168.18.95:54002 - "POST /api/v1/cases/ingest HTTP/1.1" 202
-2026-05-21 17:08:56,288 INFO uvicorn.access: 192.168.18.95:54002 - "POST /api/v1/cases/ingest HTTP/1.1" 202
-127.0.0.1:51842 - "POST /api/v1/auth/login HTTP/1.1" 200
-127.0.0.1:51842 - "POST /api/v1/auth/login HTTP/1.1" 200
-2026-05-21 17:08:56,292 INFO uvicorn.access: 127.0.0.1:51842 - "POST /api/v1/auth/login HTTP/1.1" 200
-2026-05-21 17:08:56,293 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:56,293 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:56,903 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:56,903 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:56,904 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:08:56,904 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:08:56,904 INFO sqlalchemy.engine.Engine [cached since 21.1s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:56,904 INFO sqlalchemy.engine.Engine: [cached since 21.1s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:56,909 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:56,909 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:56,910 INFO sqlalchemy.engine.Engine [cached since 20.75s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:56,910 INFO sqlalchemy.engine.Engine: [cached since 20.75s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:51410 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51410 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:56,914 INFO uvicorn.access: 127.0.0.1:51410 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:56,916 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:56,916 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:51850 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:51850 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:08:57,095 INFO uvicorn.error: 127.0.0.1:51850 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:08:57,097 INFO uvicorn.error: connection open
-127.0.0.1:51852 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:51852 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:08:57,126 INFO uvicorn.error: 127.0.0.1:51852 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:08:57,127 INFO uvicorn.error: connection open
-127.0.0.1:51854 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:51854 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:08:57,141 INFO uvicorn.error: 127.0.0.1:51854 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:08:57,143 INFO uvicorn.error: connection open
-127.0.0.1:51856 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:51856 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:08:57,158 INFO uvicorn.error: 127.0.0.1:51856 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:08:57,160 INFO uvicorn.error: connection open
-2026-05-21 17:08:57,341 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:57,341 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:57,342 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:08:57,342 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:08:57,342 INFO sqlalchemy.engine.Engine [cached since 21.3s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:57,342 INFO sqlalchemy.engine.Engine: [cached since 21.3s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:57,350 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:57,350 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:57,350 INFO sqlalchemy.engine.Engine [cached since 21.2s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:57,350 INFO sqlalchemy.engine.Engine: [cached since 21.2s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:51410 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:51410 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:57,356 INFO uvicorn.access: 127.0.0.1:51410 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:57,357 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:57,357 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:57,735 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:57,735 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:57,739 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:08:57,739 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:08:57,739 INFO sqlalchemy.engine.Engine [cached since 21.93s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:57,739 INFO sqlalchemy.engine.Engine: [cached since 21.93s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:57,753 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:57,753 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:57,754 INFO sqlalchemy.engine.Engine [cached since 21.59s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:08:57,754 INFO sqlalchemy.engine.Engine: [cached since 21.59s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:51410 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51410 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:57,770 INFO uvicorn.access: 127.0.0.1:51410 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:08:57,771 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:57,771 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:08:57,894 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:08:57,894 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:08:57,895 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:08:57,895 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:08:57,896 INFO sqlalchemy.engine.Engine [cached since 21.85s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:57,896 INFO sqlalchemy.engine.Engine: [cached since 21.85s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:57,911 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:57,911 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:08:57,912 INFO sqlalchemy.engine.Engine [cached since 21.76s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:08:57,912 INFO sqlalchemy.engine.Engine: [cached since 21.76s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:51410 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:51410 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:57,928 INFO uvicorn.access: 127.0.0.1:51410 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:08:57,931 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:08:57,931 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:09:03,517 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:09:03,517 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:09:03,518 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:09:03,518 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:09:03,518 INFO sqlalchemy.engine.Engine [cached since 27.71s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:03,518 INFO sqlalchemy.engine.Engine: [cached since 27.71s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:03,531 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:03,531 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:03,531 INFO sqlalchemy.engine.Engine [cached since 27.37s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:03,531 INFO sqlalchemy.engine.Engine: [cached since 27.37s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:51868 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51868 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:09:03,537 INFO uvicorn.access: 127.0.0.1:51868 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:09:03,538 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:09:03,538 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:09:08,652 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:09:08,652 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:09:08,653 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:09:08,653 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:09:08,654 INFO sqlalchemy.engine.Engine [cached since 32.85s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:08,654 INFO sqlalchemy.engine.Engine: [cached since 32.85s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:08,659 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:08,659 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:08,659 INFO sqlalchemy.engine.Engine [cached since 32.5s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:08,659 INFO sqlalchemy.engine.Engine: [cached since 32.5s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:51869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:09:08,662 INFO uvicorn.access: 127.0.0.1:51869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:09:08,663 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:09:08,663 INFO sqlalchemy.engine.Engine: ROLLBACK
-connection closed
-connection closed
-2026-05-21 17:09:12,337 INFO uvicorn.error: connection closed
-connection closed
-connection closed
-2026-05-21 17:09:12,338 INFO uvicorn.error: connection closed
-connection closed
-connection closed
-2026-05-21 17:09:12,339 INFO uvicorn.error: connection closed
-connection closed
-connection closed
-2026-05-21 17:09:12,339 INFO uvicorn.error: connection closed
-2026-05-21 17:09:14,310 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:09:14,310 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:09:14,311 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:09:14,311 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:09:14,312 INFO sqlalchemy.engine.Engine [cached since 38.5s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:14,312 INFO sqlalchemy.engine.Engine: [cached since 38.5s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:14,322 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:14,322 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:14,323 INFO sqlalchemy.engine.Engine [cached since 38.16s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:14,323 INFO sqlalchemy.engine.Engine: [cached since 38.16s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:51893 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51893 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:09:14,327 INFO uvicorn.access: 127.0.0.1:51893 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:09:14,327 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:09:14,327 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:09:14,459 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:09:14,459 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:09:14,460 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:09:14,460 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:09:14,460 INFO sqlalchemy.engine.Engine [cached since 38.41s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:09:14,460 INFO sqlalchemy.engine.Engine: [cached since 38.41s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:09:14,468 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:14,468 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:14,468 INFO sqlalchemy.engine.Engine [cached since 38.32s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:09:14,468 INFO sqlalchemy.engine.Engine: [cached since 38.32s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:51895 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:51895 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:09:14,472 INFO uvicorn.error: 127.0.0.1:51895 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:09:14,473 INFO uvicorn.error: connection open
-127.0.0.1:51894 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:51894 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:09:14,478 INFO uvicorn.access: 127.0.0.1:51894 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:09:14,479 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:09:14,479 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:51897 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:51897 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:09:14,559 INFO uvicorn.error: 127.0.0.1:51897 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:09:14,561 INFO uvicorn.error: connection open
-2026-05-21 17:09:14,625 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:09:14,625 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:09:14,628 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:09:14,628 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:09:14,628 INFO sqlalchemy.engine.Engine [cached since 38.82s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:14,628 INFO sqlalchemy.engine.Engine: [cached since 38.82s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:14,637 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:14,637 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:14,638 INFO sqlalchemy.engine.Engine [cached since 38.48s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:14,638 INFO sqlalchemy.engine.Engine: [cached since 38.48s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:09:14,639 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:09:14,639 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:09:14,641 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:09:14,641 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:09:14,641 INFO sqlalchemy.engine.Engine [cached since 38.59s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:09:14,641 INFO sqlalchemy.engine.Engine: [cached since 38.59s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:51893 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:51893 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:09:14,643 INFO uvicorn.access: 127.0.0.1:51893 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:09:14,644 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:09:14,644 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:09:14,649 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:14,649 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:09:14,650 INFO sqlalchemy.engine.Engine [cached since 38.5s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:09:14,650 INFO sqlalchemy.engine.Engine: [cached since 38.5s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:51898 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:51898 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:09:14,716 INFO uvicorn.access: 127.0.0.1:51898 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:09:14,718 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:09:14,718 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:51898 - "OPTIONS /api/v1/cases/8fbaf12e-3705-428e-b6ed-455d5893ed3a HTTP/1.1" 200
-127.0.0.1:51898 - "OPTIONS /api/v1/cases/8fbaf12e-3705-428e-b6ed-455d5893ed3a HTTP/1.1" 200
-2026-05-21 17:09:17,044 INFO uvicorn.access: 127.0.0.1:51898 - "OPTIONS /api/v1/cases/8fbaf12e-3705-428e-b6ed-455d5893ed3a HTTP/1.1" 200
-2026-05-21 17:09:17,105 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:09:17,105 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:09:17,113 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.id = $1::VARCHAR
-2026-05-21 17:09:17,113 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.id = $1::VARCHAR
-2026-05-21 17:09:17,113 INFO sqlalchemy.engine.Engine [generated in 0.00070s] ('8fbaf12e-3705-428e-b6ed-455d5893ed3a',)
-2026-05-21 17:09:17,113 INFO sqlalchemy.engine.Engine: [generated in 0.00070s] ('8fbaf12e-3705-428e-b6ed-455d5893ed3a',)
-127.0.0.1:51898 - "GET /api/v1/cases/8fbaf12e-3705-428e-b6ed-455d5893ed3a HTTP/1.1" 200
-127.0.0.1:51898 - "GET /api/v1/cases/8fbaf12e-3705-428e-b6ed-455d5893ed3a HTTP/1.1" 200
-2026-05-21 17:09:17,122 INFO uvicorn.access: 127.0.0.1:51898 - "GET /api/v1/cases/8fbaf12e-3705-428e-b6ed-455d5893ed3a HTTP/1.1" 200
-2026-05-21 17:09:17,123 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:09:17,123 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:13:56,666 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:13:56,666 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:13:56,667 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
-FROM cases 
-WHERE cases.id = $1::VARCHAR
-2026-05-21 17:13:56,667 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
-FROM cases 
-WHERE cases.id = $1::VARCHAR
-2026-05-21 17:13:56,667 INFO sqlalchemy.engine.Engine [cached since 359.8s ago] ('89aded08-698e-45da-aa43-0b52c7a53688',)
-2026-05-21 17:13:56,667 INFO sqlalchemy.engine.Engine: [cached since 359.8s ago] ('89aded08-698e-45da-aa43-0b52c7a53688',)
-2026-05-21 17:13:56,790 INFO sqlalchemy.engine.Engine INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
-2026-05-21 17:13:56,790 INFO sqlalchemy.engine.Engine: INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
-2026-05-21 17:13:56,790 INFO sqlalchemy.engine.Engine [cached since 301.3s ago] ('89aded08-698e-45da-aa43-0b52c7a53688', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah RIZWAN', '+92-341-2959275', 24.9622063, 67.0597128, 'Severe headache with fever and body pain', ['Mjhe english nhe ati', 'Mjhe shadeed sir mey dard hai. Jism tut rha hai, aur ultia bhe horhi henn ek hafty see', 'Mjhe bukhar hai, ultia hen aur jism tut rha hai', 'Dawai se allergy ka nhe pta lkn meri halat roz ba roz kharab horhi hai'], 10, 'RED', 'Severity score 8 or above — immediate medical attention required.', 'The patient is experiencing severe headache, fever, body pain, and vomiting for the past week, with worsening condition, and is unsure about any drug allergies.', 'PENDING', None, None, datetime.datetime(2026, 5, 21, 12, 13, 56, 790899), None, "samsung-abdullah's-a06", None)
-2026-05-21 17:13:56,790 INFO sqlalchemy.engine.Engine: [cached since 301.3s ago] ('89aded08-698e-45da-aa43-0b52c7a53688', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah RIZWAN', '+92-341-2959275', 24.9622063, 67.0597128, 'Severe headache with fever and body pain', ['Mjhe english nhe ati', 'Mjhe shadeed sir mey dard hai. Jism tut rha hai, aur ultia bhe horhi henn ek hafty see', 'Mjhe bukhar hai, ultia hen aur jism tut rha hai', 'Dawai se allergy ka nhe pta lkn meri halat roz ba roz kharab horhi hai'], 10, 'RED', 'Severity score 8 or above — immediate medical attention required.', 'The patient is experiencing severe headache, fever, body pain, and vomiting for the past week, with worsening condition, and is unsure about any drug allergies.', 'PENDING', None, None, datetime.datetime(2026, 5, 21, 12, 13, 56, 790899), None, "samsung-abdullah's-a06", None)
-2026-05-21 17:13:56,794 INFO sqlalchemy.engine.Engine COMMIT
-2026-05-21 17:13:56,794 INFO sqlalchemy.engine.Engine: COMMIT
-192.168.18.95:55806 - "POST /api/v1/cases/ingest HTTP/1.1" 202
-192.168.18.95:55806 - "POST /api/v1/cases/ingest HTTP/1.1" 202
-2026-05-21 17:13:56,801 INFO uvicorn.access: 192.168.18.95:55806 - "POST /api/v1/cases/ingest HTTP/1.1" 202
-2026-05-21 17:13:57,044 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:13:57,044 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:13:57,046 INFO sqlalchemy.engine.Engine SELECT count(knowledge_documents.id) AS count_1 
+2026-05-23 20:35:30,136 INFO uvicorn.error: Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
+2026-05-23 20:35:36,908 INFO sqlalchemy.engine.Engine select pg_catalog.version()
+2026-05-23 20:35:36,908 INFO sqlalchemy.engine.Engine: select pg_catalog.version()
+2026-05-23 20:35:36,909 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-05-23 20:35:36,909 INFO sqlalchemy.engine.Engine: [raw sql] ()
+2026-05-23 20:35:36,922 INFO sqlalchemy.engine.Engine select current_schema()
+2026-05-23 20:35:36,922 INFO sqlalchemy.engine.Engine: select current_schema()
+2026-05-23 20:35:36,922 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-05-23 20:35:36,922 INFO sqlalchemy.engine.Engine: [raw sql] ()
+2026-05-23 20:35:36,929 INFO sqlalchemy.engine.Engine show standard_conforming_strings
+2026-05-23 20:35:36,929 INFO sqlalchemy.engine.Engine: show standard_conforming_strings
+2026-05-23 20:35:36,929 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-05-23 20:35:36,929 INFO sqlalchemy.engine.Engine: [raw sql] ()
+2026-05-23 20:35:36,939 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:35:36,939 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:35:36,985 INFO sqlalchemy.engine.Engine SELECT count(knowledge_documents.id) AS count_1 
 FROM knowledge_documents 
 WHERE knowledge_documents.status = $1::documentstatus
-2026-05-21 17:13:57,046 INFO sqlalchemy.engine.Engine: SELECT count(knowledge_documents.id) AS count_1 
+2026-05-23 20:35:36,985 INFO sqlalchemy.engine.Engine: SELECT count(knowledge_documents.id) AS count_1 
 FROM knowledge_documents 
 WHERE knowledge_documents.status = $1::documentstatus
-2026-05-21 17:13:57,046 INFO sqlalchemy.engine.Engine [generated in 0.00029s] ('ACTIVE',)
-2026-05-21 17:13:57,046 INFO sqlalchemy.engine.Engine: [generated in 0.00029s] ('ACTIVE',)
-2026-05-21 17:13:57,076 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: cpu
-2026-05-21 17:13:57,076 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-Batches:   0%|                                                           | 0/1 [00:00<?, ?it/s]Batches: 100%|###################################################| 1/1 [00:02<00:00,  2.02s/it]Batches: 100%|###################################################| 1/1 [00:02<00:00,  2.02s/it]
-2026-05-21 17:14:04,201 INFO sqlalchemy.engine.Engine 
+2026-05-23 20:35:36,985 INFO sqlalchemy.engine.Engine [generated in 0.00037s] ('ACTIVE',)
+2026-05-23 20:35:36,985 INFO sqlalchemy.engine.Engine: [generated in 0.00037s] ('ACTIVE',)
+2026-05-23 20:35:37,032 INFO sentence_transformers.SentenceTransformer: Use pytorch device_name: cpu
+2026-05-23 20:35:37,032 INFO sentence_transformers.SentenceTransformer: Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+Batches:   0%|                                                           | 0/1 [00:00<?, ?it/s]Batches: 100%|###################################################| 1/1 [00:02<00:00,  2.09s/it]Batches: 100%|###################################################| 1/1 [00:02<00:00,  2.09s/it]
+2026-05-23 20:35:44,663 INFO sqlalchemy.engine.Engine 
                 SELECT
                     kc.content,
                     kc.article_title,
@@ -669,7 +60,7 @@ WHERE knowledge_documents.status = $1::documentstatus
                 ORDER BY kc.embedding <=> CAST($1 AS vector)
                 LIMIT $2
             
-2026-05-21 17:14:04,201 INFO sqlalchemy.engine.Engine: 
+2026-05-23 20:35:44,663 INFO sqlalchemy.engine.Engine: 
                 SELECT
                     kc.content,
                     kc.article_title,
@@ -685,494 +76,525 @@ WHERE knowledge_documents.status = $1::documentstatus
                 ORDER BY kc.embedding <=> CAST($1 AS vector)
                 LIMIT $2
             
-2026-05-21 17:14:04,202 INFO sqlalchemy.engine.Engine [generated in 0.00059s] ('[-0.03767295181751251,0.05614491552114487,-0.010006159543991089,0.013859059661626816,0.021263740956783295,-0.02897949330508709,0.018559489399194717,0 ... (7734 characters truncated) ... 0.0471113845705986,-0.049227274954319,-0.01131416205316782,-0.013703251257538795,-0.0008208893705159426,-0.0007140638772398233,-0.021967241540551186]', 1)
-2026-05-21 17:14:04,202 INFO sqlalchemy.engine.Engine: [generated in 0.00059s] ('[-0.03767295181751251,0.05614491552114487,-0.010006159543991089,0.013859059661626816,0.021263740956783295,-0.02897949330508709,0.018559489399194717,0 ... (7734 characters truncated) ... 0.0471113845705986,-0.049227274954319,-0.01131416205316782,-0.013703251257538795,-0.0008208893705159426,-0.0007140638772398233,-0.021967241540551186]', 1)
-2026-05-21 17:14:04,217 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:04,217 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:04,218 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:04,218 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:04,219 INFO sqlalchemy.engine.Engine [cached since 328.4s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:04,219 INFO sqlalchemy.engine.Engine: [cached since 328.4s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:04,223 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:04,223 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:04,224 INFO sqlalchemy.engine.Engine [cached since 328.1s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:04,224 INFO sqlalchemy.engine.Engine: [cached since 328.1s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:52129 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:52129 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:04,228 INFO uvicorn.access: 127.0.0.1:52129 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:04,229 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:04,229 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:14:04,290 INFO sqlalchemy.engine.Engine 
+2026-05-23 20:35:44,664 INFO sqlalchemy.engine.Engine [generated in 0.00095s] ('[0.03912507742643356,0.09008041024208069,-0.003450981108471751,0.08364561200141907,0.047148026525974274,-0.023877421393990517,-0.03144005313515663,0. ... (7749 characters truncated) ... ,-0.004214894492179155,0.023043140769004822,0.053165923804044724,0.0866798385977745,-0.036122873425483704,0.0006351113552227616,0.051669225096702576]', 1)
+2026-05-23 20:35:44,664 INFO sqlalchemy.engine.Engine: [generated in 0.00095s] ('[0.03912507742643356,0.09008041024208069,-0.003450981108471751,0.08364561200141907,0.047148026525974274,-0.023877421393990517,-0.03144005313515663,0. ... (7749 characters truncated) ... ,-0.004214894492179155,0.023043140769004822,0.053165923804044724,0.0866798385977745,-0.036122873425483704,0.0006351113552227616,0.051669225096702576]', 1)
+2026-05-23 20:35:44,701 INFO sqlalchemy.engine.Engine 
             UPDATE knowledge_documents
             SET retrieval_count = retrieval_count + 1
             WHERE id = ANY(CAST($1 AS uuid[]))
         
-2026-05-21 17:14:04,290 INFO sqlalchemy.engine.Engine: 
+2026-05-23 20:35:44,701 INFO sqlalchemy.engine.Engine: 
             UPDATE knowledge_documents
             SET retrieval_count = retrieval_count + 1
             WHERE id = ANY(CAST($1 AS uuid[]))
         
-2026-05-21 17:14:04,291 INFO sqlalchemy.engine.Engine [generated in 0.00046s] (['c25d62e1-5a73-4d6b-a32d-6c0da9c20b81'],)
-2026-05-21 17:14:04,291 INFO sqlalchemy.engine.Engine: [generated in 0.00046s] (['c25d62e1-5a73-4d6b-a32d-6c0da9c20b81'],)
-2026-05-21 17:14:04,316 INFO sqlalchemy.engine.Engine COMMIT
-2026-05-21 17:14:04,316 INFO sqlalchemy.engine.Engine: COMMIT
-192.168.18.95:55806 - "POST /api/v1/knowledge/query HTTP/1.1" 200
-192.168.18.95:55806 - "POST /api/v1/knowledge/query HTTP/1.1" 200
-2026-05-21 17:14:04,326 INFO uvicorn.access: 192.168.18.95:55806 - "POST /api/v1/knowledge/query HTTP/1.1" 200
-192.168.18.95:43348 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-192.168.18.95:43348 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-2026-05-21 17:14:14,461 INFO uvicorn.access: 192.168.18.95:43348 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-192.168.18.95:41712 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-192.168.18.95:41712 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-2026-05-21 17:14:24,465 INFO uvicorn.access: 192.168.18.95:41712 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-2026-05-21 17:14:25,384 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:25,384 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:25,386 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+2026-05-23 20:35:44,701 INFO sqlalchemy.engine.Engine [generated in 0.00057s] (['9fd58698-7fd5-4814-805d-c810bb1ce114'],)
+2026-05-23 20:35:44,701 INFO sqlalchemy.engine.Engine: [generated in 0.00057s] (['9fd58698-7fd5-4814-805d-c810bb1ce114'],)
+2026-05-23 20:35:44,720 INFO sqlalchemy.engine.Engine COMMIT
+2026-05-23 20:35:44,720 INFO sqlalchemy.engine.Engine: COMMIT
+192.168.18.95:55034 - "POST /api/v1/knowledge/query HTTP/1.1" 200
+192.168.18.95:55034 - "POST /api/v1/knowledge/query HTTP/1.1" 200
+2026-05-23 20:35:44,737 INFO uvicorn.access: 192.168.18.95:55034 - "POST /api/v1/knowledge/query HTTP/1.1" 200
+2026-05-23 20:35:47,342 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:35:47,342 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:35:47,350 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
 FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:25,386 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+WHERE cases.id = $1::VARCHAR
+2026-05-23 20:35:47,350 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
 FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:25,386 INFO sqlalchemy.engine.Engine [cached since 349.6s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:25,386 INFO sqlalchemy.engine.Engine: [cached since 349.6s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:25,395 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:25,395 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:25,396 INFO sqlalchemy.engine.Engine [cached since 349.2s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:25,396 INFO sqlalchemy.engine.Engine: [cached since 349.2s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:52130 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:52130 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:25,400 INFO uvicorn.access: 127.0.0.1:52130 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:25,400 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:25,400 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:14:25,462 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:25,462 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:25,463 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+WHERE cases.id = $1::VARCHAR
+2026-05-23 20:35:47,350 INFO sqlalchemy.engine.Engine [generated in 0.00069s] ('272c22d7-8896-4927-bd82-7a0b03c7234e',)
+2026-05-23 20:35:47,350 INFO sqlalchemy.engine.Engine: [generated in 0.00069s] ('272c22d7-8896-4927-bd82-7a0b03c7234e',)
+2026-05-23 20:35:47,587 INFO sqlalchemy.engine.Engine INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
+2026-05-23 20:35:47,587 INFO sqlalchemy.engine.Engine: INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
+2026-05-23 20:35:47,587 INFO sqlalchemy.engine.Engine [generated in 0.00048s] ('272c22d7-8896-4927-bd82-7a0b03c7234e', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah RIZWAN', '+92-341-2959275', 24.9622063, 67.0597128, 'Severe chest pain with sweating', ['Urdu mey bat keo', 'Tmhe mere symptoms pta hain', 'Mjhe shadeed dill m takleef hai aur pasena arha h bht teez', 'Achanak', 'Han meri lower back m bhe takleef hai', 'Nhe pta mjhe'], 10, 'RED', 'Critical symptom detected: chest pain. Immediate medical attention required.', 'The patient is experiencing severe chest pain and sweating, which started suddenly, with a severity score of 10, and is also experiencing lower back pain, with no known drug allergies.', 'PENDING', None, None, datetime.datetime(2026, 5, 23, 15, 35, 47, 587306), None, "samsung-abdullah's-a06", None)
+2026-05-23 20:35:47,587 INFO sqlalchemy.engine.Engine: [generated in 0.00048s] ('272c22d7-8896-4927-bd82-7a0b03c7234e', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah RIZWAN', '+92-341-2959275', 24.9622063, 67.0597128, 'Severe chest pain with sweating', ['Urdu mey bat keo', 'Tmhe mere symptoms pta hain', 'Mjhe shadeed dill m takleef hai aur pasena arha h bht teez', 'Achanak', 'Han meri lower back m bhe takleef hai', 'Nhe pta mjhe'], 10, 'RED', 'Critical symptom detected: chest pain. Immediate medical attention required.', 'The patient is experiencing severe chest pain and sweating, which started suddenly, with a severity score of 10, and is also experiencing lower back pain, with no known drug allergies.', 'PENDING', None, None, datetime.datetime(2026, 5, 23, 15, 35, 47, 587306), None, "samsung-abdullah's-a06", None)
+2026-05-23 20:35:47,593 INFO sqlalchemy.engine.Engine COMMIT
+2026-05-23 20:35:47,593 INFO sqlalchemy.engine.Engine: COMMIT
+192.168.18.95:55034 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+192.168.18.95:55034 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-05-23 20:35:47,809 INFO uvicorn.access: 192.168.18.95:55034 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+192.168.18.95:40718 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+192.168.18.95:40718 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:35:54,818 INFO uvicorn.access: 192.168.18.95:40718 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:35:55,466 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:35:55,466 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:35:55,466 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
 FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:14:25,463 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+WHERE cases.id = $1::VARCHAR
+2026-05-23 20:35:55,466 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
 FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:14:25,463 INFO sqlalchemy.engine.Engine [cached since 349.4s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:25,463 INFO sqlalchemy.engine.Engine: [cached since 349.4s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:25,468 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:25,468 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:25,469 INFO sqlalchemy.engine.Engine [cached since 349.3s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:25,469 INFO sqlalchemy.engine.Engine: [cached since 349.3s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:52130 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:52130 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:14:25,478 INFO uvicorn.access: 127.0.0.1:52130 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:14:25,479 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:25,479 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:14:25,637 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:25,637 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:25,638 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:25,638 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:25,638 INFO sqlalchemy.engine.Engine [cached since 349.8s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:25,638 INFO sqlalchemy.engine.Engine: [cached since 349.8s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:25,647 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:25,647 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:25,647 INFO sqlalchemy.engine.Engine [cached since 349.5s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:25,647 INFO sqlalchemy.engine.Engine: [cached since 349.5s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:52130 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:52130 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:25,651 INFO uvicorn.access: 127.0.0.1:52130 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:25,652 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:25,652 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:14:25,749 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:25,749 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:25,750 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:14:25,750 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:14:25,750 INFO sqlalchemy.engine.Engine [cached since 349.7s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:25,750 INFO sqlalchemy.engine.Engine: [cached since 349.7s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:25,758 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:25,758 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:25,759 INFO sqlalchemy.engine.Engine [cached since 349.6s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:25,759 INFO sqlalchemy.engine.Engine: [cached since 349.6s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:52130 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:52130 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:14:25,766 INFO uvicorn.access: 127.0.0.1:52130 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:14:25,768 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:25,768 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:52161 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:52161 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:14:25,796 INFO uvicorn.error: 127.0.0.1:52161 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:14:25,797 INFO uvicorn.error: connection open
-127.0.0.1:52163 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:52163 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:14:25,815 INFO uvicorn.error: 127.0.0.1:52163 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:14:25,816 INFO uvicorn.error: connection open
-192.168.18.95:45458 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-192.168.18.95:45458 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-2026-05-21 17:14:34,478 INFO uvicorn.access: 192.168.18.95:45458 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-connection closed
-connection closed
-2026-05-21 17:14:38,640 INFO uvicorn.error: connection closed
-connection closed
-connection closed
-2026-05-21 17:14:38,642 INFO uvicorn.error: connection closed
-192.168.18.95:54282 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-192.168.18.95:54282 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-2026-05-21 17:14:44,491 INFO uvicorn.access: 192.168.18.95:54282 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-2026-05-21 17:14:46,048 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:46,048 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:46,049 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:46,049 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:46,049 INFO sqlalchemy.engine.Engine [cached since 370.2s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:46,049 INFO sqlalchemy.engine.Engine: [cached since 370.2s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:46,056 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:46,056 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:46,058 INFO sqlalchemy.engine.Engine [cached since 369.9s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:46,058 INFO sqlalchemy.engine.Engine: [cached since 369.9s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:52160 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:52160 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:46,062 INFO uvicorn.access: 127.0.0.1:52160 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:46,063 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:46,063 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:14:46,117 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:46,117 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:46,118 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:14:46,118 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:14:46,118 INFO sqlalchemy.engine.Engine [cached since 370.1s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:46,118 INFO sqlalchemy.engine.Engine: [cached since 370.1s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:46,126 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:46,126 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:46,126 INFO sqlalchemy.engine.Engine [cached since 370s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:46,126 INFO sqlalchemy.engine.Engine: [cached since 370s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:52160 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:52160 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:14:46,134 INFO uvicorn.access: 127.0.0.1:52160 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:14:46,135 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:46,135 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:14:46,359 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:46,359 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:46,360 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:46,360 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:14:46,361 INFO sqlalchemy.engine.Engine [cached since 370.6s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:46,361 INFO sqlalchemy.engine.Engine: [cached since 370.6s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:46,366 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:46,366 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:46,366 INFO sqlalchemy.engine.Engine [cached since 370.2s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:14:46,366 INFO sqlalchemy.engine.Engine: [cached since 370.2s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:52160 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:52160 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:46,375 INFO uvicorn.access: 127.0.0.1:52160 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:14:46,376 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:46,376 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:14:46,427 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:46,427 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:46,428 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:14:46,428 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
-FROM cases 
-WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:14:46,428 INFO sqlalchemy.engine.Engine [cached since 370.4s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:46,428 INFO sqlalchemy.engine.Engine: [cached since 370.4s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:46,433 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:46,433 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:14:46,434 INFO sqlalchemy.engine.Engine [cached since 370.3s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:14:46,434 INFO sqlalchemy.engine.Engine: [cached since 370.3s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:52160 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:52160 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:14:46,441 INFO uvicorn.access: 127.0.0.1:52160 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:14:46,442 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:46,442 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:52586 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:52586 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:14:46,669 INFO uvicorn.error: 127.0.0.1:52586 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:14:46,671 INFO uvicorn.error: connection open
-127.0.0.1:52588 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:52588 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:14:46,697 INFO uvicorn.error: 127.0.0.1:52588 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-connection open
-connection open
-2026-05-21 17:14:46,698 INFO uvicorn.error: connection open
-connection closed
-connection closed
-2026-05-21 17:14:48,246 INFO uvicorn.error: connection closed
-connection closed
-connection closed
-2026-05-21 17:14:48,247 INFO uvicorn.error: connection closed
-192.168.18.95:47366 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-192.168.18.95:47366 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-2026-05-21 17:14:54,493 INFO uvicorn.access: 192.168.18.95:47366 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 401
-2026-05-21 17:14:58,923 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:14:58,923 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:14:58,924 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.org_id, users.created_at 
+WHERE cases.id = $1::VARCHAR
+2026-05-23 20:35:55,467 INFO sqlalchemy.engine.Engine [cached since 8.117s ago] ('272c22d7-8896-4927-bd82-7a0b03c7234e',)
+2026-05-23 20:35:55,467 INFO sqlalchemy.engine.Engine: [cached since 8.117s ago] ('272c22d7-8896-4927-bd82-7a0b03c7234e',)
+192.168.18.95:57250 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+192.168.18.95:57250 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-05-23 20:35:55,472 INFO uvicorn.access: 192.168.18.95:57250 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-05-23 20:35:55,473 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:35:55,473 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:34826 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+192.168.18.95:34826 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:36:04,834 INFO uvicorn.access: 192.168.18.95:34826 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:36:12,870 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:12,870 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:12,872 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.org_id, users.created_at 
 FROM users 
 WHERE users.email = $1::VARCHAR
-2026-05-21 17:14:58,924 INFO sqlalchemy.engine.Engine: SELECT users.id, users.email, users.password_hash, users.role, users.org_id, users.created_at 
+2026-05-23 20:36:12,872 INFO sqlalchemy.engine.Engine: SELECT users.id, users.email, users.password_hash, users.role, users.org_id, users.created_at 
 FROM users 
 WHERE users.email = $1::VARCHAR
-2026-05-21 17:14:58,924 INFO sqlalchemy.engine.Engine [cached since 363.7s ago] ('aghakhan@gmail.com',)
-2026-05-21 17:14:58,924 INFO sqlalchemy.engine.Engine: [cached since 363.7s ago] ('aghakhan@gmail.com',)
-2026-05-21 17:14:59,340 INFO sqlalchemy.engine.Engine SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.type AS organizations_type, organizations.access_code AS organizations_access_code, organizations.status AS organizations_status, organizations.created_at AS organizations_created_at 
+2026-05-23 20:36:12,872 INFO sqlalchemy.engine.Engine [generated in 0.00032s] ('admin@medireach.app',)
+2026-05-23 20:36:12,872 INFO sqlalchemy.engine.Engine: [generated in 0.00032s] ('admin@medireach.app',)
+2026-05-23 20:36:13,337 INFO sqlalchemy.engine.Engine SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.type AS organizations_type, organizations.access_code AS organizations_access_code, organizations.status AS organizations_status, organizations.created_at AS organizations_created_at 
 FROM organizations 
 WHERE organizations.id = $1::UUID
-2026-05-21 17:14:59,340 INFO sqlalchemy.engine.Engine: SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.type AS organizations_type, organizations.access_code AS organizations_access_code, organizations.status AS organizations_status, organizations.created_at AS organizations_created_at 
+2026-05-23 20:36:13,337 INFO sqlalchemy.engine.Engine: SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.type AS organizations_type, organizations.access_code AS organizations_access_code, organizations.status AS organizations_status, organizations.created_at AS organizations_created_at 
 FROM organizations 
 WHERE organizations.id = $1::UUID
-2026-05-21 17:14:59,343 INFO sqlalchemy.engine.Engine [cached since 363.4s ago] (UUID('b31c23f0-d681-41c9-87ef-55e86e80cf90'),)
-2026-05-21 17:14:59,343 INFO sqlalchemy.engine.Engine: [cached since 363.4s ago] (UUID('b31c23f0-d681-41c9-87ef-55e86e80cf90'),)
-127.0.0.1:52612 - "POST /api/v1/auth/login HTTP/1.1" 200
-127.0.0.1:52612 - "POST /api/v1/auth/login HTTP/1.1" 200
-2026-05-21 17:14:59,360 INFO uvicorn.access: 127.0.0.1:52612 - "POST /api/v1/auth/login HTTP/1.1" 200
-2026-05-21 17:14:59,361 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:14:59,361 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:52616 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:52616 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:15:00,048 INFO uvicorn.error: 127.0.0.1:52616 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:13,337 INFO sqlalchemy.engine.Engine [generated in 0.00044s] (UUID('61dbb1c1-b43b-4484-b69c-32f4703b7a6e'),)
+2026-05-23 20:36:13,337 INFO sqlalchemy.engine.Engine: [generated in 0.00044s] (UUID('61dbb1c1-b43b-4484-b69c-32f4703b7a6e'),)
+127.0.0.1:57846 - "POST /api/v1/auth/login HTTP/1.1" 200
+127.0.0.1:57846 - "POST /api/v1/auth/login HTTP/1.1" 200
+2026-05-23 20:36:13,367 INFO uvicorn.access: 127.0.0.1:57846 - "POST /api/v1/auth/login HTTP/1.1" 200
+2026-05-23 20:36:13,368 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:13,368 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:57862 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57862 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:14,188 INFO uvicorn.error: 127.0.0.1:57862 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
 connection open
 connection open
-2026-05-21 17:15:00,050 INFO uvicorn.error: connection open
-127.0.0.1:52618 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:52618 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:15:00,066 INFO uvicorn.error: 127.0.0.1:52618 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:14,190 INFO uvicorn.error: connection open
+127.0.0.1:57865 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57865 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:14,210 INFO uvicorn.error: 127.0.0.1:57865 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
 connection open
 connection open
-2026-05-21 17:15:00,068 INFO uvicorn.error: connection open
-127.0.0.1:52620 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:52620 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:15:00,237 INFO uvicorn.error: 127.0.0.1:52620 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:14,212 INFO uvicorn.error: connection open
+127.0.0.1:57867 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57867 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:14,230 INFO uvicorn.error: 127.0.0.1:57867 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
 connection open
 connection open
-2026-05-21 17:15:00,237 INFO uvicorn.error: connection open
-127.0.0.1:52622 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-127.0.0.1:52622 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
-2026-05-21 17:15:00,252 INFO uvicorn.error: 127.0.0.1:52622 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:14,232 INFO uvicorn.error: connection open
+127.0.0.1:57869 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57869 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:14,263 INFO uvicorn.access: 127.0.0.1:57869 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57870 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57870 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:14,265 INFO uvicorn.error: 127.0.0.1:57870 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
 connection open
 connection open
-2026-05-21 17:15:00,254 INFO uvicorn.error: connection open
-2026-05-21 17:15:00,796 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:15:00,796 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:15:00,798 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+2026-05-23 20:36:14,267 INFO uvicorn.error: connection open
+127.0.0.1:57869 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:57869 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:14,268 INFO uvicorn.access: 127.0.0.1:57869 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:57869 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57869 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:14,272 INFO uvicorn.access: 127.0.0.1:57869 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57869 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:57869 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:14,277 INFO uvicorn.access: 127.0.0.1:57869 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:14,297 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:14,297 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:14,301 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
 FROM cases 
 WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:15:00,798 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+2026-05-23 20:36:14,301 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
 FROM cases 
 WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:15:00,798 INFO sqlalchemy.engine.Engine [cached since 385s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:15:00,798 INFO sqlalchemy.engine.Engine: [cached since 385s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:15:00,803 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+2026-05-23 20:36:14,301 INFO sqlalchemy.engine.Engine [generated in 0.00089s] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:14,301 INFO sqlalchemy.engine.Engine: [generated in 0.00089s] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:14,324 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
 FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
 WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
  LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:15:00,803 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+2026-05-23 20:36:14,324 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
 FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
 WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
  LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:15:00,803 INFO sqlalchemy.engine.Engine [cached since 384.6s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:15:00,803 INFO sqlalchemy.engine.Engine: [cached since 384.6s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:52626 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:52626 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:15:00,806 INFO uvicorn.access: 127.0.0.1:52626 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:15:00,810 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:15:00,810 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:15:00,836 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:15:00,836 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:15:00,837 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+2026-05-23 20:36:14,326 INFO sqlalchemy.engine.Engine [generated in 0.00197s] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:14,326 INFO sqlalchemy.engine.Engine: [generated in 0.00197s] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:57869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:14,365 INFO uvicorn.access: 127.0.0.1:57869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:14,367 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:14,367 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-05-23 20:36:14,379 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:14,379 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:14,381 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
 FROM cases 
 WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:15:00,837 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+2026-05-23 20:36:14,381 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
 FROM cases 
 WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:15:00,838 INFO sqlalchemy.engine.Engine [cached since 384.8s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:15:00,838 INFO sqlalchemy.engine.Engine: [cached since 384.8s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:15:00,847 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+2026-05-23 20:36:14,381 INFO sqlalchemy.engine.Engine [generated in 0.00061s] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:14,381 INFO sqlalchemy.engine.Engine: [generated in 0.00061s] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:14,415 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
 FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
 WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
  LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:15:00,847 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+2026-05-23 20:36:14,415 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
 FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
 WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
  LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:15:00,847 INFO sqlalchemy.engine.Engine [cached since 384.7s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:15:00,847 INFO sqlalchemy.engine.Engine: [cached since 384.7s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:52626 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:52626 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:15:00,854 INFO uvicorn.access: 127.0.0.1:52626 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:15:00,855 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:15:00,855 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:15:00,870 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:15:00,870 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:15:00,871 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+2026-05-23 20:36:14,415 INFO sqlalchemy.engine.Engine [generated in 0.00081s] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:14,415 INFO sqlalchemy.engine.Engine: [generated in 0.00081s] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+127.0.0.1:57872 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:57872 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:14,482 INFO uvicorn.access: 127.0.0.1:57872 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:14,484 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:14,484 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:60476 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+192.168.18.95:60476 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:36:14,936 INFO uvicorn.access: 192.168.18.95:60476 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:36:14,940 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:14,940 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:14,941 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
 FROM cases 
 WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:15:00,871 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+2026-05-23 20:36:14,941 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
 FROM cases 
 WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
-2026-05-21 17:15:00,871 INFO sqlalchemy.engine.Engine [cached since 385.1s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:15:00,871 INFO sqlalchemy.engine.Engine: [cached since 385.1s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:15:00,881 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:15:00,881 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
-FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
-WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
- LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:15:00,881 INFO sqlalchemy.engine.Engine [cached since 384.7s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-2026-05-21 17:15:00,881 INFO sqlalchemy.engine.Engine: [cached since 384.7s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
-127.0.0.1:52628 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-127.0.0.1:52628 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:15:00,885 INFO uvicorn.access: 127.0.0.1:52628 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
-2026-05-21 17:15:00,886 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:15:00,886 INFO sqlalchemy.engine.Engine: ROLLBACK
-2026-05-21 17:15:00,922 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:15:00,922 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:15:00,924 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+2026-05-23 20:36:14,941 INFO sqlalchemy.engine.Engine [cached since 0.6414s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:14,941 INFO sqlalchemy.engine.Engine: [cached since 0.6414s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:14,946 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:14,946 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:14,947 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
 FROM cases 
 WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:15:00,924 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+2026-05-23 20:36:14,947 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
 FROM cases 
 WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
-2026-05-21 17:15:00,926 INFO sqlalchemy.engine.Engine [cached since 384.9s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:15:00,926 INFO sqlalchemy.engine.Engine: [cached since 384.9s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:15:00,932 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+2026-05-23 20:36:14,947 INFO sqlalchemy.engine.Engine [cached since 0.5674s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:14,947 INFO sqlalchemy.engine.Engine: [cached since 0.5674s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:15,014 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
 FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
 WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
  LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:15:00,932 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+2026-05-23 20:36:15,014 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
 FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
 WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
  LIMIT $1::INTEGER OFFSET $2::INTEGER
-2026-05-21 17:15:00,932 INFO sqlalchemy.engine.Engine [cached since 384.8s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-2026-05-21 17:15:00,932 INFO sqlalchemy.engine.Engine: [cached since 384.8s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
-127.0.0.1:52626 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-127.0.0.1:52626 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:15:00,939 INFO uvicorn.access: 127.0.0.1:52626 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
-2026-05-21 17:15:00,941 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:15:00,941 INFO sqlalchemy.engine.Engine: ROLLBACK
-127.0.0.1:52630 - "OPTIONS /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 200
-127.0.0.1:52630 - "OPTIONS /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 200
-2026-05-21 17:15:12,924 INFO uvicorn.access: 127.0.0.1:52630 - "OPTIONS /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 200
-2026-05-21 17:15:12,939 INFO sqlalchemy.engine.Engine BEGIN (implicit)
-2026-05-21 17:15:12,939 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
-2026-05-21 17:15:12,940 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+2026-05-23 20:36:15,014 INFO sqlalchemy.engine.Engine [cached since 0.6002s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:15,014 INFO sqlalchemy.engine.Engine: [cached since 0.6002s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:15,017 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:15,017 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:15,017 INFO sqlalchemy.engine.Engine [cached since 0.6939s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:15,017 INFO sqlalchemy.engine.Engine: [cached since 0.6939s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:57869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:15,037 INFO uvicorn.access: 127.0.0.1:57869 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:15,038 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:15,038 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:57874 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:57874 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:15,044 INFO uvicorn.access: 127.0.0.1:57874 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:15,045 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:15,045 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:41378 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+192.168.18.95:41378 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:36:24,838 INFO uvicorn.access: 192.168.18.95:41378 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:36:29,489 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:29,489 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:29,490 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.role, users.org_id, users.created_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-05-23 20:36:29,490 INFO sqlalchemy.engine.Engine: SELECT users.id, users.email, users.password_hash, users.role, users.org_id, users.created_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-05-23 20:36:29,490 INFO sqlalchemy.engine.Engine [cached since 16.62s ago] ('aghakhan@gmail.com',)
+2026-05-23 20:36:29,490 INFO sqlalchemy.engine.Engine: [cached since 16.62s ago] ('aghakhan@gmail.com',)
+2026-05-23 20:36:29,945 INFO sqlalchemy.engine.Engine SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.type AS organizations_type, organizations.access_code AS organizations_access_code, organizations.status AS organizations_status, organizations.created_at AS organizations_created_at 
+FROM organizations 
+WHERE organizations.id = $1::UUID
+2026-05-23 20:36:29,945 INFO sqlalchemy.engine.Engine: SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.type AS organizations_type, organizations.access_code AS organizations_access_code, organizations.status AS organizations_status, organizations.created_at AS organizations_created_at 
+FROM organizations 
+WHERE organizations.id = $1::UUID
+2026-05-23 20:36:29,946 INFO sqlalchemy.engine.Engine [cached since 16.61s ago] (UUID('b31c23f0-d681-41c9-87ef-55e86e80cf90'),)
+2026-05-23 20:36:29,946 INFO sqlalchemy.engine.Engine: [cached since 16.61s ago] (UUID('b31c23f0-d681-41c9-87ef-55e86e80cf90'),)
+127.0.0.1:57938 - "POST /api/v1/auth/login HTTP/1.1" 200
+127.0.0.1:57938 - "POST /api/v1/auth/login HTTP/1.1" 200
+2026-05-23 20:36:29,949 INFO uvicorn.access: 127.0.0.1:57938 - "POST /api/v1/auth/login HTTP/1.1" 200
+2026-05-23 20:36:29,950 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:29,950 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:57948 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57948 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:30,735 INFO uvicorn.error: 127.0.0.1:57948 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:36:30,736 INFO uvicorn.error: connection open
+127.0.0.1:57950 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57950 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:30,750 INFO uvicorn.error: 127.0.0.1:57950 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:36:30,751 INFO uvicorn.error: connection open
+127.0.0.1:57952 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57952 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:30,771 INFO uvicorn.error: 127.0.0.1:57952 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:36:30,772 INFO uvicorn.error: connection open
+127.0.0.1:57954 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57954 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:36:30,786 INFO uvicorn.error: 127.0.0.1:57954 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:36:30,788 INFO uvicorn.error: connection open
+127.0.0.1:57957 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57957 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:30,925 INFO uvicorn.access: 127.0.0.1:57957 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57957 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:57957 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:30,932 INFO uvicorn.access: 127.0.0.1:57957 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:31,232 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:31,232 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:31,233 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-05-23 20:36:31,233 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-05-23 20:36:31,233 INFO sqlalchemy.engine.Engine [cached since 16.93s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:31,233 INFO sqlalchemy.engine.Engine: [cached since 16.93s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:31,239 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:31,239 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:31,239 INFO sqlalchemy.engine.Engine [cached since 16.92s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:31,239 INFO sqlalchemy.engine.Engine: [cached since 16.92s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:57957 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57957 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:31,245 INFO uvicorn.access: 127.0.0.1:57957 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:31,247 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:31,247 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-05-23 20:36:31,264 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:31,264 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:31,265 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
+2026-05-23 20:36:31,265 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
+2026-05-23 20:36:31,266 INFO sqlalchemy.engine.Engine [cached since 16.89s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:31,266 INFO sqlalchemy.engine.Engine: [cached since 16.89s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:31,273 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:31,273 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:31,273 INFO sqlalchemy.engine.Engine [cached since 16.86s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:31,273 INFO sqlalchemy.engine.Engine: [cached since 16.86s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+127.0.0.1:57958 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:57958 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:31,286 INFO uvicorn.access: 127.0.0.1:57958 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:31,287 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:31,287 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-05-23 20:36:31,777 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:31,777 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:31,782 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-05-23 20:36:31,782 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-05-23 20:36:31,783 INFO sqlalchemy.engine.Engine [cached since 17.48s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:31,783 INFO sqlalchemy.engine.Engine: [cached since 17.48s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:31,798 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:31,798 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:31,799 INFO sqlalchemy.engine.Engine [cached since 17.47s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-05-23 20:36:31,799 INFO sqlalchemy.engine.Engine: [cached since 17.47s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:57959 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:57959 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:31,806 INFO uvicorn.access: 127.0.0.1:57959 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-05-23 20:36:31,807 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:31,807 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-05-23 20:36:32,601 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:36:32,601 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:36:32,601 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
+2026-05-23 20:36:32,601 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($1::casestatus, $2::casestatus, $3::casestatus)
+2026-05-23 20:36:32,602 INFO sqlalchemy.engine.Engine [cached since 18.22s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:32,602 INFO sqlalchemy.engine.Engine: [cached since 18.22s ago] ('ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:32,608 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:32,608 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($3::casestatus, $4::casestatus, $5::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-05-23 20:36:32,609 INFO sqlalchemy.engine.Engine [cached since 18.19s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-05-23 20:36:32,609 INFO sqlalchemy.engine.Engine: [cached since 18.19s ago] (20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+127.0.0.1:57959 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:57959 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:32,617 INFO uvicorn.access: 127.0.0.1:57959 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-05-23 20:36:32,618 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:36:32,618 INFO sqlalchemy.engine.Engine: ROLLBACK
+connection closed
+connection closed
+2026-05-23 20:36:32,778 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-05-23 20:36:32,780 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-05-23 20:36:32,782 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-05-23 20:36:32,783 INFO uvicorn.error: connection closed
+192.168.18.95:47328 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+192.168.18.95:47328 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+2026-05-23 20:36:34,823 INFO uvicorn.access: 192.168.18.95:47328 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 401
+127.0.0.1:58291 - "OPTIONS /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 200
+127.0.0.1:58291 - "OPTIONS /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 200
+2026-05-23 20:38:22,659 INFO uvicorn.access: 127.0.0.1:58291 - "OPTIONS /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 200
+2026-05-23 20:38:22,672 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:38:22,672 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:38:22,678 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
 FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
 WHERE cases.id = $1::VARCHAR
-2026-05-21 17:15:12,940 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+2026-05-23 20:38:22,678 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
 FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
 WHERE cases.id = $1::VARCHAR
-2026-05-21 17:15:12,941 INFO sqlalchemy.engine.Engine [cached since 355.8s ago] ('89aded08-698e-45da-aa43-0b52c7a53688',)
-2026-05-21 17:15:12,941 INFO sqlalchemy.engine.Engine: [cached since 355.8s ago] ('89aded08-698e-45da-aa43-0b52c7a53688',)
-127.0.0.1:52630 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 200
-127.0.0.1:52630 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 200
-2026-05-21 17:15:12,947 INFO uvicorn.access: 127.0.0.1:52630 - "GET /api/v1/cases/89aded08-698e-45da-aa43-0b52c7a53688 HTTP/1.1" 200
-2026-05-21 17:15:12,949 INFO sqlalchemy.engine.Engine ROLLBACK
-2026-05-21 17:15:12,949 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-05-23 20:38:22,679 INFO sqlalchemy.engine.Engine [generated in 0.00057s] ('272c22d7-8896-4927-bd82-7a0b03c7234e',)
+2026-05-23 20:38:22,679 INFO sqlalchemy.engine.Engine: [generated in 0.00057s] ('272c22d7-8896-4927-bd82-7a0b03c7234e',)
+127.0.0.1:58291 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 200
+127.0.0.1:58291 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 200
+2026-05-23 20:38:22,685 INFO uvicorn.access: 127.0.0.1:58291 - "GET /api/v1/cases/272c22d7-8896-4927-bd82-7a0b03c7234e HTTP/1.1" 200
+2026-05-23 20:38:22,687 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:38:22,687 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:58292 - "OPTIONS /api/v1/cases/2a58c09d-82c0-4273-a4a2-e91100121e07 HTTP/1.1" 200
+127.0.0.1:58292 - "OPTIONS /api/v1/cases/2a58c09d-82c0-4273-a4a2-e91100121e07 HTTP/1.1" 200
+2026-05-23 20:38:36,282 INFO uvicorn.access: 127.0.0.1:58292 - "OPTIONS /api/v1/cases/2a58c09d-82c0-4273-a4a2-e91100121e07 HTTP/1.1" 200
+2026-05-23 20:38:36,307 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:38:36,307 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:38:36,310 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.id = $1::VARCHAR
+2026-05-23 20:38:36,310 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.id = $1::VARCHAR
+2026-05-23 20:38:36,310 INFO sqlalchemy.engine.Engine [cached since 13.63s ago] ('2a58c09d-82c0-4273-a4a2-e91100121e07',)
+2026-05-23 20:38:36,310 INFO sqlalchemy.engine.Engine: [cached since 13.63s ago] ('2a58c09d-82c0-4273-a4a2-e91100121e07',)
+127.0.0.1:58292 - "GET /api/v1/cases/2a58c09d-82c0-4273-a4a2-e91100121e07 HTTP/1.1" 200
+127.0.0.1:58292 - "GET /api/v1/cases/2a58c09d-82c0-4273-a4a2-e91100121e07 HTTP/1.1" 200
+2026-05-23 20:38:36,319 INFO uvicorn.access: 127.0.0.1:58292 - "GET /api/v1/cases/2a58c09d-82c0-4273-a4a2-e91100121e07 HTTP/1.1" 200
+2026-05-23 20:38:36,320 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:38:36,320 INFO sqlalchemy.engine.Engine: ROLLBACK
 connection closed
 connection closed
-2026-05-21 17:20:45,163 INFO uvicorn.error: connection closed
+2026-05-23 20:53:06,372 INFO uvicorn.error: connection closed
 connection closed
 connection closed
-2026-05-21 17:20:45,165 INFO uvicorn.error: connection closed
+2026-05-23 20:53:06,373 INFO uvicorn.error: connection closed
 connection closed
 connection closed
-2026-05-21 17:20:45,434 INFO uvicorn.error: connection closed
+2026-05-23 20:53:06,374 INFO uvicorn.error: connection closed
 connection closed
 connection closed
-2026-05-21 17:20:45,446 INFO uvicorn.error: connection closed
+2026-05-23 20:53:06,375 INFO uvicorn.error: connection closed
+2026-05-23 20:54:11,517 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-05-23 20:54:11,517 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-05-23 20:54:11,520 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-05-23 20:54:11,520 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-05-23 20:54:11,521 INFO sqlalchemy.engine.Engine [generated in 0.00116s] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
+2026-05-23 20:54:11,521 INFO sqlalchemy.engine.Engine: [generated in 0.00116s] (UUID('b51f9fa0-bc16-4802-a760-ad53c09fcdbd'),)
+127.0.0.1:60375 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:60375 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-05-23 20:54:11,531 INFO uvicorn.access: 127.0.0.1:60375 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-05-23 20:54:11,533 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-05-23 20:54:11,533 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:60378 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:60378 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:54:12,000 INFO uvicorn.error: 127.0.0.1:60378 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:54:12,001 INFO uvicorn.error: connection open
+127.0.0.1:60380 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:60380 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:54:12,069 INFO uvicorn.error: 127.0.0.1:60380 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:54:12,070 INFO uvicorn.error: connection open
+127.0.0.1:60382 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:60382 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:54:12,433 INFO uvicorn.error: 127.0.0.1:60382 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:54:12,437 INFO uvicorn.error: connection open
 connection closed
 connection closed
-2026-05-21 17:20:49,739 INFO uvicorn.error: connection closed
+2026-05-23 20:54:12,451 INFO uvicorn.error: connection closed
+127.0.0.1:60384 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:60384 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:54:12,634 INFO uvicorn.error: 127.0.0.1:60384 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:54:12,636 INFO uvicorn.error: connection open
+127.0.0.1:60386 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:60386 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:54:12,669 INFO uvicorn.error: 127.0.0.1:60386 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:54:12,670 INFO uvicorn.error: connection open
 connection closed
 connection closed
-2026-05-21 17:20:49,850 INFO uvicorn.error: connection closed
+2026-05-23 20:54:12,708 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-05-23 20:54:12,710 INFO uvicorn.error: connection closed
+127.0.0.1:60388 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:60388 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-05-23 20:54:12,748 INFO uvicorn.error: 127.0.0.1:60388 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-05-23 20:54:12,749 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-05-23 20:54:12,931 INFO uvicorn.error: connection closed
 Shutting down
 Shutting down
-2026-05-21 21:57:56,858 INFO uvicorn.error: Shutting down
+2026-05-23 21:01:07,355 INFO uvicorn.error: Shutting down
+connection closed
+connection closed
+2026-05-23 21:01:07,360 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-05-23 21:01:07,361 INFO uvicorn.error: connection closed
 Waiting for application shutdown.
 Waiting for application shutdown.
-2026-05-21 21:57:56,991 INFO uvicorn.error: Waiting for application shutdown.
+2026-05-23 21:01:07,468 INFO uvicorn.error: Waiting for application shutdown.
 Application shutdown complete.
 Application shutdown complete.
-2026-05-21 21:57:57,027 INFO uvicorn.error: Application shutdown complete.
-Finished server process [16208]
-Finished server process [16208]
-2026-05-21 21:57:57,034 INFO uvicorn.error: Finished server process [16208]
+2026-05-23 21:01:07,474 INFO uvicorn.error: Application shutdown complete.
+Finished server process [5904]
+Finished server process [5904]
+2026-05-23 21:01:07,475 INFO uvicorn.error: Finished server process [5904]
 uvicorn.run returned (server stopped)

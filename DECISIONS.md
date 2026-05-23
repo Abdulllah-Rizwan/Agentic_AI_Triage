@@ -2474,6 +2474,107 @@ On devices where `insets.bottom === 0` (older devices, full-screen apps with no 
 
 ---
 
+---
+
+## Session 23 — 2026-05-23
+
+### Goal
+
+Fix two bugs in `ChatScreen.tsx`:
+1. The text input jumped far above the keyboard when tapped, leaving a visible gap between the keyboard top and the input field.
+2. After triage completed and the "Start New Assessment" button appeared, navigating away and back two or three times caused the button to disappear and the chat to resume as if triage had never happened.
+
+---
+
+### Bug 1 — Keyboard Gap
+
+**Symptom:** On iOS, tapping the input field pushed it ~44–59px above the keyboard top, leaving an empty gap. On Android, the input also misbehaved with the old `behavior="height"` setting.
+
+**Root cause (iOS):** The `KeyboardAvoidingView` is a child of `SafeAreaView` (with `edges={['top','left','right']}`). SafeAreaView pads the top by `insets.top` (status bar / Dynamic Island height). The KAV's `keyboardVerticalOffset` tells KAV how far its top edge is from the physical screen top. With `keyboardVerticalOffset={0}`, KAV thinks it starts at y=0 but actually starts at `y = insets.top`. It over-compensates by `insets.top` pixels when raising the input, creating the gap.
+
+**Root cause (Android):** The old `behavior="height"` combined with Android's default `windowSoftInputMode=adjustResize` caused double-compensation: the OS already resizes the window by the keyboard height, and KAV then also tried to shrink the layout by the same amount.
+
+**Fix applied:**
+
+```tsx
+// Before
+<KeyboardAvoidingView
+  style={styles.flex1}
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  keyboardVerticalOffset={Platform.OS === 'android' ? 24 : 0}
+>
+
+// After
+<KeyboardAvoidingView
+  style={styles.flex1}
+  behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+  keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top : 0}
+>
+```
+
+- iOS: `behavior="padding"` with `keyboardVerticalOffset={insets.top}` — KAV accounts for the SafeAreaView top inset and pushes the input exactly to the keyboard top.
+- Android: `behavior={undefined}` — disables KAV entirely; OS `adjustResize` handles keyboard avoidance natively with no double-compensation.
+
+**Architectural note:** Any `KeyboardAvoidingView` that is a child of a `SafeAreaView` (or any component that adds top inset padding) must pass `keyboardVerticalOffset={insets.top}` on iOS, or the gap will appear on devices with a notch or Dynamic Island.
+
+---
+
+### Bug 2 — "Start New Assessment" Button Disappearing
+
+**Symptom:** After triage completed and the button appeared, navigating away (Android back) and returning two or three times caused the button to vanish. The chat resumed as if triage had never happened.
+
+**Root cause — race condition between React effects and async SQLite reads:**
+
+1. ChatScreen mounts. Zustand `messages` store still holds stale messages from the previous session (Zustand is global in-memory; it is not cleared on navigation).
+2. The startup `useEffect` runs: creates a new agent (`agentRef.current = new Agent()`), then starts `loadActiveSession()` — which is async (SQLite read).
+3. In the same React effect flush, the **save effect** runs. It sees: `messages.length > 0` (stale Zustand data), `hasCompletedTriageRef.current = false` (not yet restored), `agentRef.current !== null` (just set). All guard conditions pass → it **overwrites** the SQLite session with a session that has `hasCompletedTriage: false`.
+4. `loadActiveSession()` resolves — but now reads the corrupted (overwritten) record.
+5. On the next visit, the session restores without `hasCompletedTriage: true` → a fresh chat starts instead of the completed one.
+
+**Fix applied — `sessionLoadedRef` gate:**
+
+A `sessionLoadedRef = useRef(false)` is declared. The save effect checks this ref as its first guard:
+
+```typescript
+useEffect(() => {
+  if (
+    !sessionLoadedRef.current ||          // ← new guard
+    messages.length === 0 ||
+    hasCompletedTriageRef.current ||
+    !agentRef.current
+  ) return;
+  // ... save to SQLite
+}, [messages, turnCount, emergencyRag, criticalTxStatus, criticalCaseId, emergencyTrigger]);
+```
+
+`sessionLoadedRef.current` is set to `true` synchronously inside the async IIFE of the startup effect, **before** any `setState` calls, in both branches:
+
+- **Saved session found:** `sessionLoadedRef.current = true` is set before `setMessages(saved.messages)` and `setHasCompletedTriage(true)`. When those state setters trigger a re-render and the save effect re-runs, the ref is already true — but `hasCompletedTriageRef.current` is also now true (its own effect, declared before the save effect, runs first), so the save effect correctly skips the write for completed sessions.
+- **Fresh start (no saved session or expired):** `sessionLoadedRef.current = true` is set before `clearChat()` and the first agent message. The save effect can now correctly persist the opening message.
+
+**Why `useRef` instead of `useState`:** `useState` triggers a re-render, which would add a React render cycle and could introduce its own ordering issues. A `ref` change is synchronous and invisible to the render cycle — it just sets a flag that the next effect execution will see.
+
+**Architectural note:** Any ChatScreen-style component that (a) combines Zustand in-memory state with (b) async SQLite session restoration needs a "loaded" ref guard on any effect that persists state back to SQLite. Without it, the first effect flush after mount will read stale Zustand values and overwrite the SQLite record before the async read completes.
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/screens/ChatScreen.tsx` | (1) `KeyboardAvoidingView`: `behavior={undefined}` on Android, `keyboardVerticalOffset={insets.top}` on iOS; (2) Added `sessionLoadedRef = useRef(false)` guard; (3) Set `sessionLoadedRef.current = true` before state setters in both branches of the startup `useEffect`; (4) Save effect guarded with `!sessionLoadedRef.current` as first condition |
+
+---
+
+### What is next
+- On the test device: tap input → confirm it sits flush against the keyboard top with no gap (iOS and Android)
+- Navigate away from a completed chat 3+ times → confirm "Start New Assessment" button remains visible every time
+- Press "Start New Assessment" → confirm fresh chat starts and previous session appears in "MY ASSESSMENTS"
+- No rebuild or server restart needed — Metro hot-reload is sufficient for these changes
+- Carry-forwards from Sessions 19–22: rotate Groq API key; add `expo-background-fetch`; test token refresh; new EAS preview build after ChatScreen changes
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

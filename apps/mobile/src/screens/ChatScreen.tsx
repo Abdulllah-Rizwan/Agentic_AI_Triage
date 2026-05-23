@@ -94,6 +94,11 @@ export default function ChatScreen({ navigation, route }: Props) {
   // Bottom inset — keeps input above phone navigation bar
   const insets = useSafeAreaInsets();
 
+  // Guards the save effect from firing before the SQLite session has been loaded.
+  // Without this, stale Zustand messages overwrite a completed session before
+  // loadActiveSession() can read it, causing hasCompletedTriage to be lost.
+  const sessionLoadedRef = useRef(false);
+
   // Zustand
   const messages             = useChatStore((s) => s.messages);
   const isAgentTyping        = useChatStore((s) => s.isAgentTyping);
@@ -144,6 +149,9 @@ export default function ChatScreen({ navigation, route }: Props) {
       if (unmounted.current) return;
 
       if (saved && (saved.messages?.length ?? 0) > 0 && Date.now() - saved.savedAt < SESSION_MAX_AGE_MS) {
+        // Mark session loaded BEFORE state setters so the save effect cannot fire
+        // with stale data and overwrite the SQLite record before we finish restoring.
+        sessionLoadedRef.current = true;
         setMessages(saved.messages);
         if (saved.screenState.hasCompletedTriage) {
           // Completed session — restore in read-only completed state so the user
@@ -173,7 +181,8 @@ export default function ChatScreen({ navigation, route }: Props) {
           }
         }
       } else {
-        // Fresh start
+        // Fresh start — mark loaded so the save effect can persist the opening message.
+        sessionLoadedRef.current = true;
         clearChat();
         const response = await agent.start();
         if (unmounted.current) return;
@@ -201,7 +210,7 @@ export default function ChatScreen({ navigation, route }: Props) {
   useEffect(() => { hasCompletedTriageRef.current = hasCompletedTriage; }, [hasCompletedTriage]);
 
   useEffect(() => {
-    if (messages.length === 0 || hasCompletedTriageRef.current || !agentRef.current) return;
+    if (!sessionLoadedRef.current || messages.length === 0 || hasCompletedTriageRef.current || !agentRef.current) return;
     const session: SavedChatSession = {
       messages,
       agentState: agentRef.current.getSerializableState(),
@@ -650,8 +659,8 @@ export default function ChatScreen({ navigation, route }: Props) {
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <KeyboardAvoidingView
         style={styles.flex1}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 24 : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top : 0}
       >
         {/* ── Header ── */}
         <View style={styles.header}>
