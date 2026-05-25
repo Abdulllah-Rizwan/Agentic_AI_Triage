@@ -492,16 +492,16 @@ Ollama lets the app run AI conversations without needing the large on-device mod
 1. Download and install Ollama from https://ollama.com
 2. After installation, open a terminal and pull the model:
    ```bash
-   ollama pull llama3.2:3b
+   ollama pull qwen2.5:1.5b
    ```
-   This downloads a ~2GB model file (one-time only).
+   This downloads a ~1 GB model file (one-time only).
 3. Start the Ollama server:
    ```bash
    ollama serve
    ```
    Ollama runs on port 11434 by default.
 
-> **If you want to use the actual on-device model instead** (closer to real deployment), see `apps/mobile/SETUP_SLM.md` for instructions on downloading the 700MB GGUF file. This is optional for basic testing.
+> **If you want to use the actual on-device model instead** (closer to real deployment), see `apps/mobile/SETUP_SLM.md` for instructions on downloading the ~1 GB GGUF file. This is optional for basic testing.
 
 ### 7.5 Start an Android emulator or connect a device
 
@@ -718,7 +718,7 @@ The `EXPO_PUBLIC_API_BASE_URL` baked into the APK is stale — your PC's IP chan
 
 ### Mobile app (preview APK) shows "Device AI Unavailable" on splash screen
 The GGUF model was not included in the build. Check the EAS build log for the download step.
-- If it shows "Model download failed" — the HuggingFace URL changed. Update `MODEL_URL` in `apps/mobile/scripts/download-model.js`
+- If it shows "Model download failed" — the HuggingFace URL changed. Update `MODEL_URL` in `apps/mobile/scripts/download-model.js` (current model: `Qwen2.5-1.5B-Instruct-Q4_K_M.gguf`)
 - If the download step never ran — check that `eas.json` has `"preBuildCommand"` under the preview profile
 
 ### Chat agent says "having trouble connecting" in the preview APK
@@ -780,26 +780,44 @@ Copy that HTTPS URL — you will use it as `EXPO_PUBLIC_API_BASE_URL` in the nex
 
 > **Free tier limitation:** The ngrok URL changes every time you restart `ngrok http 3001`. When it changes, you must update the EAS environment variable and rebuild the APK. If you rebuild often, consider a paid ngrok plan ($8/month) which gives you a stable subdomain.
 
-### 12.3 Set environment variables in the EAS dashboard
+### 12.3 Set environment variables for the EAS build
 
-These variables are baked into the JavaScript bundle at build time. They must be set in the EAS dashboard — **not** in `.env` files (which are gitignored and never reach EAS servers).
+These variables are baked into the JavaScript bundle at build time. They must reach EAS — **not** via `.env` files (which are gitignored and never sent to EAS servers).
+
+There are two ways to set them:
+
+**Option A — EAS Secrets (recommended for API keys)**
+
+Run these once from the `apps/mobile/` folder. Secrets are stored encrypted on Expo's servers and injected at build time into all profiles automatically.
+
+```powershell
+# Groq API key (required for online AI mode)
+eas secret:create --scope project --name EXPO_PUBLIC_GROQ_API_KEY --value gsk_your_groq_key_here
+
+# API server URL (update this whenever your ngrok URL changes)
+eas secret:create --scope project --name EXPO_PUBLIC_API_BASE_URL --value https://abc123.ngrok-free.app
+```
+
+> Never put API keys in `eas.json` — that file is committed to git.
+
+**Option B — EAS Dashboard (for non-sensitive vars)**
 
 1. Go to https://expo.dev → sign in → click on `medireach-mobile`
 2. Click **Environment Variables** in the left sidebar
 3. Select the **Preview** environment
-4. Add the following variables:
+4. Add:
 
 | Variable | Value | Notes |
 |---|---|---|
 | `EXPO_PUBLIC_API_BASE_URL` | `https://abc123.ngrok-free.app` | Your ngrok URL — no trailing slash |
-| `EXPO_PUBLIC_GROQ_API_KEY` | `gsk_your_groq_key` | From Step 3.1 of this guide |
-| `EXPO_PUBLIC_ENVIRONMENT` | `production` | Already set via `eas.json` — only add if overriding |
+| `EXPO_PUBLIC_GROQ_API_KEY` | `gsk_your_groq_key` | Use EAS Secrets instead (Option A) |
+| `EXPO_PUBLIC_ENVIRONMENT` | `production` | Already set via `eas.json` — skip this one |
 
 > The `EXPO_PUBLIC_ENVIRONMENT=production` value is already hard-coded in `eas.json` for the preview profile. You only need to add `API_BASE_URL` and `GROQ_API_KEY`.
 
 ### 12.4 Download the on-device AI model (first time only)
 
-The offline AI requires a 700MB model file. Download it once and place it in the correct folder before building. EAS will pick it up automatically via the pre-build download hook.
+The offline AI requires a ~1 GB model file. Download it once and place it in the correct folder before building. EAS will pick it up automatically via the pre-build download hook.
 
 **You only need to do this if the file is not already there:**
 
@@ -808,13 +826,15 @@ The offline AI requires a 700MB model file. Download it once and place it in the
 ls "apps\mobile\src\assets\models\"
 ```
 
-If `Llama-3.2-1B-Instruct-Q4_K_M.gguf` is NOT listed, download it:
+If `Qwen2.5-1.5B-Instruct-Q4_K_M.gguf` is NOT listed, download it:
 
-1. Go to `https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF`
-2. Find `Llama-3.2-1B-Instruct-Q4_K_M.gguf` (~807MB)
-3. Click the download icon and save the file to `apps/mobile/src/assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf`
+1. Go to `https://huggingface.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF`
+2. Find `Qwen2.5-1.5B-Instruct-Q4_K_M.gguf` (~1 GB)
+3. Click the download icon and save the file to `apps/mobile/src/assets/models/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf`
 
 > **If you are using EAS cloud builds (not local builds):** The EAS pre-build hook in `eas.json` automatically downloads the model from HuggingFace if it is not already on the build server. You do not need to have the file locally for cloud builds to work — but the file must already be there locally if you run `eas build --local`.
+
+> **Upgrading from the old Llama 3.2 1B model:** If you previously had `Llama-3.2-1B-Instruct-Q4_K_M.gguf` on device, the app will automatically delete it on first launch after this update, freeing ~807 MB. No manual action needed.
 
 ### 12.5 Build the preview APK
 
@@ -827,7 +847,7 @@ eas build --platform android --profile preview
 
 EAS will:
 1. Upload your project code
-2. Run `node scripts/download-model.js` (downloads the 807MB model — adds ~15 minutes)
+2. Run `node scripts/download-model.js` (downloads the ~1 GB model — adds ~15 minutes)
 3. Run `expo prebuild` to generate native Android code
 4. Compile the native code with Gradle
 5. Print a download URL for the final `.apk` file
@@ -865,7 +885,7 @@ Run `npm install -g eas-cli` and try again.
 The `app.json` had a placeholder projectId. This was already fixed — the real project ID is `45e9db9e-eba6-4375-bd4c-ecffb0ac3fb3` and is already in `app.json`.
 
 **Build succeeds but app shows "Device AI Unavailable"**
-The GGUF model was not downloaded during the build. Check the EAS build log for the line starting with `Downloading Llama-3.2-1B-Instruct-Q4_K_M.gguf`. If it failed, verify the HuggingFace URL in `scripts/download-model.js` is still valid.
+The GGUF model was not downloaded during the build. Check the EAS build log for the line starting with `Downloading Qwen2.5-1.5B-Instruct-Q4_K_M.gguf`. If it failed, verify the HuggingFace URL in `scripts/download-model.js` is still valid.
 
 **Reports show "Saved securely" even on WiFi**
 Your ngrok URL has changed or expired. Run `ngrok http 3001` again, update `EXPO_PUBLIC_API_BASE_URL` in the EAS dashboard, and rebuild.

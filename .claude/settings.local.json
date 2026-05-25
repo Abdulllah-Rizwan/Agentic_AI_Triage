@@ -117,7 +117,9 @@
       "Bash(Get-Content \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\api\\\\server_out.log\")",
       "Bash(Select-Object -Last 80)",
       "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/auth/dev/users\" -Method GET)",
-      "Bash(dir /s /b \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\")"
+      "Bash(dir /s /b \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\")",
+      "Bash(tasklist)",
+      "Bash(Select-Object -Last 100)"
     ]
   }
 }

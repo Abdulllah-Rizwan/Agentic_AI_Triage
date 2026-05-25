@@ -1,6 +1,7 @@
 import * as Device from 'expo-device';
 
 import { networkStore } from '../../store/networkStore';
+import { useTransmissionStore } from '../../store/transmissionStore';
 import { userStore } from '../../store/userStore';
 import {
   getPendingPayloads,
@@ -121,6 +122,7 @@ async function _trySend(caseId: string): Promise<boolean> {
         chief_complaint: 'Transmitted',
         completed_at: Date.now(),
       });
+      useTransmissionStore.getState().setLastTransmitted(caseId);
       return true;
     }
 
@@ -232,6 +234,7 @@ export async function flushQueue(): Promise<void> {
           chief_complaint: 'Transmitted',
           completed_at: Date.now(),
         });
+        useTransmissionStore.getState().setLastTransmitted(record.case_id);
       } else {
         console.warn(`[Transmission] flushQueue: HTTP ${response.status} for case ${record.case_id}`);
         await incrementPayloadAttempts(record.case_id);

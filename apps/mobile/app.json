@@ -25,6 +25,7 @@
     },
     "android": {
       "package": "com.medireach.mobile",
+      "softwareKeyboardLayoutMode": "nothing",
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
@@ -50,11 +51,11 @@
       ],
       "./plugins/withAndroidCleartextHttp"
     ],
+    "owner": "abdullah_expo",
     "extra": {
       "eas": {
-        "projectId": "45e9db9e-eba6-4375-bd4c-ecffb0ac3fb3"
+        "projectId": "bf990b61-5cab-4039-a2cc-0eeed7d63dae"
       }
-    },
-    "owner": "abdullahrizwan354"
+    }
   }
 }

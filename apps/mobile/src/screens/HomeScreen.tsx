@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,13 @@ import {
   Alert,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useFocusEffect } from '@react-navigation/native';
 import { format } from 'date-fns';
 import { useNetworkStore, NetworkMode } from '../store/networkStore';
 import { useUserStore } from '../store/userStore';
 import { getCompletedCases, markCaseAcknowledged, CompletedCase } from '../db/queries';
 import { slmAdapter } from '../services/llm/SLMAdapter';
+import { useTransmissionStore } from '../store/transmissionStore';
 import type { RootStackParamList } from '../../App';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
@@ -55,22 +57,45 @@ export default function HomeScreen({ navigation }: Props) {
   const [selectedCase, setSelectedCase] = useState<CompletedCase | null>(null);
   const [modelState, setModelState] = useState<DownloadState>('unknown');
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [showTransmittedToast, setShowTransmittedToast] = useState(false);
   const downloadingRef = useRef(false);
+  const seenTransmittedAtRef = useRef<number | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const lastTransmittedAt     = useTransmissionStore((s) => s.lastTransmittedAt);
+
+  // Refresh cases and model state every time this screen comes into focus.
+  useFocusEffect(
+    useCallback(() => {
+      loadCases();
+      checkModelState();
+    }, []),
+  );
+
+  // Show a brief toast when a cached case is transmitted in the background.
   useEffect(() => {
+    if (!lastTransmittedAt || lastTransmittedAt === seenTransmittedAtRef.current) return;
+    seenTransmittedAtRef.current = lastTransmittedAt;
     loadCases();
-    checkModelState();
-  }, []);
+    setShowTransmittedToast(true);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setShowTransmittedToast(false), 3500);
+  }, [lastTransmittedAt]);
 
   async function checkModelState() {
-    const downloaded = await slmAdapter.isModelDownloaded();
-    setModelState(downloaded ? 'ready' : 'not_downloaded');
+    try {
+      const downloaded = await slmAdapter.isModelDownloaded();
+      setModelState(downloaded ? 'ready' : 'not_downloaded');
+    } catch {
+      // If we can't check, assume not downloaded so the card is shown
+      setModelState('not_downloaded');
+    }
   }
 
   async function handleDownloadModel() {
     if (downloadingRef.current) return;
     if (networkMode === 'OFFLINE') {
-      Alert.alert('No Connection', 'Connect to WiFi to download the offline AI model (807 MB).');
+      Alert.alert('No Connection', 'Connect to WiFi to download the offline AI model (~1 GB).');
       return;
     }
     downloadingRef.current = true;
@@ -147,22 +172,12 @@ export default function HomeScreen({ navigation }: Props) {
           </View>
         </View>
 
-        {/* CTA */}
-        <TouchableOpacity
-          style={styles.ctaBtn}
-          onPress={() => navigation.navigate('Chat')}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.ctaText}>BEGIN ASSESSMENT</Text>
-        </TouchableOpacity>
-        <Text style={styles.ctaSubtext}>AI-guided symptom collection · Takes 2-3 minutes</Text>
-
-        {/* Offline AI model card */}
+        {/* Offline AI model card — shown above CTA when model is not on device */}
         {modelState !== 'unknown' && modelState !== 'ready' && (
           <View style={styles.modelCard}>
             <View style={styles.modelCardHeader}>
               <Text style={styles.modelCardTitle}>Offline AI Model</Text>
-              <Text style={styles.modelCardSize}>807 MB</Text>
+              <Text style={styles.modelCardSize}>~1 GB</Text>
             </View>
             <Text style={styles.modelCardDesc}>
               Download to use AI-guided chat without internet.
@@ -185,6 +200,16 @@ export default function HomeScreen({ navigation }: Props) {
             )}
           </View>
         )}
+
+        {/* CTA */}
+        <TouchableOpacity
+          style={styles.ctaBtn}
+          onPress={() => navigation.navigate('Chat')}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.ctaText}>BEGIN ASSESSMENT</Text>
+        </TouchableOpacity>
+        <Text style={styles.ctaSubtext}>AI-guided symptom collection · Takes 2-3 minutes</Text>
 
         {/* Past assessments */}
         <Text style={styles.sectionTitle}>MY ASSESSMENTS</Text>
@@ -218,6 +243,13 @@ export default function HomeScreen({ navigation }: Props) {
           />
         )}
       </ScrollView>
+
+      {/* Transmitted toast — shown briefly when a cached case is flushed */}
+      {showTransmittedToast && (
+        <View style={styles.transmittedToast} pointerEvents="none">
+          <Text style={styles.transmittedToastText}>✓ Report transmitted to emergency network</Text>
+        </View>
+      )}
 
       {/* Case detail modal */}
       <Modal visible={!!selectedCase} transparent animationType="slide" onRequestClose={() => setSelectedCase(null)}>
@@ -354,4 +386,17 @@ const styles = StyleSheet.create({
   progressLabel: { color: '#f59e0b', fontSize: 13, fontWeight: '600', width: 40, textAlign: 'right' },
   downloadBtn: { backgroundColor: '#1d4ed8', borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
   downloadBtnText: { color: '#ffffff', fontSize: 14, fontWeight: '700', letterSpacing: 0.5 },
+  transmittedToast: {
+    position: 'absolute',
+    bottom: 32,
+    left: 20,
+    right: 20,
+    backgroundColor: '#14532d',
+    borderRadius: 10,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#22c55e',
+    alignItems: 'center',
+  },
+  transmittedToastText: { color: '#4ade80', fontSize: 14, fontWeight: '600' },
 });

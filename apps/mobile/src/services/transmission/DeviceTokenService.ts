@@ -51,7 +51,7 @@ class DeviceTokenService {
       throw new Error(`Device registration failed: ${response.status}`);
     }
 
-    const { token } = (await response.json()) as { token: string };
+    const { device_token: token } = (await response.json()) as { device_token: string };
 
     try {
       await Promise.all([

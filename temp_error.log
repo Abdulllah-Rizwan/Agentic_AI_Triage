@@ -1,54 +1,36 @@
-Build failed again. See the logs: 
+Application archives:
+  - /home/expo/workingdir/build/apps/mobile/android/app/build/outputs/apk/release/app-release.apk (166 MB)
+Uploading application archive...
+Upload to upload session failed
+Unexpected response from server (400): {"errors":[{"code":"VALIDATION_ERROR","type":"USER","message":"Turtle build is not in progress, it cannot save artifacts.","isTransient":false,"requestId":"0ca4f9fa-5524-483c-9bcf-071a3161c46b"}]}
 
-Running "expo doctor"
-Running 17 checks on your project...
-15/17 checks passed. 2 checks failed. Possible issues detected:
-Use the --verbose flag to see more details about passed checks.
-
-✖ Check that no duplicate dependencies are installed
-Your project contains duplicate native module dependencies, which should be de-duplicated.
-Native builds may only contain one version of any given native module, and having multiple versions of a single Native module installed may lead to unexpected build errors.
-Found duplicates for @expo/vector-icons:
-  ├─ @expo/vector-icons@14.1.0 (at: node_modules/@expo/vector-icons)
-  └─ @expo/vector-icons@15.1.1 (at: node_modules/expo/node_modules/@expo/vector-icons)
-Advice:
-Resolve your dependency issues and deduplicate your dependencies. Learn more: https://expo.fyi/resolving-dependency-issues
-
-✖ Check that packages match versions required by installed Expo SDK
-❗ Major version mismatches
-package             expected  found   
-@expo/vector-icons  ^15.0.3   14.1.0  
-
-
-
-1 package out of date.
-Advice:
-Use 'npx expo install --check' to review and upgrade your dependencies.
-To ignore specific packages, add them to "expo.install.exclude" in package.json. Learn more: https://expo.fyi/dependency-validation
-2 checks failed, indicating possible issues with the project.
-Command "expo doctor" failed.
-
-
-Starting Metro Bundler
-Android ./index.js ▓▓▓▓▓░░░░░░░░░░░ 37.3% ( 54/144)
-Android ./index.js ▓▓▓▓▓░░░░░░░░░░░ 37.3% (252/721)
-Android ./index.js ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 72.4% ( 863/1014)
-Android Bundling failed 13138ms index.js (1213 modules)
-SyntaxError: src/assets/models/Llama-3.2-1B-Instruct-Q4_K_M.gguf: Cannot create a string longer than 0x1fffffe8 characters
-Error: Cannot create a string longer than 0x1fffffe8 characters
-    at Object.slice (node:buffer:635:37)
-    at Buffer.toString (node:buffer:863:14)
-    at Object.transform (/home/expo/workingdir/build/apps/mobile/node_modules/expo/node_modules/@expo/metro-config/build/transform-worker/metro-transform-worker.js:547:29)
-    at Object.transform (/home/expo/workingdir/build/apps/mobile/node_modules/expo/node_modules/@expo/metro-config/build/transform-worker/transform-worker.js:178:19)
-    at transformFile (/home/expo/workingdir/build/apps/mobile/node_modules/@expo/metro/node_modules/metro/src/DeltaBundler/Worker.flow.js:67:36)
-    at Object.transform (/home/expo/workingdir/build/apps/mobile/node_modules/@expo/metro/node_modules/metro/src/DeltaBundler/Worker.flow.js:42:10)
-    at execFunction (/home/expo/workingdir/build/apps/mobile/node_modules/jest-worker/build/workers/processChild.js:149:17)
-    at execHelper (/home/expo/workingdir/build/apps/mobile/node_modules/jest-worker/build/workers/processChild.js:137:5)
-    at execMethod (/home/expo/workingdir/build/apps/mobile/node_modules/jest-worker/build/workers/processChild.js:140:5)
-    at process.messageListener (/home/expo/workingdir/build/apps/mobile/node_modules/jest-worker/build/workers/processChild.js:44:7)
-    at process.emit (node:events:524:28)
-    at emit (node:internal/child_process:950:14)
+Failed to upload application archive: Unexpected response from server (400): {"errors":[{"code":"VALIDATION_ERROR","type":"USER","message":"Turtle build is not in progress, it cannot save artifacts.","isTransient":false,"requestId":"0ca4f9fa-5524-483c-9bcf-071a3161c46b"}]}
+Error: Unexpected response from server (400): {"errors":[{"code":"VALIDATION_ERROR","type":"USER","message":"Turtle build is not in progress, it cannot save artifacts.","isTransient":false,"requestId":"0ca4f9fa-5524-483c-9bcf-071a3161c46b"}]}
+    at createUploadSessionAsync (/usr/local/eas-build-worker/packages/worker/dist/upload.js:277:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async uploadApplicationArchiveAsync (/usr/local/eas-build-worker/packages/worker/dist/upload.js:60:55)
+    at async uploadWithAnalyticsAsync (/usr/local/eas-build-worker/packages/worker/dist/upload.js:193:27)
+    at async BuildContext.uploadArtifact [as _uploadArtifact] (/usr/local/eas-build-worker/packages/worker/dist/context.js:31:24)
+    at async BuildContext.uploadArtifact (/usr/local/eas-build-worker/packages/build-tools/dist/context.js:150:24)
+    at async uploadApplicationArchive (/usr/local/eas-build-worker/packages/build-tools/dist/utils/artifacts.js:162:5)
+    at async /usr/local/eas-build-worker/packages/build-tools/dist/builders/android.js:174:9
+    at async BuildContext.runBuildPhase (/usr/local/eas-build-worker/packages/build-tools/dist/context.js:126:28)
+    at async buildAsync (/usr/local/eas-build-worker/packages/build-tools/dist/builders/android.js:173:5)
 
 
 Build failed
+
+Failed to upload application archive: Unexpected response from server (400): {"errors":[{"code":"VALIDATION_ERROR","type":"USER","message":"Turtle build is not in progress, it cannot save artifacts.","isTransient":false,"requestId":"0ca4f9fa-5524-483c-9bcf-071a3161c46b"}]}
+Error: Unexpected response from server (400): {"errors":[{"code":"VALIDATION_ERROR","type":"USER","message":"Turtle build is not in progress, it cannot save artifacts.","isTransient":false,"requestId":"0ca4f9fa-5524-483c-9bcf-071a3161c46b"}]}
+    at createUploadSessionAsync (/usr/local/eas-build-worker/packages/worker/dist/upload.js:277:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async uploadApplicationArchiveAsync (/usr/local/eas-build-worker/packages/worker/dist/upload.js:60:55)
+    at async uploadWithAnalyticsAsync (/usr/local/eas-build-worker/packages/worker/dist/upload.js:193:27)
+    at async BuildContext.uploadArtifact [as _uploadArtifact] (/usr/local/eas-build-worker/packages/worker/dist/context.js:31:24)
+    at async BuildContext.uploadArtifact (/usr/local/eas-build-worker/packages/build-tools/dist/context.js:150:24)
+    at async uploadApplicationArchive (/usr/local/eas-build-worker/packages/build-tools/dist/utils/artifacts.js:162:5)
+    at async /usr/local/eas-build-worker/packages/build-tools/dist/builders/android.js:174:9
+    at async BuildContext.runBuildPhase (/usr/local/eas-build-worker/packages/build-tools/dist/context.js:126:28)
+    at async buildAsync (/usr/local/eas-build-worker/packages/build-tools/dist/builders/android.js:173:5)
+
 

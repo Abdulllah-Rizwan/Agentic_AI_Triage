@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Animated,
   FlatList,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -36,6 +37,7 @@ import { transmissionService } from '../services/transmission/TransmissionServic
 import { queryGuidance } from '../services/rag/queryGuidance';
 import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
+import { useTransmissionStore } from '../store/transmissionStore';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
 const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000; // sessions older than 24 h start fresh
@@ -70,6 +72,8 @@ export default function ChatScreen({ navigation, route }: Props) {
   const [criticalCaseId, setCriticalCaseId]     = useState<string | null>(null);
 
   const [hasCompletedTriage, setHasCompletedTriage] = useState(false);
+  const [keyboardVisible, setKeyboardVisible]       = useState(false);
+  const [keyboardHeight, setKeyboardHeight]         = useState(0);
 
   const agentRef           = useRef<SymptomCollectorAgent | null>(null);
   const flatListRef        = useRef<FlatList<ChatMessage>>(null);
@@ -78,6 +82,7 @@ export default function ChatScreen({ navigation, route }: Props) {
   // Tracks the case ID generated in the CRITICAL path so _handlePostTriage can
   // link the saved history to the same case that was transmitted.
   const criticalCaseIdRef  = useRef<string | null>(null);
+  const cachedSufficiencyTxIdRef = useRef<string | null>(null);
   const postTriagePollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   // Holds the post-triage function so handleSend can call it without it being
   // a dependency of the useCallback — avoids a stale-closure trap.
@@ -111,6 +116,9 @@ export default function ChatScreen({ navigation, route }: Props) {
   const clearChat            = useChatStore((s) => s.clearChat);
   const setCollectionStatus  = useChatStore((s) => s.setCollectionStatus);
 
+  const lastTransmittedCaseId = useTransmissionStore((s) => s.lastTransmittedCaseId);
+  const lastTransmittedAt     = useTransmissionStore((s) => s.lastTransmittedAt);
+
   // ── Startup — restore saved session, open readonly, or start fresh ──────────
 
   useEffect(() => {
@@ -121,15 +129,19 @@ export default function ChatScreen({ navigation, route }: Props) {
 
     if (readonlySession) {
       // Readonly replay of a completed past assessment — no agent needed.
+      // Clear Zustand first so stale messages from a previous session don't linger
+      // (stale messages cause duplicate-key errors when the no-history fallback fires).
+      clearChat();
       setHasCompletedTriage(true);
       setIsInputDisabled(true);
       setCollectionStatus('SUFFICIENT');
       loadChatHistory(readonlySession.caseId).then((msgs) => {
-        if (msgs && !unmounted.current) {
+        if (unmounted.current) return;
+        if (msgs && msgs.length > 0) {
           setMessages(msgs as ChatMessage[]);
-        } else if (!unmounted.current) {
+        } else {
           addMessage({
-            id: 'no-history',
+            id: `no-history-${Date.now()}`,
             role: 'agent',
             type: 'system',
             content: 'No conversation transcript was saved for this assessment.',
@@ -143,47 +155,44 @@ export default function ChatScreen({ navigation, route }: Props) {
     const agent = new SymptomCollectorAgent();
     agentRef.current = agent;
 
+    // Clear stale Zustand messages immediately so no previous conversation
+    // flashes on screen while we load from SQLite asynchronously.
+    clearChat();
+
     (async () => {
       const saved = await loadActiveSession<SavedChatSession>();
 
       if (unmounted.current) return;
 
-      if (saved && (saved.messages?.length ?? 0) > 0 && Date.now() - saved.savedAt < SESSION_MAX_AGE_MS) {
-        // Mark session loaded BEFORE state setters so the save effect cannot fire
-        // with stale data and overwrite the SQLite record before we finish restoring.
+      if (
+        saved &&
+        (saved.messages?.length ?? 0) > 0 &&
+        Date.now() - saved.savedAt < SESSION_MAX_AGE_MS &&
+        !saved.screenState.hasCompletedTriage
+      ) {
+        // In-progress session — restore fully so the user can continue chatting.
+        // Mark loaded BEFORE state setters so the save effect cannot fire with
+        // stale data and overwrite the SQLite record before we finish restoring.
         sessionLoadedRef.current = true;
         setMessages(saved.messages);
-        if (saved.screenState.hasCompletedTriage) {
-          // Completed session — restore in read-only completed state so the user
-          // still sees the "Start New Assessment" button and cannot keep chatting.
-          setHasCompletedTriage(true);
-          setIsInputDisabled(true);
-          setEmergencyRag(saved.screenState.emergencyRag);
-          setCriticalTxStatus(saved.screenState.criticalTxStatus ?? 'IDLE');
-          setCriticalCaseId(saved.screenState.criticalCaseId ?? null);
-          criticalTxFired.current = saved.screenState.criticalTxFired ?? false;
-          if (saved.screenState.emergencyTrigger) {
-            setEmergencyDetected(saved.screenState.emergencyTrigger);
-            barOffset.setValue(0);
-          }
-          // Agent stays un-started; input is locked so no messages can be sent.
-        } else {
-          // In-progress session — restore fully so the user can continue chatting.
-          agent.restoreState(saved.agentState);
-          setTurnCount(saved.screenState.turnCount ?? 0);
-          setEmergencyRag(saved.screenState.emergencyRag);
-          setCriticalTxStatus(saved.screenState.criticalTxStatus ?? 'IDLE');
-          setCriticalCaseId(saved.screenState.criticalCaseId ?? null);
-          criticalTxFired.current = saved.screenState.criticalTxFired ?? false;
-          if (saved.screenState.emergencyTrigger) {
-            setEmergencyDetected(saved.screenState.emergencyTrigger);
-            barOffset.setValue(0);
-          }
+        agent.restoreState(saved.agentState);
+        setTurnCount(saved.screenState.turnCount ?? 0);
+        setEmergencyRag(saved.screenState.emergencyRag);
+        setCriticalTxStatus(saved.screenState.criticalTxStatus ?? 'IDLE');
+        setCriticalCaseId(saved.screenState.criticalCaseId ?? null);
+        criticalTxFired.current = saved.screenState.criticalTxFired ?? false;
+        if (saved.screenState.emergencyTrigger) {
+          setEmergencyDetected(saved.screenState.emergencyTrigger);
+          barOffset.setValue(0);
         }
       } else {
-        // Fresh start — mark loaded so the save effect can persist the opening message.
+        // Fresh start: no session, expired session, or a completed session.
+        // Completed sessions are already persisted in history — clear the active
+        // session slot so next launch always opens a clean chat.
+        if (saved?.screenState.hasCompletedTriage) {
+          clearActiveSession().catch(() => {});
+        }
         sessionLoadedRef.current = true;
-        clearChat();
         const response = await agent.start();
         if (unmounted.current) return;
         addMessage({
@@ -284,6 +293,10 @@ export default function ChatScreen({ navigation, route }: Props) {
         const bytes = encodeLeanPayload(payload);
         const blob  = await encryptLeanPayload(bytes, profile.cnic, deviceId);
         const result = await transmissionService.sendOrCache(id, payload, blob, level);
+
+        if (result === 'CACHED') {
+          cachedSufficiencyTxIdRef.current = id;
+        }
 
         if (!unmounted.current) {
           addMessage({
@@ -416,30 +429,11 @@ export default function ChatScreen({ navigation, route }: Props) {
       }
     }
 
-    // ── 6. Mark session completed in SQLite ───────────────────────────────────
-    // Save the completed session (with hasCompletedTriage: true) instead of
-    // clearing it. This way, if the user navigates away and comes back via
-    // "BEGIN ASSESSMENT" the completed chat is restored with the "Start New
-    // Assessment" button still visible — they cannot accidentally resume a
-    // finished conversation. The session is cleared only when the user
-    // explicitly presses "Start New Assessment".
-    if (agentRef.current) {
-      const completedSession: SavedChatSession = {
-        messages: useChatStore.getState().messages,
-        agentState: agentRef.current.getSerializableState(),
-        screenState: {
-          turnCount,
-          emergencyRag,
-          criticalTxStatus,
-          criticalCaseId: criticalCaseIdRef.current,
-          criticalTxFired: criticalTxFired.current,
-          emergencyTrigger: emergencyTrigger ?? null,
-          hasCompletedTriage: true,
-        },
-        savedAt: Date.now(),
-      };
-      saveActiveSession(completedSession).catch(() => {});
-    }
+    // ── 6. Clear active session slot ─────────────────────────────────────────
+    // The history and case record are already persisted above. Clearing the
+    // active slot ensures the next "BEGIN ASSESSMENT" opens a fresh chat — no
+    // completed session ever comes back as an in-progress one.
+    clearActiveSession().catch(() => {});
     if (!unmounted.current) setHasCompletedTriage(true);
   };
 
@@ -482,6 +476,48 @@ export default function ChatScreen({ navigation, route }: Props) {
       }).start();
     }
   }, [emergencyDetected, barOffset]);
+
+  // ── Keyboard visibility (Android) ────────────────────────────────────────
+  // softwareKeyboardLayoutMode is "nothing" — the native system does not move
+  // or resize the window. KeyboardAvoidingView (behavior="height") handles
+  // everything via Android's WindowInsets API (fires on Android 11+).
+  // We track keyboardVisible only to zero out the nav-bar inset while the
+  // keyboard is up (KAV already accounts for it in its height calculation).
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+      setKeyboardVisible(true);
+    });
+    const hide = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+      setKeyboardVisible(false);
+    });
+    return () => { show.remove(); hide.remove(); };
+  }, []);
+
+  // ── React to a successful background transmission (offline → online flush) ──
+  // When the retry loop sends a cached case, update the UI so the patient knows.
+  useEffect(() => {
+    if (!lastTransmittedCaseId || !lastTransmittedAt) return;
+    // Critical path: update the status bar from CACHED → SENT
+    if (criticalCaseIdRef.current && lastTransmittedCaseId === criticalCaseIdRef.current) {
+      setCriticalTxStatus('SENT');
+    }
+    // Sufficient path: add a confirmation chat message
+    if (cachedSufficiencyTxIdRef.current && lastTransmittedCaseId === cachedSufficiencyTxIdRef.current) {
+      cachedSufficiencyTxIdRef.current = null;
+      if (!unmounted.current) {
+        addMessage({
+          id: `tx-update-${Date.now()}`,
+          role: 'agent',
+          type: 'system',
+          content: '✓ Report transmitted — your case has been relayed to the emergency network.',
+          timestamp: Date.now(),
+        });
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastTransmittedAt]);
 
   // ── Critical-path inline transmission ─────────────────────────────────────
 
@@ -553,13 +589,29 @@ export default function ChatScreen({ navigation, route }: Props) {
       if (!unmounted.current) {
         setAgentTyping(false);
         const isOffline = networkStore.getState().mode === 'OFFLINE';
+        const isDev = process.env.EXPO_PUBLIC_ENVIRONMENT === 'development';
+        let errorContent: string;
+        if (isDev && isOffline) {
+          errorContent =
+            '⚠ Dev mode: Ollama is unreachable (device offline). ' +
+            'In Expo Go, the on-device model cannot run. ' +
+            'To test offline mode properly, build a release APK via EAS.';
+        } else if (isDev) {
+          errorContent =
+            '⚠ Dev mode: Could not reach Ollama. ' +
+            'Ensure Ollama is running on your PC and your phone is on the same network.';
+        } else if (isOffline) {
+          errorContent =
+            '⚠ Offline AI model not downloaded. Go back to the Home screen and tap DOWNLOAD ' +
+            'to get the offline model (807 MB). You need WiFi to download it.';
+        } else {
+          errorContent = '⚠ Connection error. Please try again.';
+        }
         addMessage({
           id: `err-${Date.now()}`,
           role: 'agent',
           type: 'system',
-          content: isOffline
-            ? '⚠ Offline AI model not downloaded. Go back to the Home screen and tap DOWNLOAD to get the offline model (807 MB). You need WiFi to download it.'
-            : '⚠ Connection error. Please try again.',
+          content: errorContent,
           timestamp: Date.now(),
         });
       }
@@ -659,7 +711,7 @@ export default function ChatScreen({ navigation, route }: Props) {
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <KeyboardAvoidingView
         style={styles.flex1}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top : 0}
       >
         {/* ── Header ── */}
@@ -685,6 +737,7 @@ export default function ChatScreen({ navigation, route }: Props) {
         {/* ── Chat messages ── */}
         <FlatList
           ref={flatListRef}
+          style={styles.flex1}
           data={messages}
           keyExtractor={(item) => item.id}
           renderItem={renderMessage}
@@ -748,7 +801,7 @@ export default function ChatScreen({ navigation, route }: Props) {
 
         {/* ── Post-triage action bar OR live input ── */}
         {hasCompletedTriage ? (
-          <View style={[styles.postTriageBar, { paddingBottom: 14 + insets.bottom }]}>
+          <View style={[styles.postTriageBar, { paddingBottom: Platform.OS === 'android' && keyboardVisible ? 0 : 14 + insets.bottom }]}>
             <TouchableOpacity
               style={styles.newAssessmentBtn}
               onPress={() => {
@@ -767,7 +820,7 @@ export default function ChatScreen({ navigation, route }: Props) {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={[styles.inputRow, { paddingBottom: 12 + insets.bottom }]}>
+          <View style={[styles.inputRow, { paddingBottom: Platform.OS === 'android' && keyboardVisible ? 0 : 12 + insets.bottom }]}>
             <TextInput
               style={styles.textInput}
               value={input}
