@@ -119,7 +119,10 @@
       "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/auth/dev/users\" -Method GET)",
       "Bash(dir /s /b \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\")",
       "Bash(tasklist)",
-      "Bash(Select-Object -Last 100)"
+      "Bash(Select-Object -Last 100)",
+      "Bash(Get-Content \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\decisions.md\")",
+      "Bash(Measure-Object -Line)",
+      "PowerShell(\\(Get-Content \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\decisions.md\" | Measure-Object -Line\\).Lines)"
     ]
   }
 }

@@ -2575,6 +2575,210 @@ useEffect(() => {
 
 ---
 
+## Session 24 — 2026-05-26
+
+### Goal
+
+Diagnose and fix why completed triage reports are not reaching the server even when the device is connected to WiFi. The report was always shown as "💾 Report saved" (CACHED) and never as "✓ Report transmitted", and no `POST /api/v1/cases/ingest` requests appeared in `server_out.log`.
+
+---
+
+### Root cause — `_trySend` depended on a DB read-back that could silently return nothing
+
+`sendOrCache` saved the encrypted payload to SQLite, then called `_trySend(caseId)`. Inside `_trySend`, the first action was:
+
+```typescript
+const pending = await getPendingPayloads(MAX_ATTEMPTS);
+const record = pending.find((p) => p.case_id === caseId);
+if (!record) return false;   // ← exits here if record not found
+```
+
+If `getPendingPayloads` returned an empty array (or the specific `case_id` was not in the result), `_trySend` returned `false` before the `fetch` call was ever made. This caused `sendOrCache` to return `'CACHED'` even on WiFi, and produced the "💾 Report saved" message. No HTTP request was made → nothing appeared in the server log.
+
+The read-back was unnecessary: the encrypted blob is already in memory (we just computed it) at the point `sendOrCache` calls `_trySend`. Reading it from the database is a redundant round-trip that creates a silent failure vector.
+
+---
+
+### Fix — pass the blob directly; eliminate the DB read-back
+
+**`TransmissionService.ts` — `_trySend` signature changed:**
+
+```
+Before: async function _trySend(caseId: string): Promise<boolean>
+After:  async function _trySend(caseId, encryptedBlob, triageLevel): Promise<boolean>
+```
+
+The function now decrypts the in-memory `encryptedBlob` directly instead of re-reading it from SQLite. The `triageLevel` parameter replaces `record.triage_level` for the `saveCompletedCase()` call on success.
+
+**`sendOrCache` updated to pass both:**
+
+```
+Before: const sent = await _trySend(caseId);
+After:  const sent = await _trySend(caseId, encryptedBlob, triageLevel);
+```
+
+The `savePendingPayload` call is unchanged — the record is still saved to SQLite for the retry loop's durability. Only the immediate-send path now bypasses the DB read-back.
+
+**`flushQueue` unchanged** — the retry loop reads from SQLite by design (that is its entire purpose).
+
+---
+
+### Diagnostic logging added
+
+- `sendOrCache` logs the network mode and caseId when called
+- `_trySend` logs mode, caseId, URL, and payload byte count before every `fetch`
+- `flushQueue` logs the number of pending records and each case before transmission
+- All `console.warn` / `console.error` calls now include the short case ID for cross-referencing
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/services/transmission/TransmissionService.ts` | `_trySend` signature changed to accept `encryptedBlob` + `triageLevel` directly; DB read-back removed; `sendOrCache` passes both; diagnostic logging added to `sendOrCache`, `_trySend`, and `flushQueue` |
+
+---
+
+### What is next
+
+- Rebuild and reinstall the dev APK on the test device
+- Complete a RED/AMBER triage while on WiFi
+- Confirm Metro console shows `[Transmission] POST http://192.168.18.34:3001/api/v1/cases/ingest (NNN bytes, token=true/false)` followed by `Case XXXXXXXX accepted by server (HTTP 202)`
+- Confirm the case appears on the dashboard within seconds
+- If the fetch still fails: check `[Transmission] _trySend network error` message for the exact network error (likely wrong IP or Android cleartext blocked); update `EXPO_PUBLIC_API_BASE_URL` in `.env` to current PC LAN IP and rebuild
+
+---
+
+## Session 25 — 2026-05-26
+
+### Goal
+
+Replace the existing system prompts in all three agent files with the professionally structured prompts from `prompts.txt` (root directory), and update any parsing logic or Pydantic schemas that the new JSON output shapes required.
+
+---
+
+### What changed
+
+#### Agent 1 — Symptom Collector (Normal Mode) — `SymptomCollectorAgent.ts`
+
+**Before:** A flat, rules-as-bullet-points prompt with a two-field SUFFICIENT JSON (`status`, `summary`) and a two-field CRITICAL JSON (`status`, `trigger`, `message`).
+
+**After:** Structured `[ROLE] / [INSTRUCTION] / [CONTEXT] / [EXAMPLE] / [CONSTRAINTS] / [OUTPUT FORMAT]` prompt. Key improvements:
+
+- Added explicit disaster-zone context (earthquake, flood, collapse), language mirroring (English / Urdu / Roman Urdu), and the "quality of data determines whether help arrives" motivation.
+- Added a concrete Urdu-language interview example showing the question-answer rhythm.
+- Tightened constraints: 15-word question limit, explicit "never promise outcomes", no jargon policy.
+- SUFFICIENT JSON now carries **8 additional structured fields** alongside `status`:
+  - `onset_hours` (number), `pain_scale` (0–10), `location_on_body`, `associated_symptoms` (array)
+  - `mobility` (walking/limited/immobile/unknown), `consciousness` (alert/drowsy/confused/unknown)
+  - `bleeding` (none/minor/heavy/unknown), `language_used` (en/ur/roman_ur)
+- CRITICAL JSON extended with `critical_flag` enum and `message` field.
+
+#### Agent 1 — Symptom Collector (Critical Mode) — `SymptomCollectorAgent.ts`
+
+**Before:** A long imperative list requiring "ALL five" data points with `{symptom}` substitution.
+
+**After:** Structured `[ROLE] / [INSTRUCTION] / [CONTEXT] / [EXAMPLE] / [CONSTRAINTS] / [OUTPUT FORMAT]` prompt. Key improvements:
+
+- Added "every question delays dispatch" urgency framing.
+- Added Urdu-language critical-mode example.
+- Hard limit of 5 questions codified in constraints.
+- Explicit priority order: airway/breathing → bleeding → consciousness → onset → progression.
+- CRITICAL JSON now carries richer fields: `critical_flag` (typed enum), `onset_minutes`, `severity` (moderate/severe/critical), `progression`, `patient_responsive`.
+
+#### Agent 2 — SOAP Generation — `soap_agent.py`
+
+**Before:** A short bullet-point rules list. No clinical context, no example, no data-provenance language.
+
+**After:** Full structured prompt with:
+
+- `[ROLE]`: "15 years of disaster medicine experience" framing.
+- `[CONTEXT]`: Explicitly marks the data as self-reported and non-clinical; reminds the model the responder is deciding what equipment to bring.
+- `[EXAMPLE]`: Complete worked input → output pair (AMBER leg injury with building-collapse mechanism, showing the S/O/A/P format the model should produce).
+- `[CONSTRAINTS]`: Added "never invent vitals", "never invent exam findings", "150-word total limit", "WHO triage terminology", and "Insufficient data — assess on arrival" fallback wording.
+- JSON output format and `SoapOutput` Pydantic schema (`subjective`, `objective`, `assessment`, `plan`) **unchanged** — `soap_worker.py` still parses the same fields.
+
+#### Agent 3 — Triage Audit — `triage_audit_agent.py`
+
+**Before:** A two-sentence prompt with a three-field output (`confirmed`, `escalated_to`, `clinical_note`).
+
+**After:** Full structured prompt plus updated `AuditOutput` schema.
+
+**Prompt additions:**
+- `[ROLE]`: "Senior triage auditor at a disaster response command center."
+- `[CONTEXT]`: "Under-triage costs lives; over-triage costs capacity — conservatism is correct."
+- `[EXAMPLE]`: Complete worked escalation (AMBER headache → RED with reasoning and confidence).
+- `[CONSTRAINTS]`: Six named escalation patterns the model must check: altered mental status + trauma, chest pain over 40, breathing + chest involvement, bleeding + tachycardia signs, pregnancy + abdominal pain, crush mechanism regardless of pain.
+
+**`AuditOutput` schema updated:**
+
+```python
+# Before
+class AuditOutput(BaseModel):
+    confirmed: bool
+    escalated_to: Optional[str]
+    clinical_note: str
+
+# After
+class AuditOutput(BaseModel):
+    audited_level: str           # RED | AMBER | GREEN
+    original_level: str          # RED | AMBER | GREEN
+    action: str                  # CONFIRM | ESCALATE
+    reasoning: str               # ≤50 words
+    confidence: str              # high | medium | low
+    escalation_pattern: Optional[str]  # named pattern or null
+```
+
+---
+
+### Code changes required by the new SUFFICIENT JSON schema
+
+The SUFFICIENT JSON now includes arrays (`associated_symptoms`) and numbers (`onset_hours`, `pain_scale`), so the TypeScript helper that parses LLM responses needed a type update:
+
+```typescript
+// Before
+function _tryParseJSON(text: string): Record<string, string> | null
+
+// After
+function _tryParseJSON(text: string): Record<string, unknown> | null
+```
+
+`buildFeatureVector` updated to prefer LLM-provided structured fields over regex extraction:
+- `pain_scale` → `severity` (direct numeric mapping, 0–10)
+- `onset_hours` → `onsetTime` (formatted string)
+- `associated_symptoms` array → used directly instead of heuristic conversation-message slicing
+- `location_on_body`, `mobility`, `consciousness`, `bleeding` → appended to `conversationSummary` as "Additional: ..." so responders get the full picture
+
+`_buildCriticalVector` updated to use:
+- `onset_minutes` → `onsetTime`
+- `severity` string (moderate/severe/critical) → mapped to numeric (6/8/10)
+- `progression` + `patient_responsive` → appended to `conversationSummary`
+- `associated_symptoms` array from the CRITICAL JSON (not heuristic extraction)
+
+All fallback paths preserved — if the LLM doesn't provide a field, the old regex/heuristic extraction still runs.
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/agents/SymptomCollectorAgent.ts` | `SYSTEM_PROMPT` and `CRITICAL_MODE_SYSTEM_PROMPT` replaced; `_tryParseJSON` return type widened; `buildFeatureVector` uses richer JSON fields; `_buildCriticalVector` uses new critical fields |
+| `apps/api/app/agents/soap_agent.py` | `SOAP_SYSTEM_PROMPT` replaced with structured prompt + worked example |
+| `apps/api/app/agents/triage_audit_agent.py` | `AUDIT_SYSTEM_PROMPT` replaced; `AuditOutput` schema updated to 6-field richer format |
+
+---
+
+### What is next
+
+- Test the new SUFFICIENT JSON by running a complete normal assessment — confirm the Metro console shows the LLM emitting all 8 extra fields (onset_hours, pain_scale, mobility, etc.) and that `buildFeatureVector` uses them
+- Test the CRITICAL path — confirm the CRITICAL JSON now includes `critical_flag`, `onset_minutes`, `severity`, `progression`
+- Test the SOAP agent with the new prompt — run `generate_soap_task` manually and verify the 150-word limit and "self-reported" language is present in the output
+- The triage audit agent integration point in `cases.py` still needs to be wired up to use the new `AuditOutput` fields (`audited_level`, `action`) — left as carry-forward from prior sessions
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

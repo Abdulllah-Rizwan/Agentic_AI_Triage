@@ -77,28 +77,39 @@ export async function getDeviceToken(): Promise<string> {
 // ── Internal send helper ──────────────────────────────────────────────────────
 
 /**
- * Reads the encrypted blob for `caseId` from the DB, decrypts it, and POSTs
- * the raw protobuf bytes to the ingest endpoint.
- * Returns true on HTTP 202, false on any error.
+ * Decrypts `encryptedBlob` and POSTs the raw protobuf bytes to the ingest
+ * endpoint.  The caller is responsible for ensuring the blob is already
+ * persisted in SQLite before calling this (sendOrCache does this).
+ * Returns true on HTTP 2xx/202, false on any error.
+ *
+ * Accepts the blob directly so we never depend on a DB read-back — the
+ * previous pattern of save-then-read caused silent failures when the SQLite
+ * query returned before the write was visible.
  */
-async function _trySend(caseId: string): Promise<boolean> {
+async function _trySend(
+  caseId: string,
+  encryptedBlob: string,
+  triageLevel: 'RED' | 'AMBER' | 'GREEN',
+): Promise<boolean> {
   const { profile, deviceId } = userStore.getState();
-  if (!profile) return false;
+  if (!profile) {
+    console.warn('[Transmission] _trySend: no user profile — aborting');
+    return false;
+  }
+
+  const mode = networkStore.getState().mode;
+  console.log(`[Transmission] _trySend start — mode=${mode} caseId=${caseId.slice(0, 8)}`);
 
   try {
-    const pending = await getPendingPayloads(MAX_ATTEMPTS);
-    const record = pending.find((p) => p.case_id === caseId);
-    if (!record) return false;
-
     const key = await deriveKey(profile.cnic, deviceId);
-    const base64 = await decryptPayload(record.encrypted_blob, key);
+    const base64 = await decryptPayload(encryptedBlob, key);
     const payloadBytes = Buffer.from(base64, 'base64');
 
     let token = '';
     try {
       token = await getDeviceToken();
     } catch {
-      // Proceed without auth token — server may accept unauthenticated ingests
+      // Proceed without auth token — server accepts unauthenticated ingests
     }
 
     const ingestUrl = `${API_BASE_URL}/api/v1/cases/ingest`;
@@ -118,7 +129,7 @@ async function _trySend(caseId: string): Promise<boolean> {
       await deletePendingPayload(caseId);
       await saveCompletedCase({
         case_id: caseId,
-        triage_level: record.triage_level,
+        triage_level: triageLevel,
         chief_complaint: 'Transmitted',
         completed_at: Date.now(),
       });
@@ -161,9 +172,11 @@ export async function sendOrCache(
   });
 
   const mode = networkStore.getState().mode;
+  console.log(`[Transmission] sendOrCache — mode=${mode} caseId=${caseId.slice(0, 8)}`);
   if (mode === 'OFFLINE') return 'CACHED';
 
-  const sent = await _trySend(caseId);
+  // Pass blob directly — avoids a DB read-back that can silently return empty.
+  const sent = await _trySend(caseId, encryptedBlob, triageLevel);
   return sent ? 'SENT' : 'CACHED';
 }
 
@@ -203,6 +216,9 @@ export async function flushQueue(): Promise<void> {
   if (!profile) return;
 
   const pending = await getPendingPayloads(MAX_ATTEMPTS);
+  if (pending.length === 0) return;
+
+  console.log(`[Transmission] flushQueue — ${pending.length} pending, mode=${mode}`);
 
   for (const record of pending) {
     try {
@@ -217,7 +233,10 @@ export async function flushQueue(): Promise<void> {
         // Continue without token
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/v1/cases/ingest`, {
+      const ingestUrl = `${API_BASE_URL}/api/v1/cases/ingest`;
+      console.log(`[Transmission] flushQueue POST ${ingestUrl} case=${record.case_id.slice(0, 8)} (${payloadBytes.length} bytes)`);
+
+      const response = await fetch(ingestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/octet-stream',
@@ -227,6 +246,7 @@ export async function flushQueue(): Promise<void> {
       });
 
       if (response.ok || response.status === 202) {
+        console.log(`[Transmission] flushQueue: case ${record.case_id.slice(0, 8)} accepted (HTTP ${response.status})`);
         await deletePendingPayload(record.case_id);
         await saveCompletedCase({
           case_id: record.case_id,
@@ -236,11 +256,12 @@ export async function flushQueue(): Promise<void> {
         });
         useTransmissionStore.getState().setLastTransmitted(record.case_id);
       } else {
-        console.warn(`[Transmission] flushQueue: HTTP ${response.status} for case ${record.case_id}`);
+        const body = await response.text().catch(() => '');
+        console.warn(`[Transmission] flushQueue: HTTP ${response.status} for case ${record.case_id.slice(0, 8)} — ${body}`);
         await incrementPayloadAttempts(record.case_id);
       }
     } catch (err) {
-      console.error(`[Transmission] flushQueue failed for case ${record.case_id}:`, err);
+      console.error(`[Transmission] flushQueue failed for case ${record.case_id.slice(0, 8)}: ${String(err)}`);
       await incrementPayloadAttempts(record.case_id);
     }
   }
