@@ -2779,6 +2779,140 @@ All fallback paths preserved — if the LLM doesn't provide a field, the old reg
 
 ---
 
+## Session 26 — 2026-05-27
+
+### Goal
+Expand the knowledge base with 5 new NHS articles, rebuild the offline mobile FAISS index, upload to server-side pgvector, and fix the Metro bundler connectivity issue blocking physical device testing.
+
+---
+
+### What was built / fixed
+
+#### 1. Knowledge base expanded — 5 new articles added
+
+New articles added to `docs/knowledge-base/articles/`:
+
+| File | Source | Chunks |
+|------|--------|--------|
+| `acid_and_chemical_burns.txt` | NHS | 2 |
+| `animal_and_Human_Bites.txt` | NHS | 6 |
+| `broken_Arm.txt` | NHS | 2 |
+| `Diarrhoea_and_vomiting.txt` | NHS | 2 |
+| `Diziness.txt` | NHS | 2 |
+
+---
+
+#### 2. YAML metadata typos fixed — `tite:` → `title:`
+
+Three companion `.yaml` files had a `tite:` key instead of `title:`. This caused the seed script to treat the articles as having no metadata (`(no yaml)`) and the chunks were stored without `article_title` attribution. Fixed in all three files:
+
+- `broken_Arm.yaml`
+- `Diarrhoea_and_vomiting.yaml`
+- `Diziness.yaml`
+
+**Rule going forward:** Always verify YAML files show `[yaml]` (not `(no yaml)`) in the seed script output. `(no yaml)` means the title key is missing or misspelled — RAG results from those chunks will have no citation.
+
+---
+
+#### 3. Baseline mobile FAISS index rebuilt
+
+`docs/knowledge-base/build_baseline_index.py` was re-run after the YAML fixes. Output written to `apps/mobile/src/assets/knowledge/`:
+
+| File | Size |
+|------|------|
+| `knowledge_index.faiss` | 436.5 KB |
+| `knowledge_meta.json` | 174.8 KB |
+| `knowledge_embeddings.json` | 582.0 KB |
+| `knowledge_embeddings.bin` | 436.5 KB |
+| `knowledge_meta.pkl` | 123.5 KB |
+
+**Totals:** 32 articles · 291 chunks · 384-dim embeddings
+
+The mobile offline RAG (BM25 keyword search) uses `knowledge_meta.json` — this file is bundled in the APK and is now up to date with all 32 articles.
+
+---
+
+#### 4. `docs/knowledge-base/upload_articles.py` — new reusable upload script
+
+Created a Python script that:
+- Logs in as admin (`admin@medireach.app`)
+- Fetches the list of documents already on the server
+- Skips files whose filename already exists (deduplication by filename)
+- Uploads only new `.txt` files with metadata from their companion `.yaml`
+- Polls `GET /api/v1/admin/knowledge/documents/{id}` every 5 seconds until `ACTIVE` or `FAILED`
+- Prints a final summary
+
+**Usage:** `cd docs/knowledge-base && python upload_articles.py`
+
+One bug was fixed during the run: the `GET /api/v1/admin/knowledge/documents` endpoint returns `{"documents": [...]}` not a plain list. The script was updated to unwrap the `documents` key.
+
+---
+
+#### 5. 5 new articles uploaded to server pgvector — all ACTIVE
+
+The script correctly skipped 27 already-uploaded documents and uploaded only the 5 new ones. All 5 reached `ACTIVE` status within one polling cycle (~5–10 seconds each). The knowledge base version was automatically bumped by the ingestion worker after each upload.
+
+---
+
+#### 6. Metro bundler unreachable on physical device — root cause found and fixed
+
+**Problem:** `npx expo start` showed a QR code but Expo Go on the phone could not connect.
+
+**Attempted fixes that did not work:**
+- `--tunnel` flag → failed with `ngrok tunnel took too long to connect` because `@expo/ngrok` was not installed
+- Installed ngrok via `winget install Ngrok.Ngrok` → version `3.3.1` was installed, which is below the free-tier minimum of `3.20.0`; ngrok returned `ERR_NGROK_121`
+- `ngrok update` → failed
+- `@expo/ngrok` installed but tunnel still failed due to outdated system ngrok
+
+**Root cause:** The PC has four active network interfaces — Wi-Fi (`192.168.18.34`), VirtualBox Ethernet (`192.168.56.1`), WSL vEthernet (`172.26.32.1`), and Hyper-V Default Switch (`172.29.0.1`). Expo's auto-detection picks whichever adapter appears first in the OS list, which is often one of the virtual adapters. The QR code encodes an unreachable IP and the phone cannot connect despite being on the correct WiFi.
+
+**Fix:**
+```powershell
+$env:EXPO_NO_DOCTOR = "1"
+$env:REACT_NATIVE_PACKAGER_HOSTNAME = "192.168.18.34"
+npx expo start --clear
+```
+
+`REACT_NATIVE_PACKAGER_HOSTNAME` pins Metro to the actual WiFi adapter IP. The QR code now encodes `exp://192.168.18.34:8081` which the phone can reach when on the same WiFi network.
+
+**Rule going forward:** Any machine with virtual network adapters (WSL, VirtualBox, Hyper-V, Docker Desktop) must set `REACT_NATIVE_PACKAGER_HOSTNAME` explicitly. Never rely on Expo's auto-detection when multiple adapters are present.
+
+---
+
+### Decisions recorded
+
+#### DEC-031 — `REACT_NATIVE_PACKAGER_HOSTNAME` required on multi-adapter machines
+- **Date:** 2026-05-27
+- **Decision:** Always set `$env:REACT_NATIVE_PACKAGER_HOSTNAME = "192.168.18.34"` before running `npx expo start` on this machine.
+- **Reason:** The PC has WSL, VirtualBox, and Hyper-V virtual adapters alongside Wi-Fi. Expo's IP auto-detection picks a virtual adapter IP that the phone cannot reach, making the QR code useless. Pinning to the Wi-Fi IP fixes it permanently.
+- **Rejected alternative:** `--tunnel` via ngrok — requires `@expo/ngrok` package and an up-to-date ngrok binary (≥ 3.20.0); free-tier winget installation ships 3.3.1 which is rejected by ngrok servers.
+- **Status:** Final
+
+---
+
+### Start-up command for Metro (canonical — use this every session)
+
+```powershell
+cd "apps/mobile"
+$env:EXPO_NO_DOCTOR = "1"
+$env:REACT_NATIVE_PACKAGER_HOSTNAME = "192.168.18.34"
+npx expo start --clear
+```
+
+---
+
+### What is next
+- Verify Metro connects on the physical device with the `REACT_NATIVE_PACKAGER_HOSTNAME` fix
+- Test the 5 new articles in RAG guidance:
+  - GREEN path: diarrhoea/vomiting → ORS guidance from `Diarrhoea_and_vomiting`
+  - AMBER path: broken arm → immobilize guidance from `broken_Arm`
+  - RED path: acid splash on face → flush-with-water guidance from `acid_and_chemical_burns`
+  - AMBER path: dog bite → wound-wash + rabies-risk guidance from `animal_and_Human_Bites`
+  - GREEN/AMBER path: dizziness → positional guidance from `Diziness`
+- Carry-forwards from Session 25: test new structured SUFFICIENT/CRITICAL JSON fields end-to-end; test SOAP agent 150-word limit; wire triage audit `AuditOutput` new fields into `cases.py`
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
