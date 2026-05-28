@@ -1,6 +1,4 @@
-Acute Respiratory Infections — Recognition and Action in Disaster Settings
-
-Acute respiratory infections (ARIs) — including pneumonia, bronchitis, and upper respiratory tract infections — are the second most common disease after diarrhoea in displaced populations following floods in Pakistan. Overcrowded shelters, exposure to cold and damp, smoke from cooking fires, and poor nutrition sharply increase the risk. Pneumonia in children under 5 is the leading infectious cause of child death worldwide.
+Acute Respiratory Infections — Recognition and Action
 
 SYMPTOMS TO WATCH FOR
 
@@ -64,6 +62,3 @@ Handwashing with soap prevents spread of respiratory viruses.
 Vaccination: ensure children are up to date on pneumococcal vaccine and the measles vaccine — measles dramatically increases pneumonia risk.
 Identify and prioritize care for malnourished children — malnutrition severely impairs immune defence against respiratory infection.
 
-HEPATITIS E — ALSO COMMON POST-FLOOD
-
-Hepatitis E is a waterborne liver infection that surges after floods. It causes jaundice (yellow eyes and skin), dark urine, fatigue, fever, and nausea. It is particularly dangerous in pregnant women (maternal mortality up to 20%). Any pregnant woman with jaundice in a flood-affected area must be taken to hospital immediately.

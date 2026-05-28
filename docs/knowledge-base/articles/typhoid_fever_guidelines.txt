@@ -1,48 +1,42 @@
-Typhoid Fever — Recognition and Emergency Action in Disaster Settings
+Typhoid Fever — Recognition and Emergency Action
 
-Typhoid fever is a severe bacterial infection caused by Salmonella Typhi. It is transmitted through food or water contaminated with human faeces. Typhoid is one of the most common infections in Pakistan following floods, when sewage systems are damaged and drinking water is contaminated. Large outbreaks occurred after the 2010 and 2022 Pakistan floods, affecting hundreds of thousands.
+RECOGNISE TYPHOID — DISTINCTIVE SIGNS
 
-SYMPTOMS
+Typhoid has specific signs that separate it from common stomach illnesses. Look for:
+- Fever that builds slowly over several days and stays high (39–40°C / 102–104°F) for a week or more without resolving
+- Slow heart rate despite a high fever (pulse is lower than expected — this is a key distinguishing feature)
+- Rose-coloured flat spots on the chest or abdomen (appear in some patients in the second week)
+- Severe fatigue and weakness out of proportion to other symptoms
+- Abdominal tenderness and bloating
+- The fever came on gradually over days, NOT suddenly
 
-Typhoid develops 1–3 weeks after infection. It does not develop overnight. Early recognition is important because untreated typhoid can be fatal.
+Unlike a typical stomach bug, typhoid fever does not resolve in 1–2 days — it worsens progressively if untreated.
 
-Week 1: Gradually rising fever (can reach 39–40°C / 102–104°F), headache, generalised body aches, fatigue, loss of appetite, and sometimes a dry cough.
+EMERGENCY WARNING SIGNS — GO TO HOSPITAL IMMEDIATELY
 
-Week 2: Sustained high fever, slow heart rate despite high temperature (a distinctive feature), abdominal pain and bloating, constipation or diarrhoea, and a rash of flat rose-coloured spots on the trunk (seen in some patients).
-
-Week 3 onward (if untreated): Risk of life-threatening complications including intestinal perforation (sudden severe abdominal pain and vomiting), internal bleeding, sepsis, and confusion.
-
-WHEN TO SEEK EMERGENCY CARE IMMEDIATELY
-
-Go to the nearest hospital without delay if the patient develops:
-Sudden severe abdominal pain or rigidity of the abdomen — this may indicate intestinal perforation, a surgical emergency.
-Vomiting blood or passing blood in stools.
-High fever with confusion, delirium, or loss of consciousness.
-Severe weakness and inability to eat or drink — risk of collapse.
-Seizures.
+Call for help or go to the nearest hospital without delay if any of the following appear:
+- Sudden severe abdominal pain or a rigid, board-hard abdomen — indicates possible intestinal perforation (surgical emergency)
+- Blood in stools or vomiting blood
+- High fever with confusion, delirium, or unconsciousness
+- Seizures or convulsions
+- Complete inability to take any fluids — risk of collapse
 
 IMMEDIATE ACTIONS BEFORE REACHING HOSPITAL
 
-Keep the patient lying down and resting.
-Encourage fluid intake (oral rehydration salts / ORS, clean boiled water, or clear fluids) if conscious and not vomiting — typhoid causes significant fluid loss.
-Reduce fever with paracetamol. Do not use aspirin or ibuprofen — these can increase risk of bleeding.
-Do not give antidiarrhoeals (like loperamide) — these trap bacteria in the gut.
+- Keep the patient lying flat and resting — no physical exertion
+- Give oral rehydration salts (ORS) or clean boiled water in small, frequent sips if the patient is conscious and can swallow
+- Give paracetamol to reduce fever — do NOT give aspirin or ibuprofen (increases bleeding risk)
+- Do NOT give any medicine to stop loose stools — this traps the bacteria inside the gut
 
-TREATMENT
+PREVENTION IN DISASTER-AFFECTED AREAS
 
-Typhoid is treated with antibiotics. A doctor will prescribe the appropriate antibiotic based on local resistance patterns. In Pakistan, fluoroquinolone resistance is common; azithromycin or ceftriaxone may be prescribed. Severely ill patients require hospital admission and intravenous antibiotics.
-
-Do not self-medicate with antibiotics — the wrong antibiotic can mask symptoms and lead to delayed diagnosis or resistance.
-
-PREVENTION IN FLOOD-AFFECTED AREAS
-
-Drink only boiled or bottled water with unbroken seals.
-Wash hands with soap and water before eating and after using the toilet.
-Avoid eating raw vegetables, salads, and unpeeled fruit from street vendors.
-Avoid ice in drinks unless you know it is made from safe water.
-Typhoid vaccination is available and recommended for individuals in endemic and flood-affected areas.
-Report suspected typhoid cases to the nearest relief medical team — rapid containment prevents outbreak spread.
+- Drink only boiled water or sealed bottled water — never untreated flood water
+- Wash hands with soap before eating and after toilet use
+- Avoid raw vegetables, unpeeled fruit, and street food prepared with unclean water
+- Avoid ice in drinks unless made from safe water
+- Typhoid vaccination is recommended for people in flood-affected or endemic areas
+- Report any cluster of prolonged fever cases to the nearest medical relief team
 
 TYPHOID IN CHILDREN
 
-Children under 5 in Pakistan are at highest risk. A child with sustained high fever lasting more than 3 days without an obvious cause should be tested for typhoid. Do not wait for the rash or abdominal symptoms — seek care early.
+Children under 5 are at highest risk. A child with a high fever lasting more than 3 days without an obvious cause (such as a visible wound or cold) should be taken for medical assessment. Do not wait for other symptoms to appear — seek care early.

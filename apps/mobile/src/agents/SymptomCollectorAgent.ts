@@ -10,6 +10,7 @@ import {
   type MedicalFeatureVector,
 } from '../services/triage/TriageEngine';
 import type { ChatMessage as LLMChatMessage } from '../services/llm/LLMAdapter.interface';
+import { networkStore } from '../store/networkStore';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -175,28 +176,35 @@ export class SymptomCollectorAgent {
    *   Turn 2 (or when LLM emits CRITICAL JSON) → navigate with complete vector.
    */
   async sendMessage(userMessage: string): Promise<AgentResponse> {
-    // ── 1. Safety gate: check raw user input before touching the LLM ──────────
-    const userInputTrigger = detectCriticalSymptom(userMessage);
+    // ── 1. Safety gate ────────────────────────────────────────────────────────
+    // FULL mode: Gemini detects critical symptoms in any language (Urdu, Roman
+    // Urdu, English) via the system prompt — the English-only keyword list would
+    // miss non-English input, so skip it and let the LLM emit {"status":"CRITICAL"}.
+    // OFFLINE / DEGRADED: the SLM is less reliable at instruction-following, so
+    // keep the keyword gate as a deterministic safety net.
+    const networkMode = networkStore.getState().mode;
+    const userInputTrigger = networkMode !== 'FULL'
+      ? detectCriticalSymptom(userMessage)
+      : null;
 
     // Always append user message to history so the LLM has full context
     this.conversationHistory.push({ role: 'user', content: userMessage });
 
     if (userInputTrigger && !this._criticalMode) {
-      // First critical symptom detected — enter critical mode.
-      // We do NOT return immediately; we call the LLM in critical mode so it
-      // can ask 2 focused follow-up questions before we navigate away.
       this._criticalMode = true;
       this._criticalTrigger = userInputTrigger;
     }
 
     // ── 2. RAG augmentation ────────────────────────────────────────────────────
     const queryText = this._criticalTrigger ?? userMessage;
-    const ragResults = await queryKnowledgeBase(queryText, 1);
-    const ragItem = ragResults[0];
-    // Only inject into the LLM context when the chunk is genuinely relevant —
-    // irrelevant context degrades response quality more than no context at all.
-    const llmRagContext =
-      ragItem && ragItem.score >= LLM_RAG_MIN_SCORE ? ragItem.content : undefined;
+    const ragResults = await queryKnowledgeBase(queryText, 3);
+    // Filter by score threshold then join up to 3 chunks so the LLM receives
+    // guidance from multiple articles (e.g. WHO + NHS + Healthline) when all
+    // are relevant, not just the single top hit.
+    const relevantChunks = ragResults.filter(r => r.score >= LLM_RAG_MIN_SCORE);
+    const llmRagContext = relevantChunks.length > 0
+      ? relevantChunks.map(r => r.content).join('\n\n---\n\n')
+      : undefined;
 
     const messagesForLLM: LLMChatMessage[] = this.conversationHistory.map(
       (entry, idx) => {
