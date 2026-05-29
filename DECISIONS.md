@@ -2885,7 +2885,7 @@ npx expo start --clear
 - **Date:** 2026-05-27
 - **Decision:** Always set `$env:REACT_NATIVE_PACKAGER_HOSTNAME = "192.168.18.34"` before running `npx expo start` on this machine.
 - **Reason:** The PC has WSL, VirtualBox, and Hyper-V virtual adapters alongside Wi-Fi. Expo's IP auto-detection picks a virtual adapter IP that the phone cannot reach, making the QR code useless. Pinning to the Wi-Fi IP fixes it permanently.
-- **Rejected alternative:** `--tunnel` via ngrok — requires `@expo/ngrok` package and an up-to-date ngrok binary (≥ 3.20.0); free-tier winget installation ships 3.3.1 which is rejected by ngrok servers.
+- **Note:** ngrok tunnel is now documented as a separate workaround in Session 27 (DEC-036) for bypassing router AP isolation. For Metro bundler IP, still use `REACT_NATIVE_PACKAGER_HOSTNAME`. For API URL, update `.env` with the ngrok URL.
 - **Status:** Final
 
 ---
@@ -2910,6 +2910,223 @@ npx expo start --clear
   - AMBER path: dog bite → wound-wash + rabies-risk guidance from `animal_and_Human_Bites`
   - GREEN/AMBER path: dizziness → positional guidance from `Diziness`
 - Carry-forwards from Session 25: test new structured SUFFICIENT/CRITICAL JSON fields end-to-end; test SOAP agent 150-word limit; wire triage audit `AuditOutput` new fields into `cases.py`
+
+---
+
+## Session 27 — 2026-05-29
+
+### Goal
+Fix two live-device bugs: (1) post-triage guidance showing the wrong article and wrong section, (2) reports not being transmitted to the server even on WiFi. Also standardize all knowledge-base articles to a consistent format and implement the full LLM-based article routing pipeline.
+
+---
+
+### Root Cause Analysis — Guidance Bug
+
+Two separate failure modes were identified:
+
+**Failure 1 — Wrong article retrieved (BM25 keyword matching failure):**
+The previous RAG pipeline used BM25 keyword search with a single keyword (triggered keyword or chief complaint) as the query. When the patient described malaria symptoms in Roman Urdu ("bukhar, nausea, sweating, chills"), BM25 scored the Leptospirosis article higher because both diseases share the same symptom vocabulary. BM25 has no semantic understanding and cannot distinguish diseases from overlapping symptom descriptions. Roman Urdu input made keyword matching structurally impossible.
+
+**Failure 2 — Wrong section returned (even when the right article was found):**
+Articles were chunked by character count (RecursiveCharacterTextSplitter, 512 chars). The "RECOGNIZING MALARIA" section scored highest for a malaria symptoms query because it contains the exact patient symptom words. The "WHAT TO DO WHILE WAITING" section — which has the actionable guidance — contains different vocabulary (paracetamol, ORS, cool cloth) and scored low. There was no mechanism to prefer action-type chunks.
+
+---
+
+### What was built
+
+#### 1. Article standardisation (all 30 articles)
+
+All articles rewritten to a consistent format with exactly these section headers:
+
+```
+[CONDITION NAME] — First Aid Guide
+
+TOPIC: [disease/condition keywords for LLM routing]
+
+RECOGNIZING [CONDITION]:
+[symptom list]
+
+WHEN TO SEEK EMERGENCY CARE:
+[red flags requiring hospital]
+
+WHAT TO DO WHILE WAITING:
+[numbered first-aid action steps — THIS is shown to the patient]
+
+DO NOT:
+[common dangerous mistakes]
+
+PREVENTION:
+[optional]
+```
+
+8 raw NHS/WHO paste articles were fully rewritten. 2 near-duplicate articles were merged (`Diarrhoea_and_vomiting` merged into `Diarrhoeal_disease_guidelines`; `who_flood_aftermyths_guidelines` merged into `who_flood_guidelines`). Result: 30 articles total.
+
+**Why `TOPIC:` line matters:** The LLM routing endpoint reads this line to build the article list it presents to the LLM. The LLM picks 1–2 matching topics from this list. The TOPIC line is stripped before chunking (not stored as a RAG chunk).
+
+#### 2. Section-type tagging (Strategy 2)
+
+`ingestion_worker.py` was rewritten to chunk by ALL-CAPS section headers instead of character count. Each chunk is tagged with `section_type`:
+
+| Header pattern | section_type |
+|---|---|
+| `WHAT TO DO WHILE WAITING:`, `IMMEDIATE TREATMENT:`, `EMERGENCY ACTIONS:` | `action` |
+| `WHEN TO SEEK EMERGENCY CARE:`, `GO TO HOSPITAL:` | `emergency` |
+| `RECOGNIZING [CONDITION]:`, `SYMPTOMS:` | `symptoms` |
+| `PREVENTION:`, `PREVENTING:` | `prevention` |
+| Everything else | `general` |
+
+Alembic migration 0004 added `section_type` (String, nullable) to `knowledge_chunks` and `topic_keywords` (Text, nullable) to `knowledge_documents`.
+
+`rag_service.py` updated: `query_knowledge_base` now fetches `top_k × 4` results and prefers `action`/`prevention` chunks. New `query_by_document_ids` function returns only action/prevention chunks from specific documents.
+
+`index_exporter.py` updated: exports `section_type` in `knowledge_meta.json` so the mobile app section preference works after a knowledge base sync.
+
+`build_baseline_index.py` updated: uses the same section-aware chunker; outputs `section_type` in `knowledge_meta.json`.
+
+#### 3. LLM-based disease routing (Strategy 1)
+
+New endpoint: `POST /api/v1/knowledge/route`
+
+Flow:
+1. Receives `conversation_summary` + `triage_level` from mobile
+2. Fetches all active document `topic_keywords` from DB
+3. Calls Groq LLM with conversation summary + article topic list
+4. LLM picks 1–2 matching article slugs from the constrained list
+5. Calls `query_by_document_ids` to retrieve `action`-type chunks from matched articles
+6. Returns chunks with citation metadata
+7. Falls back to generic ORS/paracetamol/call-1122 guidance if no article matches
+
+**Why constrained list:** Instead of asking the LLM to freely generate a disease name (which can hallucinate), it picks from the actual article topics in the database. Output is always a valid article reference. Language-agnostic — works on English, Urdu, Roman Urdu, or mixed.
+
+New function in mobile: `routeGuidance(conversationSummary, triageLevel)` in `queryGuidance.ts`:
+- FULL mode → calls `/route` endpoint (LLM routing)
+- OFFLINE/DEGRADED mode → falls back to `localRAG.query(conversationSummary, 1)` (BM25 over full summary)
+- No match anywhere → returns generic guidance text
+
+`ChatScreen._handlePostTriage` and `TriageResultScreen` now call `routeGuidance()` instead of `queryGuidance()`.
+
+`queryGuidance()` (used by `SymptomCollectorAgent` for emergency bar context) is unchanged — it still uses BM25/keyword query because LLM round-trips would add too much latency per chat turn.
+
+#### 4. LocalRAG section_type validation
+
+`LocalRAG._loadFromDocumentDirectory` now validates that loaded JSON has `section_type` fields. Old cached JSON without `section_type` is rejected and the bundled `knowledge_meta.json` (built with section-type tagging) is used instead. Without this fix, old cached files from previous downloads would make section preference silently fail.
+
+#### 5. Transmission fix — Buffer → ArrayBuffer
+
+`_trySend` and `flushQueue` in `TransmissionService.ts` now convert `Buffer → ArrayBuffer` via `.buffer.slice()` before passing to `fetch`. React Native's native networking layer handles `ArrayBuffer` reliably across all Android/iOS versions. `Buffer` (a Uint8Array subclass) can silently serialize as an empty or wrong body on some builds.
+
+---
+
+### Root Cause Analysis — Transmission Bug
+
+Two issues found:
+
+**Issue A — Router AP isolation:** The WiFi router has client isolation (AP isolation) enabled, which blocks device-to-device traffic on the same LAN. The phone and PC are both on the same router but the router prevents them from communicating. Confirmed by: PC can reach `http://192.168.18.34:3001` from itself, but phone cannot.
+
+**Issue B — Binary body encoding:** `Buffer` passed as a `fetch` body may serialize incorrectly in some React Native versions. Fixed by converting to `ArrayBuffer` before the fetch call.
+
+---
+
+### ngrok setup (run every session when testing on physical device)
+
+The PC's router has AP isolation. Until it is disabled in the router admin page, use ngrok as a tunnel each testing session.
+
+**Step 1 — Start the tunnel (in a dedicated terminal, keep it running):**
+```powershell
+ngrok http 3001
+```
+Wait for the `Forwarding` line to appear. Copy the `https://` URL (e.g. `https://driller-encroach-specks.ngrok-free.dev`).
+
+**Step 2 — Update the API URL in `.env`:**
+```
+# apps/mobile/.env
+EXPO_PUBLIC_API_BASE_URL=https://YOUR-NGROK-URL.ngrok-free.dev
+```
+
+**Step 3 — Restart Metro with `--clear` to bake in the new URL:**
+```powershell
+$env:EXPO_NO_DOCTOR = "1"
+$env:REACT_NATIVE_PACKAGER_HOSTNAME = "192.168.18.34"
+npx expo start --clear
+```
+
+**Note:** The ngrok free-tier URL changes on every `ngrok http 3001` restart. Repeat all three steps each session. For a permanent fix, log into your router admin page and disable "AP Isolation" or "Client Isolation" in the wireless settings — after that, the LAN IP `http://192.168.18.34:3001` works directly and ngrok is not needed.
+
+---
+
+### Decisions recorded
+
+#### DEC-032 — LLM-based disease routing via constrained article topic list
+- **Date:** 2026-05-29
+- **Decision:** The `/route` endpoint asks the Groq LLM to select 1–2 articles from the TOPIC keyword list extracted from the database, rather than freely generating a disease name.
+- **Reason:** Free disease name generation can hallucinate. Constraining the LLM to pick from the actual article list ensures the output is always a valid DB reference. Language-agnostic — understands Roman Urdu, Urdu, English, and mixed input.
+- **Rejected alternative:** BM25 keyword matching — structurally fails for Roman Urdu/mixed language input; also fails when multiple diseases share symptom vocabulary.
+- **Status:** Final
+
+#### DEC-033 — Section-aware chunking replaces character-count chunking
+- **Date:** 2026-05-29
+- **Decision:** `ingestion_worker.py` and `build_baseline_index.py` now split articles at ALL-CAPS section headers, not at 512-character boundaries. Each chunk is tagged `section_type`.
+- **Reason:** Character-count chunking returned the "RECOGNIZING" symptom section as guidance because it contained patient symptom words. Section-aware chunking guarantees that "WHAT TO DO WHILE WAITING" chunks are always available and preferred.
+- **Rejected alternative:** RecursiveCharacterTextSplitter — ignores content semantics, returns wrong sections.
+- **Status:** Final
+
+#### DEC-034 — LocalRAG rejects cached JSON without section_type
+- **Date:** 2026-05-29
+- **Decision:** `LocalRAG._loadFromDocumentDirectory` validates `section_type` presence. Old cached JSON is rejected and the bundled JSON (with section_type) is loaded instead.
+- **Reason:** Without this check, old downloaded `knowledge_meta.json` files silently bypass section preference, causing the symptom-recognition section to be returned as guidance.
+- **Status:** Final
+
+#### DEC-035 — Buffer → ArrayBuffer for React Native fetch binary body
+- **Date:** 2026-05-29
+- **Decision:** `TransmissionService._trySend` and `flushQueue` convert `Buffer` to `ArrayBuffer` via `.buffer.slice()` before passing as the fetch body.
+- **Reason:** React Native's native networking module handles `ArrayBuffer` reliably. `Buffer` (a polyfill Uint8Array subclass) can silently send an empty or malformed body on some Android builds.
+- **Status:** Final
+
+#### DEC-036 — ngrok as LAN bypass for router AP isolation
+- **Date:** 2026-05-29
+- **Decision:** Use `ngrok http 3001` to tunnel the API server when the router's AP isolation prevents phone-to-PC LAN traffic.
+- **Reason:** The router has AP isolation enabled which blocks device-to-device WiFi traffic. Until the router is reconfigured, ngrok provides a stable HTTPS tunnel. The free-tier URL changes on each restart (run all three ngrok steps above each session).
+- **Permanent fix:** Disable "AP Isolation" or "Client Isolation" in the router admin page.
+- **Status:** Workaround (permanent fix requires router admin access)
+
+---
+
+### Articles added/modified this session
+
+| Action | Article |
+|---|---|
+| Rewritten (NHS paste → standard) | `acid_and_chemical_burns`, `animal_and_Human_Bites`, `broken_Arm`, `Diziness`, `wound_management_guidelines` |
+| Merged + rewritten | `who_flood_guidelines` (merged `who_flood_aftermyths` into it) |
+| Deleted (merged into Diarrhoeal) | `Diarrhoea_and_vomiting` |
+| Section headers standardized + TOPIC added | All remaining 24 articles |
+
+Final state: 30 articles, 270 server-side chunks (section-typed), 184 mobile baseline chunks (section-typed).
+
+---
+
+### Server/Celery restart procedure (needed after code changes)
+
+When code changes are made to `knowledge_base.py`, `ingestion_worker.py`, or `index_exporter.py`, the server and Celery must be restarted and articles re-ingested:
+
+```powershell
+# 1. Restart server (new terminal)
+cd apps/api && python run_server.py
+
+# 2. Restart Celery (new terminal)
+cd apps/api && python run_celery.py
+
+# 3. Re-ingest all articles to apply new section-type tagging
+cd docs/knowledge-base && python reupload_all.py
+```
+
+---
+
+### What is next
+- Test the full guidance pipeline end-to-end on physical device: complete an AMBER assessment with malaria-like symptoms → verify dashboard receives the case AND guidance shows "WHAT TO DO WHILE WAITING" content from the malaria article
+- Test RED path (critical keyword, emergency bar, ChatScreen inline transmission)
+- Test GREEN path (guidance shows, no transmission)
+- If router AP isolation cannot be disabled: consider upgrading ngrok to a paid plan for a stable URL, or use localtunnel (`npx --yes localtunnel --port 3001`) as a free alternative
+- Carry-forwards: wire new `AuditOutput` fields into `cases.py`; test SOAP agent 150-word limit; test structured SUFFICIENT/CRITICAL JSON fields
 
 ---
 
