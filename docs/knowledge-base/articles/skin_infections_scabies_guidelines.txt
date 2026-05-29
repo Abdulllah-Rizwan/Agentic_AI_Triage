@@ -1,52 +1,69 @@
-Skin Infections and Scabies — Recognition and Treatment
+Skin Infections and Scabies — First Aid Guide
 
-SCABIES — RECOGNITION AND TREATMENT
+TOPIC: scabies, skin infection, itching, khujli, wound infection, impetigo, ringworm, fungal skin
 
-Scabies is caused by the human itch mite (Sarcoptes scabiei), which burrows into the skin. It spreads rapidly in crowded conditions through prolonged skin-to-skin contact and sharing of bedding, towels, and clothing.
+RECOGNIZING SKIN INFECTIONS:
 
-Symptoms:
-Intense itching, typically worse at night.
-A rash of small red bumps, blisters, or pimples, most commonly on: the webbing between fingers and toes, wrists, elbows, armpits, waist, buttocks, and in men, the genitals.
-Thin, irregular burrow lines visible in the skin (small greyish-white or skin-coloured lines about 1 cm long).
-Crusted or thick scaly patches in severe cases (crusted scabies) — this form is highly contagious.
+Scabies:
+- Intense itching, typically worse at night
+- A rash of small red bumps, blisters, or pimples on: webbing between fingers, wrists, elbows, armpits, waist, buttocks
+- Thin, irregular burrow lines visible in the skin (small greyish-white lines about 1 cm long)
+- Spreads rapidly in crowded conditions through prolonged skin-to-skin contact
 
-Treatment of individuals:
-Apply permethrin 5% cream (first-line treatment) to all skin from neck to toes at night. Leave on for 8–14 hours then wash off. Repeat after 1 week.
-Alternative: benzyl benzoate 25% solution — apply from neck down, leave overnight, wash off. Repeat in 24 hours and again at 1 week.
-Treat all members of the household and close contacts at the same time — even those without symptoms.
-Wash all clothing, bedding, and towels in hot water (above 60°C). Items that cannot be washed should be sealed in a plastic bag for 3 days.
+Infected wound (pyoderma):
+- Increasing redness spreading beyond wound edges, warmth, swelling
+- Pus or discharge, foul smell
+- Fever, red streak spreading up the arm or leg from the wound (emergency sign)
 
-Mass treatment in camps: WHO recommends mass drug administration using ivermectin (oral, weight-based dose) for outbreak control in displaced settings.
+Fungal skin infection (tinea/ringworm):
+- Ring-shaped rash with a clearer center and raised scaly edges
+- Itching, cracking, and peeling of skin between toes
+- Common after prolonged skin contact with water
 
-INFECTED WOUNDS AND CUTS — PYODERMA
+Impetigo (children):
+- Small blisters that break and leave a honey-coloured crusty sore, typically on the face and around nose and mouth
+- Highly contagious
 
-Floodwater contamination of wounds leads rapidly to bacterial infection (pyoderma). Signs of wound infection: increasing pain, redness spreading beyond the wound edges, warmth, swelling, pus or discharge, foul smell, fever.
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital immediately if:
+- A red streak is spreading from the wound up the arm or leg (lymphangitis — infection entering the bloodstream)
+- Wound has a foul odour with black or dark tissue (gangrene)
+- Patient has high fever with a skin infection
+- Widespread impetigo covering large areas of skin
+- Suspected scabies outbreak in a relief camp — requires mass treatment coordination
 
-Immediate wound care:
-Wash the wound gently with clean (boiled and cooled) water and soap.
-Cover with a clean dressing. Change daily.
-If infected: seek medical care for oral antibiotic treatment (amoxicillin or flucloxacillin typically prescribed).
-If the person develops fever, a red streak spreading up the arm or leg from the wound (cellulitis or lymphangitis), or if the wound has a foul odour with black tissue (gangrene), seek emergency hospital care immediately.
+WHAT TO DO WHILE WAITING:
 
-FUNGAL SKIN INFECTIONS — TINEA (RINGWORM)
+For scabies:
+1. Apply permethrin 5% cream (first-line treatment) to all skin from neck to toes at night. Leave on for 8–14 hours then wash off. Repeat after 1 week.
+2. Alternative: benzyl benzoate 25% solution — apply from neck down, leave overnight, wash off. Repeat in 24 hours and again at 1 week.
+3. Treat all household members and close contacts at the same time — even those without symptoms.
+4. Wash all clothing, bedding, and towels in hot water (above 60°C). Items that cannot be washed should be sealed in a plastic bag for 3 days.
+5. Report to camp health coordinator for mass treatment if more than one person is affected.
 
-Prolonged skin contact with water and humid conditions promote fungal infections. Common forms: tinea pedis (athlete's foot — between the toes), tinea corporis (ringworm on the body), and tinea cruris (jock itch — groin area).
+For infected wounds:
+1. Wash the wound gently with clean (boiled and cooled) water and soap.
+2. Cover with a clean dressing. Change daily.
+3. Seek medical care for oral antibiotic treatment.
 
-Symptoms: ring-shaped rash with a clearer center and raised scaly edges, itching, cracking, and peeling of skin between toes.
+For fungal skin infections (tinea/ringworm):
+1. Apply topical antifungal cream (clotrimazole or miconazole) twice daily for 2–4 weeks.
+2. Keep the affected area dry. Wear open footwear if possible.
 
-Treatment: topical antifungal cream (clotrimazole or miconazole) applied twice daily for 2–4 weeks. Keep the affected area dry. Wear open footwear if possible.
+For impetigo in children:
+1. Wash the sores gently with clean water.
+2. Apply mupirocin antibiotic ointment if available.
+3. Keep the child's hands clean and trim fingernails to prevent scratching and spread.
+4. Seek medical care for widespread impetigo.
 
-IMPETIGO (CHILDREN)
+DO NOT:
+- Do not share towels, combs, clothing, or bedding — scabies and impetigo spread through sharing.
+- Do not ignore a red streak spreading from a wound — this is a blood poisoning emergency.
+- Do not apply herbal remedies to infected wounds.
 
-Impetigo is a highly contagious bacterial skin infection common in children in disaster settings. It starts as small blisters that break and leave a honey-coloured crusty sore, typically on the face and around the nose and mouth.
-
-Wash the sores gently with clean water. Apply mupirocin antibiotic ointment if available. Oral antibiotics may be needed for widespread impetigo. Keep the child's hands clean and trim fingernails to prevent scratching and spread.
-
-PREVENTION IN RELIEF CAMPS
-
-Provide soap and adequate clean water for personal hygiene — handwashing and daily bathing reduce skin infection dramatically.
-Do not share towels, combs, clothing, or bedding.
-Inspect skin of family members regularly, particularly children.
-Ensure wound dressings are changed daily and covered.
-Wear footwear even in temporary shelter areas — waterlogged floors harbour bacteria and fungi.
-Report suspected scabies outbreaks to the camp health coordinator immediately for mass treatment response.
+PREVENTION IN RELIEF CAMPS:
+- Provide soap and adequate clean water for daily personal hygiene.
+- Inspect skin of family members regularly, particularly children.
+- Ensure wound dressings are changed daily and covered.
+- Wear footwear even in temporary shelter areas — waterlogged floors harbour bacteria and fungi.
+- Report suspected scabies outbreaks to the camp health coordinator immediately for mass treatment response.

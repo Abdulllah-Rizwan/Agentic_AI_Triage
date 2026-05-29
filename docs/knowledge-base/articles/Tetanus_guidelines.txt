@@ -1,10 +1,12 @@
-Tetanus — Field Recognition and Wound Care
+Tetanus — First Aid Guide
 
-WHEN TO SUSPECT TETANUS RISK:
-Any wound caused by: soil, dust, mud, manure, rusty metal, animal bites, burns, or dirty objects.
-Symptoms appear 3–21 days after the wound — most within 14 days.
+TOPIC: tetanus, lockjaw, tetanus wound, rusty nail, dirty wound, jaw stiffness
 
-EARLY WARNING SIGNS OF TETANUS:
+RECOGNIZING TETANUS RISK AND SYMPTOMS:
+High-risk wounds (tetanus thrives in these):
+Any wound caused by soil, dust, mud, manure, rusty metal, animal bites, burns, or dirty objects.
+
+Early warning signs of tetanus (appear 3–21 days after the wound — most within 14 days):
 - Jaw stiffness or difficulty opening the mouth ("lockjaw")
 - Neck stiffness
 - Difficulty swallowing
@@ -12,27 +14,36 @@ EARLY WARNING SIGNS OF TETANUS:
 - Fever and sweating
 - Headache
 
-IN NEWBORNS:
+In newborns (neonatal tetanus):
 - Inability to suck or breastfeed in first 28 days of life
 - Excessive crying
 - Muscle rigidity or spasms
 Neonatal tetanus is a medical emergency — take to hospital immediately.
 
-WHAT TO DO FOR A HIGH-RISK WOUND:
+WHEN TO SEEK EMERGENCY CARE:
+If any tetanus symptoms appear — go to hospital immediately. There is no home treatment for tetanus. Hospital care is required: antitoxin injection, muscle relaxants, wound debridement, airway support.
+
+WHAT TO DO WHILE WAITING:
+
+For a high-risk wound (before symptoms appear):
 1. Clean the wound thoroughly — wash with clean water and soap for at least 5 minutes.
-2. Remove visible dirt, rust, or foreign material by flushing with water (do not scrub deeply).
+2. Remove visible dirt, rust, or foreign material by flushing with water. Do not scrub deeply.
 3. Do NOT close or bandage the wound tightly — tetanus thrives in sealed wounds without oxygen.
 4. Go to a health worker or hospital for:
    - Tetanus toxoid vaccination booster (if last dose was more than 5 years ago)
    - Tetanus immunoglobulin (TIG) injection if wound is severe and person has never been vaccinated
    - Antibiotic prescription (metronidazole or penicillin — only prescribed by medical staff)
+5. Continue monitoring for symptoms for up to 21 days.
 
-IF TETANUS SYMPTOMS APPEAR — GO TO HOSPITAL IMMEDIATELY:
-There is no home treatment for tetanus. Hospital care is required:
-- Antitoxin injection
-- Muscle relaxants
-- Wound debridement
-- Airway support
+If tetanus symptoms have already appeared:
+1. Go to hospital immediately — do not attempt any home treatment.
+2. Keep the patient calm and in a quiet, dark area — spasms are triggered by light, noise, and touch.
+3. Do not give food or water if swallowing is impaired.
+
+DO NOT:
+- Do not close a high-risk wound tightly — tetanus bacteria produce toxin in low-oxygen (sealed) environments.
+- Do not attempt to treat tetanus symptoms at home — hospitalization and antitoxin are required.
+- Do not delay seeking a tetanus booster after any dirty wound — vaccine protection takes 48 hours to activate.
 
 PREVENTION — PROTECT NEWBORNS:
 - Deliver babies with a clean blade to cut the cord.

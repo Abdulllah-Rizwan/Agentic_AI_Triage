@@ -1,4 +1,6 @@
-Cholera — Field Recognition and Treatment
+Cholera — First Aid Guide
+
+TOPIC: cholera, rice water diarrhea, cholera watery diarrhea, heza
 
 RECOGNIZING CHOLERA:
 - Sudden onset of profuse watery diarrhoea (described as "rice water" stools — pale, watery, no blood)
@@ -7,7 +9,16 @@ RECOGNIZING CHOLERA:
 - Muscle cramps (from fluid and salt loss)
 - Symptoms appear 12 hours to 5 days after drinking contaminated water
 
-IMMEDIATE TREATMENT — ORS (ORAL REHYDRATION SOLUTION):
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital immediately if:
+- Patient cannot drink or keep fluids down
+- Diarrhoea is more than 10 times per hour
+- Signs of severe dehydration: no urine in 6+ hours, sunken eyes, cannot stand
+- Patient is confused, very weak, or unconscious
+- Child is severely lethargic or unable to cry
+Severe cases need intravenous fluids — this cannot be done at home.
+
+WHAT TO DO WHILE WAITING:
 Most cholera cases can be treated with ORS alone.
 1. If ORS packets are available: dissolve 1 packet in 1 litre of clean water. Give continuously.
 2. If ORS is not available — make home ORS: 1 litre clean water + 6 teaspoons sugar + 1/2 teaspoon salt. Stir until dissolved.
@@ -15,13 +26,10 @@ Most cholera cases can be treated with ORS alone.
 4. Children under 5: give small sips frequently — 5 ml every 1–2 minutes.
 5. Continue ORS even if the patient is vomiting — give small amounts slowly.
 
-WHEN TO GO TO HOSPITAL IMMEDIATELY:
-- Patient cannot drink or keep fluids down
-- Diarrhoea is more than 10 times per hour
-- Signs of severe dehydration: no urine in 6+ hours, sunken eyes, cannot stand
-- Patient is confused, very weak, or unconscious
-- Child is severely lethargic or unable to cry
-Severe cases need intravenous fluids — this cannot be done at home.
+DO NOT:
+- Do not stop ORS if vomiting occurs — reduce the amount and give more frequently.
+- Do not give antibiotics without medical advice — they are only needed for severe cases.
+- Do not allow others to drink from the same water source until it is treated.
 
 PREVENTING SPREAD:
 - Wash hands with soap and water after any contact with the patient or their waste.
@@ -30,8 +38,3 @@ PREVENTING SPREAD:
 - Disinfect any surface or clothing that contacted diarrhoea using bleach solution (1 part bleach to 9 parts water).
 - Do not eat raw food, uncooked shellfish, or food prepared without clean water.
 - Breastfeed infants — breast milk does not transmit cholera and protects the child.
-
-DO NOT:
-- Give antibiotics without medical advice — they are only needed for severe cases.
-- Stop ORS if vomiting occurs — reduce the amount and give more frequently.
-- Allow others to drink from the same water source until it is treated.

@@ -1,39 +1,38 @@
-Dengue Fever — Recognition and First Aid
+Dengue Fever — First Aid Guide
 
-RECOGNIZE DENGUE FEVER:
+TOPIC: dengue, dengue fever, dengue bukhar, breakbone fever, mosquito fever
+
+RECOGNIZING DENGUE FEVER:
 - Sudden high fever (up to 41°C / 106°F) starting 4–10 days after a mosquito bite
 - Severe headache behind the eyes
 - Severe joint and muscle pain ("breakbone fever")
 - Skin rash appearing 2–5 days after fever begins
 - Nausea and vomiting
 
-WARNING SIGNS OF SEVERE DENGUE (seek hospital immediately):
+WHEN TO SEEK EMERGENCY CARE:
+Seek hospital immediately if any warning sign appears:
 - Belly pain or tenderness
 - Vomiting 3 or more times in 24 hours
 - Bleeding from nose or gums
 - Blood in vomit or stool (black or red)
 - Extreme fatigue, restlessness, or confusion
 - Fever drops but condition worsens — this is the most dangerous period (days 3–7)
+- Skin turns pale, cold, or shows bruising or red spots not fading with pressure
+- Fever persists beyond 7 days
 
-WHAT TO DO AT HOME (mild cases only):
+WHAT TO DO WHILE WAITING:
 1. Rest completely.
 2. Drink plenty of fluids — water, ORS, coconut water, or clear broth. At least 2–3 litres per day.
 3. Use paracetamol (acetaminophen) only to reduce fever and pain.
 4. Monitor temperature and symptoms every few hours.
+5. Watch for warning signs listed above — if any appear, go to hospital immediately.
 
 DO NOT:
-- Give aspirin or ibuprofen — they increase bleeding risk and can make dengue worse.
-- Allow the patient to get up and move around more than necessary.
-- Dismiss worsening symptoms as "just flu."
+- Do not give aspirin or ibuprofen — they increase bleeding risk and can make dengue much worse.
+- Do not allow the patient to get up and move around more than necessary.
+- Do not dismiss worsening symptoms — dengue can become severe within hours.
 
-GO TO HOSPITAL IMMEDIATELY IF:
-- Any warning signs above appear
-- Fever persists beyond 7 days
-- Patient cannot keep fluids down
-- Patient becomes very drowsy or difficult to wake
-- Skin turns pale, cold, or shows bruising or red spots not fading with pressure
-
-PREVENTION — REDUCE MOSQUITO EXPOSURE:
+PREVENTION:
 - Use mosquito repellent on all exposed skin.
 - Wear long sleeves and long trousers, especially during dawn and dusk.
 - Sleep under mosquito nets.

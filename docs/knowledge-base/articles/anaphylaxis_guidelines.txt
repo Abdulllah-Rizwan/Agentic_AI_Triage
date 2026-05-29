@@ -1,65 +1,45 @@
 Anaphylaxis — Severe Allergic Reaction Emergency
 
-Anaphylaxis is a severe, life-threatening allergic reaction that can cause death within minutes if not treated. In disaster settings, triggers include insect stings (bees, wasps), snake bites, unfamiliar food, and medications given during relief efforts. It requires immediate emergency action.
+TOPIC: anaphylaxis, severe allergic reaction, allergy, allergic shock, bee sting allergy, throat swelling
 
-RECOGNIZING ANAPHYLAXIS
+RECOGNIZING ANAPHYLAXIS:
+Anaphylaxis develops rapidly — usually within minutes of exposure to a trigger. Look for symptoms in two or more body systems at the same time:
+- Skin: sudden hives (raised itchy welts), widespread redness and flushing, swelling of the face, lips, tongue, or throat
+- Breathing: difficulty breathing, wheezing, noisy breathing, sensation of throat tightening, hoarse voice, stridor (high-pitched sound when inhaling)
+- Circulation: rapid weak pulse, sudden dizziness, fainting or loss of consciousness
+- Digestive: nausea, vomiting, severe abdominal cramps
+- Neurological: sudden severe anxiety, confusion, loss of consciousness
+Throat swelling is the most immediately life-threatening symptom — it can block the airway within minutes.
 
-Anaphylaxis develops rapidly — usually within minutes of exposure to the trigger. Symptoms involve two or more body systems at the same time.
+WHEN TO SEEK EMERGENCY CARE:
+Anaphylaxis is always a medical emergency. Call Rescue 1122 or Edhi 115 immediately. State that the person is having a severe allergic reaction. All patients with suspected anaphylaxis must go to hospital even if they feel better — symptoms can return 8–72 hours later without re-exposure to the trigger.
 
-Skin and appearance: sudden hives (raised itchy welts), widespread redness and flushing, swelling of the face, lips, tongue, or throat, pale or bluish skin.
-
-Breathing: difficulty breathing, wheezing, noisy breathing, sensation of throat tightening or swelling, hoarse voice, stridor (high-pitched sound when inhaling).
-
-Circulation: rapid weak pulse, sudden drop in blood pressure, dizziness, fainting or loss of consciousness.
-
-Digestive: nausea, vomiting, severe abdominal cramps, diarrhoea.
-
-Neurological: sudden severe anxiety or sense of doom, confusion, loss of consciousness.
-
-Throat swelling is the most immediately life-threatening symptom — it can completely block the airway within minutes.
-
-CALL FOR EMERGENCY HELP IMMEDIATELY
-
-Anaphylaxis is always a medical emergency. Call Rescue 1122 or Edhi 115 immediately and state that the person is having a severe allergic reaction.
-
-IMMEDIATE FIRST AID WITHOUT EPINEPHRINE (Most Common Situation in Field)
-
-If epinephrine (adrenaline / EpiPen) is not available:
-
+WHAT TO DO WHILE WAITING:
+If epinephrine (adrenaline) is NOT available (most common situation in the field):
 1. Lay the person flat. If they are struggling to breathe, allow them to sit upright.
-2. If unconscious and not breathing, begin CPR immediately.
-3. Remove the trigger if identifiable and still present — for example, remove a stinger by scraping it out (do not pinch it with fingers), move away from the insect source.
-4. Loosen tight clothing, especially around the neck.
-5. Keep them calm and still. Do not give food or water.
-6. Monitor breathing and pulse continuously until emergency help arrives.
-7. If they lose consciousness and stop breathing, start CPR.
+2. Remove the trigger if still present — scrape out an insect stinger, move away from the insect source.
+3. Loosen tight clothing, especially around the neck.
+4. Keep them calm and still. Do not give food or water.
+5. Monitor breathing and pulse continuously.
+6. If they lose consciousness and stop breathing, begin CPR immediately.
 
-IF EPINEPHRINE (ADRENALINE) IS AVAILABLE
+If epinephrine (adrenaline) IS available:
+1. Inject into the outer thigh muscle — not in a vein, not in the buttock.
+2. Adults: 0.3–0.5 mg intramuscular. Children: 0.01 mg per kg body weight.
+3. A second dose can be given after 5–15 minutes if symptoms do not improve.
+4. Hospital care is still required even after epinephrine — it buys time, it is not a cure.
 
-Epinephrine injection is the only effective treatment for anaphylaxis.
-Inject into the outer thigh muscle (not in a vein, not in the buttock).
-In Pakistan, ampoules of 1:1000 adrenaline are available in most emergency kits. Dose for adults: 0.3–0.5 mg intramuscular. Dose for children: 0.01 mg per kg body weight.
-A second dose can be given after 5–15 minutes if symptoms do not improve.
-Epinephrine buys time — hospital care is still required even after epinephrine.
+DO NOT:
+- Do not give antihistamines (chlorphenamine) as the primary treatment — they are too slow and may give false reassurance.
+- Do not give aspirin or ibuprofen.
+- Do not leave the person alone.
+- Do not assume the reaction is over when symptoms improve — biphasic anaphylaxis means symptoms can return hours later.
 
-DO NOT
+ANAPHYLAXIS TRIGGERS IN PAKISTAN DISASTER SETTINGS:
+- Insect stings: bee and wasp stings become more common when hives are disturbed by floods or rescue operations.
+- Food allergies: relief food may contain allergens unfamiliar to the patient (nuts, dairy).
+- Medications: penicillin, aspirin, NSAIDs administered during mass treatment campaigns.
+- Snake venom: some venomous bites cause an anaphylactic response in addition to direct venom toxicity.
 
-Do not give antihistamines (chlorphenamine) as the primary treatment — they are too slow to stop anaphylaxis and may give false reassurance. They can be used as additional treatment after epinephrine.
-Do not give aspirin or ibuprofen.
-Do not leave the person alone.
-Do not assume the reaction is over when symptoms improve — biphasic anaphylaxis means symptoms can return 8–72 hours later without re-exposure to the trigger.
-
-AFTER APPARENT RECOVERY
-
-All patients with suspected anaphylaxis must go to hospital even if they feel better. Biphasic reactions (a second wave of symptoms hours later) occur in up to 20% of cases. Medical observation for at least 4–6 hours is required.
-
-ANAPHYLAXIS TRIGGERS IN PAKISTAN DISASTER SETTINGS
-
-Insect stings: bee and wasp stings become more common when hives are disturbed by floods or rescue operations.
-Food allergies: relief food may contain allergens unfamiliar to the patient (nuts, dairy).
-Medications: penicillin, aspirin, NSAIDs administered during mass treatment campaigns.
-Snake venom: some venomous bites cause an anaphylactic response in addition to direct venom toxicity.
-
-RECOGNIZING ANAPHYLAXIS IN CHILDREN
-
-Children may not be able to describe throat tightening. Look for: sudden excessive crying, refusal to eat, drooling (inability to swallow), rapid breathing, sudden pallor, and slumping or limpness. These in combination after a known exposure are warning signs of anaphylaxis.
+RECOGNIZING ANAPHYLAXIS IN CHILDREN:
+Children may not be able to describe throat tightening. Look for: sudden excessive crying, refusal to eat, drooling, rapid breathing, sudden pallor, and slumping or limpness — in combination after a known exposure, these are warning signs.

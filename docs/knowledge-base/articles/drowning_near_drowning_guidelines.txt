@@ -1,60 +1,54 @@
-Drowning and Near-Drowning — Emergency First Aid
+Drowning and Near-Drowning — First Aid Guide
 
-A person who appears to recover after submersion can deteriorate hours later due to secondary drowning — always take any near-drowning victim to hospital even if they seem well.
+TOPIC: drowning, near drowning, submersion, flood drowning, child in water
 
-RESCUING A DROWNING PERSON — RESCUER SAFETY FIRST
+RECOGNIZING DROWNING AND SECONDARY DROWNING:
+Active drowning: person struggling in water, arms out to sides, head back, mouth at water level. Children may simply go quiet — they cannot call for help while drowning.
 
-Do not jump into fast-moving or deep water unless you are a trained swimmer with rescue equipment. More rescuers die attempting untrained water rescues than victims.
+After rescue — secondary drowning warning signs (appear 1–24 hours after the incident even if the person walked away seemingly fine):
+- Increasing difficulty breathing or persistent coughing
+- Extreme fatigue or persistent sleepiness
+- Confusion or unusual behaviour
+- Chest pain
+- Bluish tinge to the lips or skin
 
-Safe rescue techniques (in order of preference):
-REACH — Extend a hand, rope, towel, branch, or clothing from the shore or boat without entering the water.
-THROW — Throw a rope, life ring, empty jerrycan, or any buoyant object within reach of the victim.
-WADE — If water is shallow and calm, wade toward the victim from the side, using a stick or rope for the victim to grab.
-ROW — If a boat is available, row to the victim and pull them aboard.
-GO — Enter the water only as a last resort, and only if you are a confident swimmer. Approach the victim from behind to avoid being grabbed and pulled under.
+WHEN TO SEEK EMERGENCY CARE:
+Take any near-drowning victim to hospital — even if they appear fully recovered and are walking, talking, and breathing normally. Secondary drowning can occur 1–24 hours after submersion and can kill a child or adult who seemed fine. Inform the hospital that submersion occurred.
 
-IMMEDIATE ACTIONS AFTER REMOVAL FROM WATER
+WHAT TO DO WHILE WAITING:
 
-1. Check responsiveness: call their name, tap their shoulders.
-2. If unresponsive and not breathing: begin CPR immediately. Do not waste time trying to drain water from the lungs — CPR is the priority.
-3. If breathing: place in the recovery position (on their side, head tilted back slightly). Monitor breathing continuously.
+Rescuing a drowning person — rescuer safety first:
+Do not jump into fast-moving or deep water unless you are a trained swimmer. More rescuers die attempting untrained water rescues than victims.
+1. REACH — extend a hand, rope, towel, branch, or clothing from shore without entering water.
+2. THROW — throw a rope, life ring, empty jerrycan, or any buoyant object.
+3. WADE — if water is shallow and calm, wade toward victim using a stick for support.
+4. ROW — if a boat is available, row to the victim.
+5. GO — enter water only as last resort if you are a confident swimmer. Approach from behind.
 
-CPR FOR NEAR-DROWNING
+After removing from water:
+1. Check responsiveness: call their name, tap shoulders.
+2. If unresponsive and not breathing: begin CPR immediately. Do NOT waste time trying to drain water from lungs — CPR is the priority.
+3. If breathing: place in recovery position (on their side, head tilted back). Monitor breathing continuously.
 
-Unlike standard hands-only CPR, drowning victims also require rescue breaths because the cause of cardiac arrest is lack of oxygen, not a heart rhythm problem.
+CPR for near-drowning (rescue breaths required — unlike cardiac arrest):
+1. Give 5 initial rescue breaths before starting chest compressions.
+2. Then continue: 30 chest compressions followed by 2 rescue breaths.
+3. Compress hard and fast — at least 5 cm deep, 100–120 per minute.
+4. Rescue breathing: tilt head back, lift chin, pinch nose closed, give a full breath watching chest rise.
+5. Continue until the person breathes normally or emergency help arrives.
 
-Give 5 initial rescue breaths before starting chest compressions.
-Then continue: 30 chest compressions followed by 2 rescue breaths.
-Compress the chest hard and fast — at least 5 cm deep, 100–120 per minute.
-Continue until the person breathes normally or emergency help arrives.
+For hypothermia after cold floodwater:
+1. Remove wet clothing immediately.
+2. Wrap in blankets, including the head.
+3. Do not rub limbs vigorously — rewarm gently.
+4. Give warm sweet drinks only if person is fully conscious and not vomiting.
 
-Rescue breathing: tilt the head back, lift the chin, pinch the nose closed, and give a full breath watching for the chest to rise.
+DO NOT:
+- Do not enter fast-moving or deep water without rescue equipment.
+- Do not try to drain water from the lungs before CPR — this wastes critical time.
+- Do not assume a near-drowning victim is fine because they appear recovered — secondary drowning is real and dangerous.
 
-AFTER RECOVERY — HOSPITAL IS STILL REQUIRED
-
-Even if the victim appears to have fully recovered — walking, talking, normal breathing — they must go to hospital. Secondary drowning can occur 1–24 hours after the event. Water that entered the lungs causes delayed swelling and respiratory failure. This can kill a child or adult who walked away from the water seemingly fine.
-
-Take any near-drowning victim to the nearest hospital regardless of how they feel. Inform the hospital that submersion occurred.
-
-WARNING SIGNS OF SECONDARY DROWNING (1–24 hours after incident):
-Increasing difficulty breathing or persistent coughing.
-Extreme fatigue or persistent sleepiness.
-Confusion or unusual behaviour.
-Chest pain.
-Bluish tinge to the lips or skin.
-
-HYPOTHERMIA IN NEAR-DROWNING
-
-Submersion in Pakistan's floodwaters — which are often cold — causes rapid hypothermia. After removing the victim from water:
-Remove wet clothing immediately.
-Wrap in blankets, including the head.
-Do not rub the limbs vigorously.
-Rewarm slowly in a warm environment.
-Give warm sweet drinks only if the person is fully conscious and not vomiting.
-
-PREVENTION DURING FLOODS
-
-Never cross floodwater on foot without checking depth and speed. Moving water above knee height is dangerous for adults.
-Keep children away from all flood-affected water bodies, ditches, and drains.
-Do not allow children to play near waterlogged areas — open drains and pits may be invisible under murky floodwater.
-If you must cross water, use a pole to check the ground ahead of each step.
+PREVENTION DURING FLOODS:
+- Never cross floodwater on foot without checking depth and speed — moving water above knee height is dangerous for adults.
+- Keep children away from all flood-affected water bodies, ditches, and drains.
+- Do not allow children to play near waterlogged areas — open drains and pits may be invisible under murky floodwater.

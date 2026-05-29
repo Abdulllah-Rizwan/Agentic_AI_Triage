@@ -1,70 +1,49 @@
-Dehydration and Oral Rehydration Therapy — Practical Guide
+Dehydration and Oral Rehydration Therapy — First Aid Guide
 
-Dehydration is the most immediate life-threatening consequence of diarrhoea, vomiting, and heat exposure in disaster-affected communities in Pakistan. Children under 5 can die from dehydration within hours of severe diarrhoea onset. Oral Rehydration Solution (ORS) saves lives — it is the first and most important treatment in the field before hospital care is available.
+TOPIC: dehydration, ORS, oral rehydration, pani ki kami, fluid loss, rehydration
 
-RECOGNIZING DEHYDRATION
+RECOGNIZING DEHYDRATION:
+Mild: thirst, dry mouth, slightly less urine, fatigue.
 
-Mild dehydration: thirst, dry mouth, slightly less urine than normal, fatigue.
+Moderate (needs prompt ORS treatment): sunken eyes, dry mouth and lips, no tears when crying (in children), dark yellow urine, skin slow to return when pinched, headache, dizziness when standing.
 
-Moderate dehydration (needs prompt ORS treatment): sunken eyes, dry mouth and lips, no tears when crying (in children), reduced urination (dark yellow urine), skin that is slow to return to normal when pinched (skin tenting), headache, dizziness when standing.
+Severe (medical emergency — needs IV fluids): very sunken eyes, no urine for 6+ hours, extreme weakness or inability to stand, rapid weak pulse, cold hands and feet, lethargy or loss of consciousness, in infants: sunken fontanelle (soft spot on top of head).
 
-Severe dehydration — medical emergency: very sunken eyes, no urine output for 6+ hours, extreme weakness or inability to stand, rapid weak pulse, cold hands and feet, lethargy or loss of consciousness, in infants: sunken fontanelle (soft spot on top of head). Intravenous fluids are required immediately.
+WHEN TO SEEK EMERGENCY CARE:
+Take the patient to hospital immediately if:
+- Too weak or drowsy to drink
+- Vomiting so frequent that ORS cannot be kept down
+- Signs of severe dehydration (see above)
+- Diarrhoea contains blood
+- Symptoms not improving or worsening after 3–4 hours of ORS
+- A young infant (under 3 months) with any diarrhoea and vomiting
 
-HOW TO MAKE ORS AT HOME
+WHAT TO DO WHILE WAITING:
 
-Standard WHO ORS packet: dissolve one packet in 1 litre of clean water (boiled and cooled, or bottled water with unbroken seal). Stir well.
+How to make ORS at home:
+- Standard WHO packet: dissolve 1 packet in 1 litre of clean (boiled and cooled) water.
+- If no packets: 1 litre clean water + 6 level teaspoons sugar + half a level teaspoon salt. Stir until dissolved. It should taste like slightly salty tears. Never add extra salt.
 
-If ORS packets are not available, prepare a home solution:
-1 litre of clean water
-6 level teaspoons of sugar (granulated)
-half a level teaspoon of salt
+Giving ORS:
+1. Adults and children over 2 years: give small sips frequently. After each loose stool — 200–400 ml for adults, 100–200 ml for children.
+2. Children under 2 years: give 50–100 ml ORS after each stool using a spoon or syringe.
+3. Infants under 6 months: continue breastfeeding frequently and give 50 ml ORS after each stool.
+4. If the child vomits after ORS: wait 10 minutes, then restart very slowly — 5 ml (one teaspoon) every minute.
+5. Continue ORS until diarrhoea stops and the child is urinating normally.
 
-Stir until completely dissolved. Taste it — it should taste like slightly salty tears. If it tastes saltier than tears, add more water. Never add extra salt — too much salt worsens dehydration.
+Feeding during diarrhoea:
+1. Continue feeding children throughout diarrhoea — do not stop food. Starvation weakens the child further.
+2. Breastfeeding must continue without interruption.
+3. Give simple foods: rice, dal, khichri, bananas, boiled potatoes.
+4. Avoid fatty, sugary, or spicy food.
 
-Do not add sugar without salt, or salt without sugar — both are needed.
+For children under 5 with diarrhoea, give zinc tablets if available:
+- Children under 6 months: 10 mg daily for 10–14 days.
+- Children 6 months to 5 years: 20 mg daily for 10–14 days.
+Zinc reduces diarrhoea duration by 25% and reduces risk of future episodes.
 
-GIVING ORS
-
-Adults and children over 2 years: give small sips frequently. After each loose stool, give an adult 200–400 ml ORS, a child 100–200 ml.
-Children under 2 years: give 50–100 ml ORS after each loose stool, using a spoon or syringe. Do not give large volumes at once.
-Infants under 6 months: continue breastfeeding as frequently as possible, and give additional ORS 50 ml after each stool.
-
-If the child vomits after ORS: wait 10 minutes, then restart very slowly — 5 ml (one teaspoon) every minute. This usually stays down.
-
-Continue ORS until diarrhoea stops and the child is urinating normally.
-
-WHEN ORS IS NOT ENOUGH — SEEK EMERGENCY CARE
-
-ORS cannot treat severe dehydration. Take the patient to hospital immediately if:
-The patient is too weak or drowsy to drink.
-Vomiting is so frequent that ORS cannot be kept down.
-Signs of severe dehydration (see above).
-Diarrhoea contains blood.
-Symptoms are not improving or are worsening after 3–4 hours of ORS.
-The patient is a young infant (under 3 months) with any diarrhoea and vomiting.
-
-In hospital, dehydration is treated with intravenous fluids (Ringer's lactate or normal saline). For children in severe dehydration: 100 ml/kg IV fluid over 3 hours (WHO standard protocol).
-
-FEEDING DURING DIARRHOEA
-
-Continue feeding children throughout diarrhoea — do not stop food. Starvation weakens the child further.
-Breastfeeding must continue without interruption.
-Give simple, easily digestible foods: rice, dal, khichri, bananas, boiled potatoes.
-Avoid fatty, sugary, or spicy food.
-Resume normal diet as soon as the child's appetite returns.
-
-ZINC SUPPLEMENTATION
-
-WHO recommends zinc supplementation for all children under 5 with diarrhoea:
-Children under 6 months: 10 mg zinc daily for 10–14 days.
-Children 6 months to 5 years: 20 mg zinc daily for 10–14 days.
-Zinc reduces the duration of diarrhoea by 25% and reduces the risk of future episodes.
-
-ORS + ZINC together are the two-part treatment that saves children's lives from diarrhoeal disease.
-
-CHOLERA-SPECIFIC REHYDRATION
-
-In cholera, fluid loss through diarrhoea is extremely rapid — adults can lose 1 litre per hour. ORS may not keep pace.
-Administer ORS continuously and aggressively.
-All suspected cholera patients should be taken to a health facility for assessment and antibiotic treatment.
-Oral cholera vaccine is available during outbreaks through NDMA and WHO emergency health response.
+DO NOT:
+- Do not add extra salt to ORS — too much salt worsens dehydration.
+- Do not give fruit juice or fizzy drinks — they worsen diarrhoea.
+- Do not stop ORS if the patient is vomiting — reduce amount, give more frequently.
+- Do not stop feeding during diarrhoea.

@@ -1,61 +1,49 @@
-Electric Shock — Emergency First Aid
+Electric Shock — First Aid Guide
 
-Electric shock can cause cardiac arrest instantly. Scene safety is critical — do not touch the person until the power source is confirmed off.
+TOPIC: electric shock, electrocution, bijli lagni, power line, flood electricity
 
-DANGERS SPECIFIC TO FLOODS
+RECOGNIZING ELECTRIC SHOCK INJURIES:
+- Entry wound where current entered body (may appear as a small burn)
+- Exit wound where current left (often on foot or hand touching the ground)
+- Do not judge severity by visible wound size — massive internal damage can occur between entry and exit points
+- Burns to the skin at entry and exit points
+- Muscle cramps or tetanic contraction (muscles locked in contraction)
+- Loss of consciousness, confusion
+- Cardiac arrest — current disrupts heart rhythm
+- Spinal injury if the person fell or was thrown by the shock
 
-Submerged electrical equipment: appliances, wiring, and generators in floodwater can electrify the water.
-Downed power lines: fallen high-voltage lines may not be visibly sparking but remain live. Water conducts electricity from a downed line for a wide radius.
-Returning home: people returning to flooded homes may turn on appliances before checking electrical systems — this is a leading cause of post-flood electrocution deaths.
+Warning signs after the incident (even if person seems fine):
+- Palpitations or irregular heartbeat
+- Chest pain
+- Dizziness or fainting
 
-SAFETY RULE: DO NOT TOUCH
+WHEN TO SEEK EMERGENCY CARE:
+Every person who has received a significant electric shock must go to hospital — even if they feel well and have no visible injuries. Delayed cardiac arrhythmias and internal organ damage can be fatal hours after the incident.
 
-Do not touch a person who is in contact with an electrical source — you will receive the shock through them.
-Do not enter water where electrical equipment is submerged or where a power line is down.
-Do not approach a downed power line. Even if it appears inactive, assume it is live. Stay at least 10 metres away.
+WHAT TO DO WHILE WAITING:
+Scene safety first — do not touch the person until power is confirmed off:
+1. Do not touch a person in contact with an electrical source — you will receive the shock.
+2. Turn off electricity at the main switch or circuit breaker.
+3. If you cannot turn off the supply: use a dry non-conducting object (dry wooden plank, dry rope, rubber mat) to push the person away from the source. Never use anything wet or metal.
+4. Only approach when you are certain the power is off.
 
-MAKING THE SCENE SAFE — BEFORE TOUCHING THE VICTIM
+After making the scene safe:
+1. Check responsiveness and breathing.
+2. If unresponsive and not breathing: begin CPR immediately. Call Rescue 1122 or Edhi 115.
+3. If conscious: lay them down and monitor for deterioration. Check for burns.
+4. Cool any visible burns with cool running water for 20 minutes. Cover loosely with clean non-fluffy cloth.
+5. If the person fell or was thrown by the shock: assume spinal injury. Do not move the neck or spine. Immobilize the head.
+6. Keep the patient lying down and calm until emergency help arrives.
 
-Turn off the electrical source at the main switch or circuit breaker if safe to do so.
-If you cannot turn off the supply, do not touch the victim with your hands. Use a dry non-conducting object to push the person away from the source: a dry wooden plank, dry rope, rubber mat, or plastic object. Never use anything wet or metal.
-Only approach when you are certain the power is off.
+DO NOT:
+- Do not touch a person in contact with an electrical source — you will be electrocuted too.
+- Do not enter water where electrical equipment is submerged.
+- Do not approach downed power lines — stay at least 10 metres away even if they appear inactive.
+- Do not remove clothing stuck to electrical burns.
+- Do not judge injury as minor because entry and exit wounds are small.
 
-IMMEDIATE ASSESSMENT AFTER MAKING SCENE SAFE
-
-Electric shock can cause cardiac arrest instantly — the electrical current disrupts heart rhythm. Check immediately:
-Is the person breathing? Look, listen, and feel for 10 seconds.
-Is the person conscious and responsive?
-
-If unresponsive and not breathing: Begin CPR immediately. Call Rescue 1122 or Edhi 115.
-
-If conscious: lay them down, check for burns (entry and exit wounds), and monitor for deterioration.
-
-BURNS FROM ELECTRIC SHOCK
-
-Electrical burns have an entry wound (where current entered the body) and an exit wound (where it left). There is severe internal damage between these two points that may not be visible.
-
-Do not judge injury severity by the size of the visible burn — a small entry wound can conceal massive internal damage.
-Cool visible burns with cool running water for 20 minutes.
-Cover burns loosely with a clean non-fluffy cloth.
-Do not remove clothing stuck to burned skin.
-All electrical burns require hospital assessment — internal organ damage, kidney failure from muscle breakdown, and delayed cardiac arrhythmias can occur hours after the injury.
-
-HEART PROBLEMS AFTER ELECTRIC SHOCK
-
-Electrical current can cause abnormal heart rhythms (arrhythmias) that may not cause symptoms immediately but can be fatal hours after the incident. Every person who has received a significant electric shock must be monitored in hospital — even if they feel well and have no visible injuries.
-
-Warning signs: palpitations, chest pain, dizziness, fainting.
-
-SPINAL INJURY FROM ELECTRIC SHOCK
-
-The violent muscle contraction caused by an electric shock can fracture the spine. If a person has fallen or been thrown by a shock:
-Assume a spinal injury.
-Do not move the neck or spine.
-Immobilize the head in the position found and wait for emergency help.
-
-ACTIONS AFTER FLOODS — PREVENTING ELECTROCUTION
-
-Do not turn on electricity in a flooded home. Have all wiring, switches, and appliances checked by a qualified electrician before restoring power.
-Do not use petrol or diesel generators indoors — they produce carbon monoxide which causes rapid death in enclosed spaces.
-Never use electrical equipment while standing in water.
-If a power line is down in your area, contact the electricity authority (LESCO, HESCO, PESCO) and keep people away from the entire area.
+PREVENTING ELECTROCUTION DURING FLOODS:
+- Do not turn on electricity in a flooded home. Have all wiring, switches, and appliances checked by a qualified electrician before restoring power.
+- Do not use petrol or diesel generators indoors — they produce carbon monoxide which causes rapid death in enclosed spaces.
+- Never use electrical equipment while standing in water.
+- If a power line is down in your area, contact the electricity authority (LESCO, HESCO, PESCO) and keep people away from the entire area.

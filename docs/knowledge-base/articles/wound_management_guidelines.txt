@@ -1,17 +1,63 @@
-Overview
-Minor cuts and scrapes can often be treated at home. You may need to seek medical care if you notice the injury becomes infected.
+Wound and Cut Management — First Aid Guide
 
-Treatment
-These guidelines can help you care for minor cuts and scrapes:
+TOPIC: wound, cut, laceration, scrape, gash, deep cut, open wound, zakhm
 
-Wash your hands. This helps avoid infection.
-Stop the bleeding. Minor cuts and scrapes usually stop bleeding on their own. If needed, gently press the wound with a clean bandage or cloth. Raise the area until the bleeding stops.
-Clean the wound. Rinse the wound with water. Keeping the wound under running water will lower the risk of infection. Wash around the wound with soap. But don't get soap in the wound. And don't use hydrogen peroxide or iodine. Both can irritate wounds. Remove any dirt or debris with tweezers cleaned with alcohol. See a healthcare professional if you can't remove all debris.
-Put on an antibiotic or petroleum jelly. Put on a thin layer of an antibiotic ointment or petroleum jelly to keep the surface moist and help prevent scarring. Ingredients in some antibiotic ointments can cause a mild rash in some people. If you get a rash, stop using the ointment.
-Cover the wound. Put on a bandage, rolled gauze or gauze held in place with paper tape. Covering the wound keeps it clean. If you have just a minor scrape or scratch, don't cover it.
-Change the covering. Do this at least once a day or whenever the covering becomes wet or dirty.
-When to call your doctor
-Seek medical care if:
+RECOGNIZING WOUND SEVERITY:
+Minor wound: small cut or scrape, bleeding controlled within 10 minutes of pressure, no deep tissue visible, edges come together naturally.
 
-See a healthcare professional if you see signs of infection on the skin or near the wound. These include expanding changes in color, increasing pain, drainage, warmth or swelling.
-See a healthcare professional to get a tetanus shot. A tetanus shot is needed if you haven't had one in the past five years and the wound is deep or dirty.
+Moderate wound: cut longer than 2 cm or deep enough to see yellow fat tissue; jagged or gaping edges that will not stay closed; wound on the face, hand, or over a joint; wound from a rusty, dirty, or animal-contaminated object.
+
+Severe wound:
+- Bleeding that does not slow after 10 minutes of firm continuous pressure
+- Blood spurting in pulses (arterial bleed)
+- Wound to the chest, abdomen, neck, or groin
+- Embedded object (knife, glass, metal) in the wound
+- Bone visible through the wound
+- Patient is pale, cold, confused, or losing consciousness from blood loss
+
+Signs of infection (usually 24–72 hours after injury):
+- Increasing redness spreading outward from the wound edges
+- Wound is hot and swollen
+- Pus or cloudy fluid leaking from the wound
+- Foul smell
+- Red streaks running up the arm or leg from the wound
+- Fever or chills
+
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital immediately for:
+- Any severe wound listed above
+- Wounds with embedded objects — do not remove them
+- Wounds to the chest, abdomen, neck, or groin
+- Wound from a rusty or heavily contaminated object — tetanus injection may be needed
+- Signs of infection with fever, spreading redness, or red streaks
+- Any wound that has not stopped bleeding after 10–15 minutes of firm pressure
+- Animal or human bites (see separate article)
+
+WHAT TO DO WHILE WAITING:
+For minor cuts and scrapes:
+1. Wash your hands before touching the wound.
+2. Apply gentle firm pressure with a clean cloth or dressing to stop bleeding. Hold for at least 5–10 minutes without releasing to check.
+3. Rinse the wound under clean running water for several minutes to remove dirt and debris. Do not use hydrogen peroxide or iodine — these damage healing tissue.
+4. Wash around the wound with soap and water. Keep soap out of the wound itself.
+5. Remove any visible dirt or debris using clean tweezers. If debris is deeply embedded, do not probe — go to hospital.
+6. Pat dry with a clean cloth and cover with a clean bandage or dressing.
+7. Change the dressing at least once daily or when it becomes wet or dirty.
+8. Give paracetamol for pain.
+
+For moderate to severe wounds (while getting to hospital):
+1. Apply firm continuous pressure with the cleanest cloth available. Do not remove the cloth if it soaks through — add more on top.
+2. Raise the injured limb above heart level if possible while maintaining pressure.
+3. For embedded objects: do NOT pull them out. Pad around the object with cloth and apply pressure beside it. The object may be plugging a blood vessel.
+4. Keep the patient lying down and warm.
+
+DO NOT:
+- Do not remove embedded objects from wounds.
+- Do not apply toothpaste, butter, haldi (turmeric paste), or any traditional remedies — these introduce bacteria and complicate hospital treatment.
+- Do not close a contaminated wound with tape or stitches before it has been properly cleaned.
+- Do not check a pressure dressing by lifting it every few minutes — this breaks the clot. Press and hold.
+- Do not use hydrogen peroxide or iodine on the wound — they damage tissue and slow healing.
+
+PREVENTION:
+- Wear shoes or sandals in all disaster-affected areas — flood debris, broken glass, and metal are common underfoot hazards.
+- Cover all existing wounds and cuts with waterproof dressings before walking in floodwater — floodwater contains sewage bacteria that rapidly infect open wounds.
+- Ensure tetanus vaccination is up to date — any wound from soil, rust, or animal contact carries tetanus risk if not vaccinated within the last 5–10 years.

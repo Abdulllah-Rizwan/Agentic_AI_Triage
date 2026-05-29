@@ -1,10 +1,10 @@
-Leptospirosis — Flood Disease Recognition and Prevention
+Leptospirosis — First Aid Guide
 
-WHAT IS LEPTOSPIROSIS:
-A bacterial infection spread through contact with floodwater, soil, or surfaces contaminated by the urine of infected animals (rats, cattle, dogs). Very common after floods. Enters the body through cuts, open wounds, eyes, or mouth.
+TOPIC: leptospirosis, flood fever, rat fever, weil disease, leptospira
 
 RECOGNIZING LEPTOSPIROSIS:
-Symptoms appear 1–2 weeks after exposure to contaminated water.
+A bacterial infection spread through contact with floodwater, soil, or surfaces contaminated by the urine of infected animals (rats, cattle, dogs). Very common after floods. Enters the body through cuts, open wounds, eyes, or mouth.
+Symptoms appear 1–2 weeks after exposure to contaminated water:
 - Sudden high fever and severe chills
 - Intense muscle pain, especially in the calves and lower back
 - Severe headache
@@ -12,7 +12,8 @@ Symptoms appear 1–2 weeks after exposure to contaminated water.
 - Nausea, vomiting, diarrhoea
 - Rash on the shins
 
-SEVERE LEPTOSPIROSIS — GO TO HOSPITAL IMMEDIATELY:
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital immediately if any of the following appear:
 - Jaundice: yellow skin and yellow eyes (Weil's disease)
 - Dark urine or reduced urine output
 - Difficulty breathing or chest pain
@@ -21,14 +22,18 @@ SEVERE LEPTOSPIROSIS — GO TO HOSPITAL IMMEDIATELY:
 - Cannot keep any fluids down
 Severe cases can lead to kidney failure, liver failure, and death without hospital care.
 
-WHAT TO DO WHILE WAITING FOR MEDICAL CARE (mild symptoms only):
+WHAT TO DO WHILE WAITING:
 1. Rest completely.
 2. Drink plenty of clean, boiled water or ORS to prevent dehydration.
 3. Take paracetamol for fever and muscle pain.
 4. Do NOT take ibuprofen or aspirin — they can worsen kidney function.
 5. Go to a health worker for antibiotic prescription — doxycycline or amoxicillin is the first-line treatment.
 
-PREVENTION DURING FLOODS:
+DO NOT:
+- Do not take ibuprofen or aspirin — they damage kidneys which are already stressed by leptospirosis.
+- Do not assume it is just a cold or flu — leptospirosis can worsen rapidly within 24–48 hours.
+
+PREVENTION:
 - Do NOT walk barefoot or wade through floodwater — wear rubber boots or waterproof footwear.
 - Cover all cuts, wounds, and open sores with waterproof bandaging before any water contact.
 - Do not let floodwater enter your mouth or eyes.

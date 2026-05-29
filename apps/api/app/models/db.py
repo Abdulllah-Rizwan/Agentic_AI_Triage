@@ -170,6 +170,8 @@ class KnowledgeDocument(Base):
     processed_at = Column(DateTime, nullable=True)
     error_message = Column(Text, nullable=True)
     retrieval_count = Column(Integer, default=0, nullable=False, server_default="0")
+    # Keywords from the TOPIC: line — used by the LLM routing endpoint to match articles
+    topic_keywords = Column(Text, nullable=True)
 
     uploaded_by_user = relationship("User", back_populates="uploaded_docs")
     chunks = relationship(
@@ -201,6 +203,9 @@ class KnowledgeChunk(Base):
     article_url    = Column(String, nullable=True)
     article_author = Column(String, nullable=True)
     article_source = Column(String, nullable=True)
+    # Section type: symptoms | emergency | action | prevention | general
+    # Used to prefer actionable "WHAT TO DO" content in RAG results
+    section_type   = Column(String, nullable=True)
     embedding = Column(Vector(384), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 

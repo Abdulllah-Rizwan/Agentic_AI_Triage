@@ -1,64 +1,63 @@
-Acute Respiratory Infections — Recognition and Action
+Acute Respiratory Infection — First Aid Guide
 
-SYMPTOMS TO WATCH FOR
+TOPIC: respiratory infection, chest infection, breathing difficulty, saans ki takleef, pneumonia, cough fever, flu
 
-Upper respiratory infection (common cold / flu-like illness): runny nose, sore throat, mild fever, cough. Usually self-limiting in 7–10 days with supportive care.
+RECOGNIZING RESPIRATORY INFECTIONS:
 
-Pneumonia (lower respiratory infection): This is serious and requires treatment. Symptoms include:
-Cough with yellow, green, or brown phlegm (sputum).
-Fever above 38°C, often with chills.
-Rapid breathing (see rate thresholds below).
-Chest pain that worsens with breathing or coughing.
-Shortness of breath — especially worrying if present at rest.
-In children: lower chest wall indrawing — the lower chest pulls inward during breathing (opposite of normal).
-In severe cases: bluish lips or fingernails, confusion, inability to feed (infants), severe lethargy.
+Upper respiratory infection (common cold or flu): runny nose, sore throat, mild fever, cough. Usually self-limiting in 7–10 days.
 
-BREATHING RATE — A CRITICAL SIGN
+Pneumonia (lower respiratory infection — serious):
+- Cough with yellow, green, or brown phlegm (sputum)
+- Fever above 38°C, often with chills
+- Rapid breathing (see thresholds below)
+- Chest pain that worsens with breathing or coughing
+- Shortness of breath, especially at rest
+- In children: lower chest wall indrawing — the lower chest pulls inward during breathing
+- In severe cases: bluish lips or fingernails, confusion, inability to feed (infants), severe lethargy
 
-Breathing rate is the most reliable early sign of pneumonia in children. Count the number of breaths per minute with the child calm and quiet (place your hand on the chest and count for one full minute).
-
-Rapid breathing thresholds (WHO definition):
-Under 2 months: more than 60 breaths per minute.
-2 months to 12 months: more than 50 breaths per minute.
-1 year to 5 years: more than 40 breaths per minute.
-Adults: more than 30 breaths per minute at rest is a warning sign.
-
+BREATHING RATE — A CRITICAL SIGN:
+Breathing rate is the most reliable early sign of pneumonia in children. Count breaths per minute with child calm and quiet.
+- Under 2 months: more than 60 breaths/minute = fast
+- 2 to 12 months: more than 50 breaths/minute = fast
+- 1 to 5 years: more than 40 breaths/minute = fast
+- Adults: more than 30 breaths/minute at rest = warning sign
 If rapid breathing is present, seek medical care immediately.
 
-WHEN TO SEEK EMERGENCY CARE
+WHEN TO SEEK EMERGENCY CARE:
+Take the patient to hospital without delay if any of the following are present:
+- Difficulty breathing at rest or severe shortness of breath
+- Lips or fingernails turning blue (cyanosis)
+- Chest indrawing in children
+- Inability to drink or breastfeed in infants
+- Stridor (high-pitched crowing sound when inhaling)
+- Altered consciousness, drowsiness, or convulsions with fever
+- Breathing rate above the thresholds listed above
+- Patient getting worse after 48 hours of home management
 
-Take the patient to a health facility without delay if any of the following are present:
-Difficulty breathing at rest or severe shortness of breath.
-Lips or fingernails turning blue (cyanosis) — this indicates critically low oxygen.
-Chest indrawing in children.
-Inability to drink or breastfeed in infants — severe sign.
-Stridor (a high-pitched, crowing sound when inhaling).
-Altered consciousness, drowsiness, or convulsions with fever.
-Breathing rate above the thresholds listed above.
-The patient is getting worse after 48 hours of home management.
+WHAT TO DO WHILE WAITING:
 
-TREATMENT
+For upper respiratory infections (cold, mild flu):
+1. Rest and increase fluid intake — water, ORS, clear soup, breast milk for infants.
+2. Give paracetamol for fever and discomfort. Do not use aspirin in children.
+3. One teaspoon of honey 3 times daily can soothe cough in children over 1 year. Do not give honey to infants under 1 year.
+4. Saline nasal drops (half teaspoon salt in 100 ml clean water) for nasal congestion.
+5. Ensure adequate warm clothing and shelter.
+6. Monitor breathing rate daily. Seek care if rate increases.
 
-Upper respiratory infections: rest, adequate fluids, paracetamol for fever and pain. Antibiotics are not effective against viruses (most common colds and flu).
+For suspected pneumonia (while getting to hospital):
+1. Keep the patient sitting upright or with head elevated — lying flat worsens breathing.
+2. Loosen tight clothing around the chest and neck.
+3. Keep the patient warm.
+4. Give paracetamol for fever.
+5. If prescribed amoxicillin by a health worker, give the full 5-day course even if the patient improves.
 
-Pneumonia (bacterial): requires antibiotic treatment — amoxicillin is the first-line treatment for community pneumonia in Pakistan. Do not stop antibiotics early even if the patient feels better. Complete the full course (usually 5–7 days for children, 5 days adults). Severe pneumonia requires hospital admission and IV antibiotics.
+DO NOT:
+- Do not give cough syrups to children under 6 years — they are ineffective and some are harmful.
+- Do not give antibiotics without medical assessment — antibiotics are ineffective against viral respiratory infections.
+- Do not delay if breathing is fast or difficult — pneumonia kills children within hours.
 
-Do not give cough syrups to children under 6 years — they are ineffective and some are harmful. Saline nasal drops can help clear a blocked nose.
-
-HOME CARE FOR MILD RESPIRATORY ILLNESS
-
-Increase fluid intake — water, ORS, clear soup, breast milk for infants.
-Paracetamol for fever and discomfort. Do not use aspirin in children.
-Honey (one teaspoon, 3 times daily) can soothe cough in children over 1 year. Do not give honey to infants under 1 year.
-Saline nasal drops (half teaspoon salt in 100 ml clean water) for nasal congestion.
-Ensure adequate warm clothing and shelter — cold exposure worsens respiratory illness.
-Monitor breathing rate daily. Seek care if rate increases.
-
-PREVENTION IN RELIEF CAMPS
-
-Ventilate shelters as much as possible — avoid overcrowded enclosed spaces.
-Avoid cooking fires inside tents or enclosed shelters — smoke worsens respiratory illness and causes pneumonia in children.
-Handwashing with soap prevents spread of respiratory viruses.
-Vaccination: ensure children are up to date on pneumococcal vaccine and the measles vaccine — measles dramatically increases pneumonia risk.
-Identify and prioritize care for malnourished children — malnutrition severely impairs immune defence against respiratory infection.
-
+PREVENTION IN RELIEF CAMPS:
+- Ventilate shelters as much as possible — avoid overcrowded enclosed spaces.
+- Avoid cooking fires inside tents — smoke worsens respiratory illness and causes pneumonia in children.
+- Handwashing with soap prevents spread of respiratory viruses.
+- Prioritize care for malnourished children — malnutrition severely impairs immunity against respiratory infection.

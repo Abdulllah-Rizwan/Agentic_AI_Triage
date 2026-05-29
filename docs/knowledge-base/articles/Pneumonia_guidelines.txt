@@ -1,4 +1,6 @@
-Pneumonia — Recognition and Field Management
+Pneumonia — First Aid Guide
+
+TOPIC: pneumonia, chest infection, lung infection, nizmonia, saans ki takleef
 
 RECOGNIZING PNEUMONIA:
 - Cough with fast or difficult breathing
@@ -9,36 +11,28 @@ RECOGNIZING PNEUMONIA:
 - Lower chest indrawing in children: chest wall sucks inward during breathing (not outward)
 - Wheezing or grunting sounds when breathing
 
-SEVERITY ASSESSMENT:
-Mild (can treat with antibiotics at home if prescribed):
-- Breathing fast but no chest indrawing
-- Able to drink fluids
-- No blue lips
-
-Severe (send to hospital now):
-- Chest indrawing visible
-- Cannot drink or breastfeed
+WHEN TO SEEK EMERGENCY CARE:
+Send to hospital immediately if:
+- Chest indrawing visible in a child
+- Patient cannot drink or breastfeed
 - Blue lips or fingernails
-- Convulsions
-- Lethargic or unconscious
+- Convulsions with fever
+- Patient is lethargic or unconscious
+- High fever with very fast breathing at any age
+- No improvement after 2 days on prescribed antibiotics
+Pneumonia in children can kill within hours — do not delay.
 
-WHAT TO DO WHILE WAITING FOR MEDICAL CARE:
+WHAT TO DO WHILE WAITING:
 1. Keep the patient sitting upright or with head elevated — lying flat worsens breathing.
 2. Loosen tight clothing around the chest and neck.
 3. Keep the patient warm.
-4. Give paracetamol for fever (do not give aspirin to children).
+4. Give paracetamol for fever — do not give aspirin to children.
 5. Encourage small sips of fluid frequently — do not force large amounts.
 6. If prescribed amoxicillin by a health worker, give the full course (5 days) even if the patient improves.
 7. Do NOT give cough suppressants — coughing helps clear the airway.
 
 DO NOT:
-- Delay seeking care if breathing becomes difficult or fast — pneumonia in children kills within hours.
-- Give antibiotics without medical advice for a first episode without assessment.
-- Leave a child alone who has very fast breathing or chest indrawing.
-
-GO TO HOSPITAL IMMEDIATELY IF:
-- Child has blue lips, severe chest indrawing, or cannot drink
-- Patient is confused or unconscious
-- High fever with very fast breathing in any age
-- No improvement after 2 days on prescribed antibiotics
-- Any oxygen saturation below 90% if a pulse oximeter is available
+- Do not delay seeking care if breathing becomes difficult or fast.
+- Do not give antibiotics without medical advice for a first episode without assessment.
+- Do not leave a child alone who has very fast breathing or chest indrawing.
+- Do not give cough syrups to children under 6 years — they are ineffective and some are harmful.

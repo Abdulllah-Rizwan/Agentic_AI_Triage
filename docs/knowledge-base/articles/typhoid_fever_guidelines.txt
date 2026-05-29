@@ -1,42 +1,44 @@
-Typhoid Fever — Recognition and Emergency Action
+Typhoid Fever — First Aid Guide
 
-RECOGNISE TYPHOID — DISTINCTIVE SIGNS
+TOPIC: typhoid, typhoid fever, enteric fever, tifo, persistent fever, typhoid bukhar
 
+RECOGNIZING TYPHOID — DISTINCTIVE SIGNS:
 Typhoid has specific signs that separate it from common stomach illnesses. Look for:
 - Fever that builds slowly over several days and stays high (39–40°C / 102–104°F) for a week or more without resolving
-- Slow heart rate despite a high fever (pulse is lower than expected — this is a key distinguishing feature)
+- Slow heart rate despite a high fever (pulse is lower than expected — a key distinguishing feature)
 - Rose-coloured flat spots on the chest or abdomen (appear in some patients in the second week)
 - Severe fatigue and weakness out of proportion to other symptoms
 - Abdominal tenderness and bloating
 - The fever came on gradually over days, NOT suddenly
-
 Unlike a typical stomach bug, typhoid fever does not resolve in 1–2 days — it worsens progressively if untreated.
 
-EMERGENCY WARNING SIGNS — GO TO HOSPITAL IMMEDIATELY
-
-Call for help or go to the nearest hospital without delay if any of the following appear:
-- Sudden severe abdominal pain or a rigid, board-hard abdomen — indicates possible intestinal perforation (surgical emergency)
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital without delay if any of the following appear:
+- Sudden severe abdominal pain or a rigid, board-hard abdomen — possible intestinal perforation (surgical emergency)
 - Blood in stools or vomiting blood
 - High fever with confusion, delirium, or unconsciousness
 - Seizures or convulsions
 - Complete inability to take any fluids — risk of collapse
 
-IMMEDIATE ACTIONS BEFORE REACHING HOSPITAL
+WHAT TO DO WHILE WAITING:
+1. Keep the patient lying flat and resting — no physical exertion.
+2. Give oral rehydration salts (ORS) or clean boiled water in small, frequent sips if the patient is conscious and can swallow.
+3. Give paracetamol to reduce fever — do NOT give aspirin or ibuprofen (increases bleeding risk).
+4. Do NOT give any medicine to stop loose stools — this traps the bacteria inside the gut.
+5. Monitor for emergency warning signs above — if any appear, go to hospital immediately.
 
-- Keep the patient lying flat and resting — no physical exertion
-- Give oral rehydration salts (ORS) or clean boiled water in small, frequent sips if the patient is conscious and can swallow
-- Give paracetamol to reduce fever — do NOT give aspirin or ibuprofen (increases bleeding risk)
-- Do NOT give any medicine to stop loose stools — this traps the bacteria inside the gut
+DO NOT:
+- Do not give aspirin or ibuprofen — they increase the risk of intestinal bleeding in typhoid.
+- Do not give anti-diarrhoeal medication — it traps bacteria in the gut.
+- Do not allow the patient to eat solid food if abdominal pain is present.
 
-PREVENTION IN DISASTER-AFFECTED AREAS
+PREVENTION:
+- Drink only boiled water or sealed bottled water — never untreated flood water.
+- Wash hands with soap before eating and after toilet use.
+- Avoid raw vegetables, unpeeled fruit, and street food prepared with unclean water.
+- Avoid ice in drinks unless made from safe water.
+- Typhoid vaccination is recommended for people in flood-affected or endemic areas.
+- Report any cluster of prolonged fever cases to the nearest medical relief team.
 
-- Drink only boiled water or sealed bottled water — never untreated flood water
-- Wash hands with soap before eating and after toilet use
-- Avoid raw vegetables, unpeeled fruit, and street food prepared with unclean water
-- Avoid ice in drinks unless made from safe water
-- Typhoid vaccination is recommended for people in flood-affected or endemic areas
-- Report any cluster of prolonged fever cases to the nearest medical relief team
-
-TYPHOID IN CHILDREN
-
-Children under 5 are at highest risk. A child with a high fever lasting more than 3 days without an obvious cause (such as a visible wound or cold) should be taken for medical assessment. Do not wait for other symptoms to appear — seek care early.
+TYPHOID IN CHILDREN:
+Children under 5 are at highest risk. A child with a high fever lasting more than 3 days without an obvious cause should be taken for medical assessment. Do not wait for other symptoms to appear.

@@ -207,11 +207,25 @@ class KnowledgeQueryResult(BaseModel):
     article_url: Optional[str] = None
     article_author: Optional[str] = None
     article_source: Optional[str] = None
+    section_type: Optional[str] = None
     relevance_score: float
 
 
 class KnowledgeQueryResponse(BaseModel):
     results: list[KnowledgeQueryResult]
+
+
+class KnowledgeRouteRequest(BaseModel):
+    """Request body for the LLM-based disease routing endpoint."""
+    conversation_summary: str
+    triage_level: str = "GREEN"  # RED | AMBER | GREEN
+
+
+class KnowledgeRouteResponse(BaseModel):
+    """Guidance chunks selected via LLM disease routing."""
+    matched_topics: list[str]  # which article topics the LLM matched
+    results: list[KnowledgeQueryResult]
+    fallback: bool = False  # True when generic guidance was returned
 
 
 # ── Admin — Knowledge ─────────────────────────────────────────────────────────

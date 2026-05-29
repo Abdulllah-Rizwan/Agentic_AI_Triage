@@ -1,36 +1,45 @@
-There are some things you can do after being bitten by an animal or a person.
+Animal and Human Bites — First Aid Guide
 
-Do:
-clean the wound with soap and warm water
+TOPIC: animal bite, dog bite, cat bite, human bite, rat bite
 
-gently squeeze the wound so it bleeds slightly (unless it's already bleeding) – this can help reduce the risk of infection
+RECOGNIZING AN INFECTED BITE:
+Fresh bite: puncture marks or torn skin, bleeding, bruising around the wound.
+Signs of infection developing (usually 24–72 hours after bite):
+- Increasing redness spreading beyond the wound edges
+- Swelling and warmth around the bite
+- Pus or discharge leaking from the wound
+- Wound smells unpleasant
+- Patient has a high temperature or feels feverish and shivery
+- Red streak spreading up the arm or leg from the bite site (lymphangitis — urgent sign)
 
-press a dry dressing or clean cloth firmly onto the wound to stop the bleeding if it's bleeding heavily
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital or a doctor without delay if:
+- The bite is deep, gaping, or will not stop bleeding
+- There are possible teeth, hair, or dirt fragments inside the wound
+- The bite is on the hands, feet, face, or head — these areas are higher infection risk
+- The bite was from a human — human mouth bacteria cause severe infections
+- The patient has not had a tetanus vaccine in the last 5–10 years
+- The bite was from a stray dog, wild animal, bat, or any animal behaving abnormally — rabies risk
+- Signs of infection are present (see above)
+- A red streak is spreading from the wound up the limb — this is an emergency
 
-after cleaning the wound, gently pat it dry and cover it with a clean dressing
+WHAT TO DO WHILE WAITING:
+1. Wash the wound thoroughly with soap and clean running water for at least 5 minutes. Do not rush this step — thorough washing is the most important thing you can do to prevent infection.
+2. Gently squeeze the wound to encourage a small amount of bleeding — this helps flush out bacteria. Do not squeeze a heavily bleeding wound.
+3. If bleeding heavily, apply firm continuous pressure with a clean cloth or dressing until bleeding slows.
+4. Once bleeding is controlled, rinse again with clean water and gently pat dry.
+5. Cover with a clean bandage or dressing.
+6. Give paracetamol or ibuprofen for pain and swelling — children under 16 should not take aspirin.
+7. Go to a doctor or hospital for assessment — most animal bites need antibiotic treatment and a tetanus booster check.
 
-take paracetamol or ibuprofen to help ease any pain and swelling – children under 16 should not take aspirin
+DO NOT:
+- Do not close the wound tightly with tape or stitches before medical assessment — sealing a bite wound traps bacteria and causes abscess formation.
+- Do not apply herbal remedies, raw egg, or any substance to the wound.
+- Do not ignore a bite that appears infected — infections from bites spread rapidly and can reach the bone.
+- Do not delay seeking care for bites on the hand — hand infections are particularly dangerous and can cause permanent disability.
 
-Get help from professional if:
-You've been bitten and:
-
-you think there may be objects like teeth, hair or dirt in the wound
-the bite is hot or swollen (it may also be painful, red or darker than the surrounding skin, which may be harder to see on black or brown skin)
-you have a high temperature, or feel hot, cold or shivery
-fluid is leaking from the bite
-the bite smells unpleasant
-you were bitten on your hands, feet, face or head
-you were bitten by a person
-you have not had a tetanus vaccine in the last 10 years
-
-
-Treatments for animal and human bites
-If you've been bitten by an animal or person, a doctor or nurse will check the wound.
-
-They may:
-
-clean the bite thoroughly – if the wound is very dirty, some of the affected area may need to be removed to reduce the risk of infection
-close the wound with stitches, sticky strips or special glue, or leave it open to heal
-give you antibiotics to stop the wound becoming infected
-check your risk of getting tetanus and rabies – you'll be given treatment to prevent these serious infections if needed
-If you've been bitten by a person, you may also be offered a blood test to check for hepatitis B, hepatitis C and HIV.
+PREVENTION:
+- Do not approach unfamiliar animals, especially stray dogs and cats, during and after disasters — animals become stressed and aggressive during floods and earthquakes.
+- Wear rubber boots and thick clothing when moving through flood-affected areas where rats are present.
+- Rat bites are common during floods when rodents are displaced — check dark corners, bedding, and stored food carefully.
+- If bitten by any animal during a flood, mention the flood exposure to the treating doctor — leptospirosis and other flood-related infections are transmitted through rat bites and scratches.

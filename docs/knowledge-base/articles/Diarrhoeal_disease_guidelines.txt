@@ -1,6 +1,8 @@
-Diarrhoea — Field Treatment and Dehydration Prevention
+Diarrhoea and Dehydration — First Aid Guide
 
-RECOGNIZE DANGEROUS DEHYDRATION:
+TOPIC: diarrhea, diarrhoea, loose motions, ulti dast, gastroenteritis, stomach bug, dehydration
+
+RECOGNIZING DANGEROUS DEHYDRATION:
 - No urine in 6+ hours, or dark yellow urine
 - Sunken eyes or sunken fontanelle in infants
 - Dry mouth and tongue
@@ -8,31 +10,36 @@ RECOGNIZE DANGEROUS DEHYDRATION:
 - Child is very weak, limp, or unconscious
 - Adult is confused, cannot stand, or has rapid weak pulse
 
-IMMEDIATE TREATMENT — ORS:
-1. If ORS packets available: dissolve 1 packet in 1 litre of clean water.
-2. If no ORS packets: home solution = 1 litre clean water + 6 teaspoons sugar + 1/2 teaspoon salt.
-3. Give continuously. Adults: 200–400 ml after each loose stool. Children: 50–100 ml after each stool.
-4. Give small sips frequently if patient is vomiting — do not stop.
-5. Continue ORS until diarrhoea stops.
-
-FOR CHILDREN UNDER 5:
-- Continue breastfeeding throughout the illness — do not stop.
-- Offer small amounts of ORS every few minutes.
-- After 4 hours of ORS if no improvement — take to health worker.
-- Give zinc tablets (20 mg/day for children over 6 months, 10 mg/day for infants) if available — zinc reduces duration of diarrhoea.
-
-CONTINUE FEEDING:
-- Do NOT stop food during diarrhoea — starvation worsens recovery.
-- Give soft, easily digestible foods: khichri, rice, bread, banana, boiled potato.
-- Avoid raw fruits, greasy food, and dairy (except breast milk) until diarrhoea resolves.
-
-GO TO HOSPITAL OR HEALTH WORKER IMMEDIATELY IF:
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital or health worker immediately if:
 - Blood in the stool (dysentery — needs antibiotics)
 - Diarrhoea for more than 14 days
-- Signs of severe dehydration (above)
+- Signs of severe dehydration (see above)
 - Child cannot drink at all or is unconscious
 - Patient has high fever (above 38.5°C) with diarrhoea
 - Adult passing more than 10 stools per day
+- Vomiting so severe that ORS cannot be kept down at all
+
+WHAT TO DO WHILE WAITING:
+1. If ORS packets available: dissolve 1 packet in 1 litre of clean water.
+2. If no ORS packets: home solution = 1 litre clean water + 6 teaspoons sugar + 1/2 teaspoon salt.
+3. Give continuously. Adults: 200–400 ml after each loose stool. Children: 50–100 ml after each stool.
+4. Give small sips frequently if patient is vomiting — do not stop ORS.
+5. Continue ORS until diarrhoea stops.
+6. Continue feeding — do NOT stop food during diarrhoea. Give soft, easily digestible foods: khichri, rice, bread, banana, boiled potato.
+7. Continue breastfeeding throughout the illness — do not stop.
+
+FOR CHILDREN UNDER 5:
+- Offer small amounts of ORS every few minutes.
+- Give zinc tablets if available (20 mg/day for children over 6 months, 10 mg/day for infants) — zinc reduces duration of diarrhoea.
+- After 4 hours of ORS with no improvement — take to health worker.
+
+DO NOT:
+- Do not stop ORS if the patient is vomiting — give less at a time, more frequently.
+- Do not give fruit juice or fizzy drinks — they worsen diarrhoea.
+- Do not give children under 12 anti-diarrhoeal medication without medical advice.
+- Do not give aspirin to children under 16.
+- Do not stop feeding during diarrhoea — starvation worsens recovery.
 
 PREVENTION — STOP SPREAD:
 - Wash hands with soap and water after using the toilet and before preparing food.

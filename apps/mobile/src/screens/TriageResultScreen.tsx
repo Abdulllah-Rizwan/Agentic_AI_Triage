@@ -16,7 +16,7 @@ import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
 import { useChatStore } from '../store/chatStore';
 import type { RAGResult } from '../services/rag/LocalRAG';
-import { queryGuidance } from '../services/rag/queryGuidance';
+import { routeGuidance } from '../services/rag/queryGuidance';
 import { encodeLeanPayload, generateCaseId, type LeanPayload } from '../proto/triage';
 import { encryptLeanPayload } from '../services/encryption/AESEncryption';
 import { transmissionService } from '../services/transmission/TransmissionService';
@@ -60,17 +60,11 @@ export default function TriageResultScreen({ navigation, route }: Props) {
   useEffect(() => {
     unmounted.current = false;
 
-    // RAG query for first-aid guidance
-    const queryText =
-      level === 'RED' && triageResult.triggeredKeyword
-        ? triageResult.triggeredKeyword
-        : featureVector.chiefComplaint;
-    const topK = level === 'GREEN' ? 2 : 1;
-
-    const RAG_MIN_SCORE = 0.3;
-    queryGuidance(queryText, topK).then((results) => {
-      if (!unmounted.current)
-        setRagResults(results.filter((r) => r.score >= RAG_MIN_SCORE));
+    // LLM-based article routing for first-aid guidance.
+    // Uses the full conversation summary so the server can identify the correct
+    // article from the patient's described condition, not just a single keyword.
+    routeGuidance(featureVector.conversationSummary, level).then((results) => {
+      if (!unmounted.current) setRagResults(results);
     });
 
     // GREEN cases require no transmission

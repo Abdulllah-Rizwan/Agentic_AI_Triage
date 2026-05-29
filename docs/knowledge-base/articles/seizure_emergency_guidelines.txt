@@ -1,58 +1,55 @@
-Seizure (Convulsion) — Emergency Recognition and First Aid
+Seizure (Convulsion) — First Aid Guide
 
-A seizure is a sudden burst of uncontrolled electrical activity in the brain. It may cause convulsions (shaking), loss of consciousness, muscle stiffness, or staring episodes. Seizures can happen to anyone — they are more common after head injuries, high fevers (especially in young children in Pakistan), stroke, meningitis, hypoglycaemia (low blood sugar), and in people with epilepsy who run out of their medication during disasters.
+TOPIC: seizure, convulsion, epilepsy, murghi, mirgi, fit, febrile convulsion, shaking
 
-WHAT A SEIZURE LOOKS LIKE
+RECOGNIZING A SEIZURE:
+Convulsive seizure (most recognisable): sudden loss of consciousness, body goes rigid, then rhythmic jerking movements of arms and legs. May last 1–3 minutes. The person may cry out at the start, bite their tongue, lose bladder or bowel control, and be confused and drowsy afterward.
 
-Convulsive seizure (most recognisable): Sudden loss of consciousness, body goes rigid, then rhythmic jerking movements of the arms and legs. May last 1–3 minutes. The person may cry out at the start, bite the tongue, lose bladder or bowel control, and be confused and drowsy afterward.
+Absence seizure: brief staring episode, the person appears to switch off for seconds. More common in children.
 
-Absence seizure: Brief staring episode, the person appears to switch off for seconds. More common in children.
+Partial seizure: one limb or one side of the body twitches while the person remains conscious.
 
-Partial seizure: One limb or one side of the body twitches while the person remains conscious.
+Febrile convulsion (in children): seizure triggered by a rapidly rising high fever. Very common in Pakistani children under 5. Usually brief but requires medical evaluation.
 
-Febrile convulsion (in children): Seizure triggered by a rapidly rising high fever. Very common in Pakistani children under 5. Usually brief and not immediately life-threatening but requires medical evaluation.
+WHEN TO SEEK EMERGENCY CARE:
+Call for emergency help immediately if:
+- The seizure lasts more than 5 minutes (status epilepticus — can cause brain damage)
+- The person does not regain consciousness within 10 minutes after the seizure stops
+- A second seizure follows shortly after the first
+- The person has difficulty breathing or lips/skin turn blue after the seizure
+- The person is injured during the seizure
+- The seizure occurs in water (drowning risk)
+- The person is pregnant
+- This is the person's first-ever seizure
+- The person has diabetes — seizures can indicate dangerously low blood sugar
 
-WHAT TO DO DURING A SEIZURE
+WHAT TO DO WHILE WAITING:
 
-Protect the person from injury — clear away hard or sharp objects. Place something soft under their head.
-Turn the person gently onto their side (recovery position) to prevent choking if they vomit.
-Do not restrain the person. Do not hold their limbs down — let the seizure run its course.
-Do not put anything in their mouth — not fingers, not a spoon, not a cloth. Contrary to common belief, people cannot swallow their tongue during a seizure. Putting objects in the mouth causes broken teeth, jaw injuries, and bitten fingers.
-Time the seizure. Note when it started.
-Loosen any tight clothing around the neck.
-Stay with the person and stay calm.
+During the seizure:
+1. Protect from injury — clear away hard or sharp objects. Place something soft under their head.
+2. Turn gently onto their side (recovery position) to prevent choking if they vomit.
+3. Do not restrain the person — let the seizure run its course.
+4. Loosen any tight clothing around the neck.
+5. Stay with the person and stay calm. Time the seizure from the start.
 
-WHAT TO DO AFTER THE SEIZURE
+After the seizure:
+1. The person will be confused, drowsy, or upset for several minutes — this is normal (post-ictal phase). Speak calmly and reassure them.
+2. Keep them in the recovery position until fully awake.
+3. Check for any injuries from the fall or movements.
+4. Do not give food or water until fully alert.
 
-The person will be confused, drowsy, or upset for several minutes — this is called the post-ictal phase. Speak calmly and reassure them.
-Keep them in the recovery position until fully awake.
-Check for any injuries from the fall or movements.
-Do not give food or water until fully alert.
+For febrile convulsions in children with fever:
+1. Remove excess clothing to cool the child — do not place in cold water.
+2. Place the child on their side after the convulsion stops.
+3. Give paracetamol for fever once the child is conscious.
+4. Seek medical evaluation after every febrile convulsion, even if brief.
+5. If it lasts more than 5 minutes or the child does not recover normally, go to the emergency department immediately.
 
-CALL FOR EMERGENCY HELP IMMEDIATELY IF:
+DO NOT:
+- Do not restrain the person or hold their limbs down.
+- Do not put anything in their mouth — not fingers, not a spoon, not a cloth. People cannot swallow their tongue during a seizure. Objects in the mouth cause broken teeth, jaw injuries, and bitten fingers.
+- Do not give food or water until the person is fully alert.
+- Do not leave the person alone until fully conscious.
 
-The seizure lasts more than 5 minutes — this is called status epilepticus and is a medical emergency that can cause brain damage.
-The person does not regain consciousness within 10 minutes after the seizure stops.
-A second seizure follows shortly after the first.
-The person has difficulty breathing after the seizure, or their lips or skin turn blue.
-The person is injured during the seizure.
-The seizure occurs in water (drowning risk).
-The person is pregnant.
-This is the person's first-ever seizure.
-The person has diabetes — seizures can indicate dangerously low blood sugar (hypoglycaemia).
-
-SEIZURES IN CHILDREN WITH HIGH FEVER (FEBRILE CONVULSIONS)
-
-These are common and frightening but usually last less than 2 minutes and stop on their own.
-Remove excess clothing to cool the child — do not place in cold water.
-Do not put anything in the child's mouth.
-Place the child on their side after the convulsion stops.
-Give paracetamol for fever once the child is conscious.
-Seek medical evaluation after every febrile convulsion, even if brief.
-If it lasts more than 5 minutes or the child does not recover normally, go to the emergency department immediately.
-
-EPILEPSY PATIENTS WITHOUT MEDICATION IN DISASTER SETTINGS
-
-Epilepsy is common in Pakistan. Patients who run out of anti-epileptic medication during disasters are at high risk of prolonged or repeated seizures.
-Inform relief medical teams immediately — epilepsy medication must be prioritised as a life-saving supply.
-NDMA mobile medical units carry essential neurological medications. Register your need.
+EPILEPSY PATIENTS WITHOUT MEDICATION IN DISASTER SETTINGS:
+Epilepsy is common in Pakistan. Patients who run out of anti-epileptic medication during disasters are at high risk of prolonged or repeated seizures. Inform relief medical teams immediately — epilepsy medication must be prioritised as a life-saving supply. NDMA mobile medical units carry essential neurological medications.

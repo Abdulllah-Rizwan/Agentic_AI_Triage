@@ -1,45 +1,58 @@
-Bleeding and Hemorrhage — Field First Aid
+Bleeding and Hemorrhage — First Aid Guide
 
-IMMEDIATE ACTIONS FOR SEVERE BLEEDING
+TOPIC: bleeding, hemorrhage, khoon, severe bleeding, uncontrolled bleeding, cut artery
 
-Apply direct pressure immediately. Use a clean cloth, bandage, or clothing. Press firmly on the wound without lifting or checking every few seconds — continuous pressure is what stops bleeding. Hold for at least 10 minutes without releasing.
+RECOGNIZING SEVERE BLEEDING:
+- Blood soaking through clothing or dressings rapidly
+- Blood is bright red and spurting in pulses (arterial bleed — most dangerous)
+- Wound to the chest, abdomen, neck, or groin
+- Large wound with gaping edges
+- Embedded object (knife, glass, metal) in the wound
+- Signs of internal bleeding: bruising, swelling, rigid abdomen, pale and cold skin, rapid weak pulse, patient feels faint or confused (no visible wound)
 
-If blood soaks through, do NOT remove the cloth. Add more material on top and press harder.
-
-Elevate the injured limb above heart level if possible while maintaining pressure.
-
-FOR LIMB BLEEDING THAT WILL NOT STOP WITH PRESSURE — TOURNIQUET:
-1. Apply 5–7 cm (2–3 inches) above the wound, not on a joint.
-2. Tighten until bleeding stops completely — it must be tight enough to hurt.
-3. Write the time of application on the person's skin or forehead (e.g. "TK 14:30").
-4. Do NOT remove the tourniquet once applied — only medical staff should remove it.
-5. A tourniquet can stay on safely for up to 2 hours.
-
-FOR EMBEDDED OBJECTS (knife, glass, debris):
-- Do NOT remove the object — it may be plugging a vessel.
-- Pad around the object to keep it stable and apply pressure around the sides.
-- Transport immediately to hospital.
-
-FOR INTERNAL BLEEDING (no visible wound):
-Signs: bruising, swelling, rigid abdomen, pale and cold skin, rapid weak pulse, patient feels faint or confused.
-Action: Lay patient flat, raise legs 30 cm, keep warm, do NOT give food or water, get to hospital immediately. Internal bleeding cannot be treated in the field.
-
-NOSEBLEED:
-1. Sit the patient upright and tilt head slightly forward (NOT backward — blood goes to stomach).
-2. Pinch the soft part of the nose firmly for 10–15 minutes without releasing.
-3. Breathe through the mouth.
-4. Apply a cold wet cloth to the forehead and back of neck.
-5. If bleeding continues beyond 20 minutes or follows a head injury — seek emergency care.
-
-WOUND PACKING (for deep wounds where surface pressure is insufficient):
-1. Pack clean cloth or gauze firmly into the wound cavity.
-2. Apply hard pressure over the packed wound.
-3. Maintain pressure and transport to hospital.
-
-SIGNS THAT REQUIRE IMMEDIATE HOSPITAL TRANSPORT:
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital immediately if:
 - Bleeding does not slow after 10 minutes of firm pressure
 - Suspected internal bleeding
 - Large wound requiring sutures
 - Blood is bright red and spurting (arterial bleed)
 - Patient is losing consciousness, pale, or confused
 - Penetrating wound to chest, abdomen, neck, or groin
+- Embedded object in wound
+
+WHAT TO DO WHILE WAITING:
+
+For severe external bleeding:
+1. Apply direct pressure immediately. Use a clean cloth, bandage, or clothing. Press firmly on the wound without lifting or checking every few seconds — continuous pressure is what stops bleeding. Hold for at least 10 minutes without releasing.
+2. If blood soaks through, do NOT remove the cloth. Add more material on top and press harder.
+3. Elevate the injured limb above heart level if possible while maintaining pressure.
+
+For limb bleeding that will not stop with pressure — tourniquet:
+1. Apply 5–7 cm (2–3 inches) above the wound, not on a joint.
+2. Tighten until bleeding stops completely — it must be tight enough to hurt.
+3. Write the time of application on the person's skin or forehead (e.g. "TK 14:30").
+4. Do NOT remove the tourniquet once applied — only medical staff should remove it.
+5. A tourniquet can stay on safely for up to 2 hours.
+
+For embedded objects (knife, glass, debris):
+1. Do NOT remove the object — it may be plugging a vessel.
+2. Pad around the object to keep it stable and apply pressure around the sides.
+3. Transport immediately to hospital.
+
+For internal bleeding (no visible wound):
+1. Lay patient flat, raise legs 30 cm.
+2. Keep warm.
+3. Do NOT give food or water.
+4. Get to hospital immediately — internal bleeding cannot be treated in the field.
+
+For nosebleed:
+1. Sit the patient upright and tilt head slightly forward — NOT backward.
+2. Pinch the soft part of the nose firmly for 10–15 minutes without releasing.
+3. Breathe through the mouth.
+4. If bleeding continues beyond 20 minutes or follows a head injury — seek emergency care.
+
+DO NOT:
+- Do not remove embedded objects from wounds.
+- Do not check a pressure dressing every few minutes — this breaks the clot forming underneath.
+- Do not apply a tourniquet on a joint.
+- Do not remove a tourniquet once applied in the field.

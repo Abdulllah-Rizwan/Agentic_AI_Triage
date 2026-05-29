@@ -1,4 +1,6 @@
-Malaria — Recognition, Prevention and First Aid
+Malaria — First Aid Guide
+
+TOPIC: malaria, malarial fever, malaria bukhar, cycling fever, mosquito fever
 
 RECOGNIZING MALARIA:
 Symptoms appear 10–15 days after a mosquito bite.
@@ -8,7 +10,8 @@ Symptoms appear 10–15 days after a mosquito bite.
 - Nausea, vomiting
 - Sweating after fever peak
 
-SEVERE MALARIA — GO TO HOSPITAL IMMEDIATELY:
+WHEN TO SEEK EMERGENCY CARE:
+Go to hospital immediately if any of the following appear:
 - High fever with confusion or difficulty waking
 - Multiple seizures or convulsions
 - Difficulty breathing or rapid breathing
@@ -18,7 +21,7 @@ SEVERE MALARIA — GO TO HOSPITAL IMMEDIATELY:
 - Child unable to drink or breastfeed
 Severe malaria can kill within 24 hours without treatment. Do not delay.
 
-WHAT TO DO WHILE WAITING FOR MEDICAL CARE:
+WHAT TO DO WHILE WAITING:
 1. Give paracetamol for high fever — follow dosing on the packet.
 2. Keep the patient cool with a damp cloth on the forehead — do not over-bundle.
 3. Encourage fluids: water, ORS, or clear soup.

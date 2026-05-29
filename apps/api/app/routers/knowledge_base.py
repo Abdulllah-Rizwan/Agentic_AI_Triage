@@ -1,6 +1,8 @@
+import json
 import os
 from datetime import datetime, timezone
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy import func, select
@@ -14,6 +16,14 @@ from app.models.db import DocumentStatus, KnowledgeBaseVersion, KnowledgeDocumen
 from app.services import rag_service
 
 router = APIRouter(tags=["knowledge"])
+
+# Generic first-aid guidance shown when no article matches
+_GENERIC_GUIDANCE = (
+    "Rest and stay hydrated — drink clean water or ORS (1 litre water + 6 teaspoons sugar "
+    "+ 1/2 teaspoon salt). Give paracetamol for fever or pain. Monitor symptoms closely. "
+    "If your condition worsens, seek medical care at the nearest health facility. "
+    "Call Rescue 1122 or Edhi Foundation 115 if you feel your situation is serious."
+)
 
 
 # ── GET /version ──────────────────────────────────────────────────────────────
@@ -77,4 +87,129 @@ async def query_knowledge(
 
     return schemas.KnowledgeQueryResponse(
         results=[schemas.KnowledgeQueryResult(**r) for r in results]
+    )
+
+
+# ── POST /route ───────────────────────────────────────────────────────────────
+
+
+@router.post("/route", response_model=schemas.KnowledgeRouteResponse)
+async def route_to_article(
+    body: schemas.KnowledgeRouteRequest,
+    db: AsyncSession = Depends(get_db),
+    _device: str = Depends(get_device_user),
+):
+    """
+    LLM-based disease routing endpoint.
+
+    1. Fetches all active article topic_keywords from the database.
+    2. Calls Groq LLM with the patient's conversation summary + article list.
+    3. LLM selects 1-2 matching article topics.
+    4. Returns action-type chunks from the matched article(s).
+    5. Falls back to generic first-aid guidance when no match is found.
+    """
+    # Step 1: Get all active documents with their topic_keywords
+    rows = (
+        await db.execute(
+            select(KnowledgeDocument.id, KnowledgeDocument.topic_keywords)
+            .where(
+                KnowledgeDocument.status == DocumentStatus.ACTIVE,
+                KnowledgeDocument.topic_keywords.isnot(None),
+            )
+        )
+    ).fetchall()
+
+    if not rows:
+        return schemas.KnowledgeRouteResponse(
+            matched_topics=[],
+            results=[schemas.KnowledgeQueryResult(
+                content=_GENERIC_GUIDANCE,
+                section_type="action",
+                relevance_score=1.0,
+            )],
+            fallback=True,
+        )
+
+    # Build the article list for the LLM prompt
+    # Format: slug → topic_keywords line
+    article_list_lines = []
+    slug_to_doc_id: dict[str, str] = {}
+    for row in rows:
+        # Use the first keyword as the slug (e.g. "malaria" from "malaria, mosquito fever, ...")
+        slug = row.topic_keywords.split(",")[0].strip().lower()
+        article_list_lines.append(f'- "{slug}": {row.topic_keywords}')
+        slug_to_doc_id[slug] = str(row.id)
+
+    article_list = "\n".join(article_list_lines)
+
+    # Step 2: Call Groq LLM
+    prompt = f"""You are a medical article routing assistant. Your only job is to identify which medical articles are relevant to a patient's symptoms.
+
+Patient summary (may be in English, Urdu, or Roman Urdu):
+{body.conversation_summary}
+
+Available medical articles (slug: keywords):
+{article_list}
+
+Which 1-2 article slugs best match the patient's condition?
+Rules:
+- Return ONLY a JSON array of slug strings exactly as listed above (e.g. ["malaria"] or ["cholera", "dehydration"])
+- Use only slugs from the list above — do not invent new ones
+- If no article clearly matches, return []
+- Do not explain your answer — return only the JSON array"""
+
+    matched_slugs: list[str] = []
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            response = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": "llama-3.3-70b-versatile",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": 0.0,
+                    "max_tokens": 64,
+                },
+            )
+        if response.status_code == 200:
+            raw = response.json()["choices"][0]["message"]["content"].strip()
+            # Extract JSON array from response (may have markdown fences)
+            if "```" in raw:
+                raw = raw.split("```")[1].strip()
+                if raw.startswith("json"):
+                    raw = raw[4:].strip()
+            # Find the first [ ... ] substring
+            start = raw.find("[")
+            end = raw.rfind("]")
+            if start != -1 and end != -1:
+                matched_slugs = json.loads(raw[start:end + 1])
+                # Validate — keep only slugs that exist in our map
+                matched_slugs = [s for s in matched_slugs if s in slug_to_doc_id]
+    except Exception:
+        # LLM call failed — fall through to generic guidance
+        pass
+
+    # Step 3: If LLM matched articles, retrieve their action chunks
+    if matched_slugs:
+        doc_ids = [slug_to_doc_id[s] for s in matched_slugs]
+        chunks = await rag_service.query_by_document_ids(doc_ids, db)
+        if chunks:
+            return schemas.KnowledgeRouteResponse(
+                matched_topics=matched_slugs,
+                results=[schemas.KnowledgeQueryResult(**c) for c in chunks],
+                fallback=False,
+            )
+
+    # Step 4: No match or empty chunks — return generic guidance
+    return schemas.KnowledgeRouteResponse(
+        matched_topics=[],
+        results=[schemas.KnowledgeQueryResult(
+            content=_GENERIC_GUIDANCE,
+            section_type="action",
+            relevance_score=1.0,
+        )],
+        fallback=True,
     )

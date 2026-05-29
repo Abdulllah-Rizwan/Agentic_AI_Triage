@@ -36,6 +36,9 @@ def _write_mobile_json_exports(export_dir: str, rows: list, vectors) -> None:
             "articleUrl":    getattr(r, "article_url", None),
             "articleAuthor": getattr(r, "article_author", None),
             "articleSource": getattr(r, "article_source", None),
+            # section_type enables the mobile BM25 engine to prefer action chunks
+            # over symptom-description chunks when displaying post-triage guidance.
+            "section_type":  getattr(r, "section_type", None),
         }
         for r in rows
     ]
@@ -75,6 +78,7 @@ async def bump_version_and_export(db: AsyncSession) -> int:
                 KnowledgeChunk.article_url,
                 KnowledgeChunk.article_author,
                 KnowledgeChunk.article_source,
+                KnowledgeChunk.section_type,
             )
             .join(KnowledgeDocument, KnowledgeChunk.document_id == KnowledgeDocument.id)
             .where(KnowledgeDocument.status == DocumentStatus.ACTIVE)

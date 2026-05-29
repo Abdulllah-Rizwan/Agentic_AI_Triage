@@ -1,68 +1,53 @@
-Malnutrition in Disaster Settings — Recognition and Emergency Action
+Malnutrition in Disaster Settings — First Aid Guide
 
-Severe acute malnutrition (SAM) is life-threatening. Recognizing it early and ensuring access to therapeutic food and hospital care saves lives.
+TOPIC: malnutrition, severe malnutrition, malnourished child, wasting, kwashiorkor, food emergency, hungry child
 
-FORMS OF MALNUTRITION IN DISASTERS
+RECOGNIZING SEVERE ACUTE MALNUTRITION IN CHILDREN:
+Measure the mid-upper arm circumference (MUAC) using a tape or a paper strip marked at 11.5 cm and 12.5 cm:
+- Red zone (below 11.5 cm): Severe Acute Malnutrition — urgent therapeutic feeding and medical care required.
+- Yellow zone (11.5–12.5 cm): Moderate Acute Malnutrition — supplementary feeding required.
+- Green zone (above 12.5 cm): Normal — monitor and ensure adequate diet.
 
-Acute malnutrition (wasting): occurs when a child or adult does not receive enough food in recent weeks or months. Visible as extreme thinness.
+How to measure: bend child's left arm at 90 degrees, find midpoint between shoulder and elbow, straighten the arm and measure around the midpoint with the tape snug but not squeezing.
 
-Severe Acute Malnutrition (SAM): the most dangerous form. Defined as very low weight for height (more than 3 standard deviations below normal) or bilateral pitting oedema (swelling of both feet and legs). SAM has high mortality without treatment.
+Bilateral pitting oedema (always an emergency): press both feet firmly with thumbs for 3 seconds. If a pit (dent) remains in both feet — this is oedema, a sign of Severe Acute Malnutrition regardless of MUAC.
 
-Chronic malnutrition (stunting): long-term inadequate nutrition causing short stature. Does not require emergency treatment but affects immunity and increases risk from infections.
+WHEN TO SEEK EMERGENCY CARE:
+Seek emergency hospital care immediately for a malnourished child with any of:
+- High fever or hypothermia (belly is cold to touch)
+- Severe dehydration
+- Breathlessness or rapid breathing
+- Loss of consciousness or extreme lethargy
+- Inability to drink or feed
+- Seizures
+- Bilateral pitting oedema
 
-Micronutrient deficiency: vitamin A, iron, zinc, and iodine deficiencies are widespread in Pakistan and worsen during floods when food diversity collapses.
+WHAT TO DO WHILE WAITING:
+If Ready-to-Use Therapeutic Food (RUTF — brand names: Plumpy'Nut, Wawa Mum) is available:
+1. Give 3–4 sachets per day spread across meals.
+2. Continue breastfeeding alongside RUTF.
+3. Do not share RUTF with other family members — it is medicine, not food.
+4. Bring the child to a health worker weekly for weight monitoring.
+5. Do not give RUTF to children who are too sick to swallow — they require IV treatment first.
 
-RECOGNIZING SEVERE ACUTE MALNUTRITION IN CHILDREN
+For moderate malnutrition without RUTF:
+1. Give supplementary food provided by relief agencies.
+2. Increase feeding frequency — malnourished children need 6–8 small meals per day.
+3. Continue breastfeeding for children under 2 years.
+4. Energy-dense, locally available foods: khichri (rice and dal), chapati with ghee, milk, eggs, fish, lentils, green leafy vegetables.
+5. Treat any infection promptly — infections worsen malnutrition.
 
-Measure the mid-upper arm circumference (MUAC) using a MUAC tape or a strip of paper marked at 11.5 cm and 12.5 cm.
-Red zone (below 11.5 cm): Severe Acute Malnutrition — requires urgent therapeutic feeding and medical care.
-Yellow zone (11.5–12.5 cm): Moderate Acute Malnutrition — requires supplementary feeding.
-Green zone (above 12.5 cm): Normal — monitor and ensure adequate diet.
+For pregnant and breastfeeding women:
+1. Ensure iron-folic acid supplements daily throughout pregnancy.
+2. Adequate caloric intake — at least 300 additional calories per day above normal requirements.
+3. Report to camp health coordinator — their needs must be prioritised.
 
-To measure MUAC: bend the child's left arm at 90 degrees, find the midpoint between the shoulder and elbow, straighten the arm and measure around the midpoint with the tape snug but not squeezing.
+DO NOT:
+- Do not give RUTF to a child too sick or weak to swallow safely — aspiration risk.
+- Do not share therapeutic food intended for the malnourished child with other family members.
+- Do not stop treating infections in a malnourished child — infections and malnutrition worsen each other.
 
-Bilateral pitting oedema: press both feet firmly with your thumbs for 3 seconds. If a pit (dent) remains in both feet when you release, this is oedema — a sign of SAM regardless of MUAC measurement. This is always an emergency.
-
-SAM — MEDICAL EMERGENCIES TO WATCH FOR
-
-Children with SAM are highly susceptible to infection and can deteriorate rapidly. Seek emergency hospital care immediately for a malnourished child with:
-High fever or hypothermia (abnormally low body temperature — feel the belly; it should be warm).
-Severe dehydration.
-Breathlessness or rapid breathing (possible pneumonia).
-Loss of consciousness or extreme lethargy.
-Inability to drink or feed.
-Seizures.
-
-READY-TO-USE THERAPEUTIC FOOD (RUTF)
-
-RUTF (brand name Plumpy'Nut or Wawa Mum) is a peanut-based paste used to treat SAM at community level. It does not require cooking or clean water for preparation. If RUTF is available from relief distributions:
-Give the child 3–4 sachets per day spread across meals.
-Continue breastfeeding alongside RUTF.
-Do not share RUTF with other family members — it is medicine, not food.
-Bring the child to a health worker weekly for weight monitoring.
-
-Do not give RUTF to children who are too sick to swallow — they require IV treatment first.
-
-MANAGING MODERATE MALNUTRITION AT HOME
-
-Give supplementary food provided by relief agencies.
-Increase feeding frequency — malnourished children need 6–8 small meals per day.
-Continue breastfeeding for children under 2 years.
-Treat vitamin A deficiency: give vitamin A capsule once (if available) — particularly important during measles outbreaks.
-Give iron-folic acid supplements to pregnant women and malnourished adolescent girls.
-Treat any infection promptly — infections worsen malnutrition and malnutrition worsens infections.
-
-FEEDING IN EMERGENCY — PRACTICAL GUIDANCE
-
-Energy-dense, locally available foods for malnourished individuals: khichri (rice and dal), chapati with ghee, milk, eggs, fish, lentils, and green leafy vegetables.
-In relief camps, community kitchens should prioritize supplementary feeding for: children under 5, pregnant and breastfeeding women, and elderly individuals.
-Vitamin A supplementation campaigns should be run by health authorities during flood responses.
-
-SPECIAL CONCERN: PREGNANT AND BREASTFEEDING WOMEN
-
-Malnourished pregnant women face high risk of complications, low-birth-weight babies, and maternal death. Ensure pregnant women receive:
-Iron-folic acid supplements daily throughout pregnancy.
-Adequate caloric intake — at least 300 additional calories per day above normal adult requirements.
-Access to antenatal care and skilled birth attendance.
-
-Report all pregnant women in displaced communities to the camp health coordinator — their needs must be prioritised.
+PREVENTION:
+- In relief camps, community kitchens should prioritize supplementary feeding for: children under 5, pregnant and breastfeeding women, and elderly individuals.
+- Vitamin A supplementation campaigns should be run by health authorities during flood responses.
+- Report all pregnant women in displaced communities to the camp health coordinator.

@@ -115,13 +115,21 @@ async function _trySend(
     const ingestUrl = `${API_BASE_URL}/api/v1/cases/ingest`;
     console.log(`[Transmission] POST ${ingestUrl} (${payloadBytes.length} bytes, token=${!!token})`);
 
+    // Convert Buffer → ArrayBuffer so React Native's native fetch layer handles
+    // the binary body correctly on all Android/iOS versions (Buffer.buffer may
+    // share backing memory with a larger allocation; slicing gives a clean copy).
+    const binaryBody = payloadBytes.buffer.slice(
+      payloadBytes.byteOffset,
+      payloadBytes.byteOffset + payloadBytes.byteLength,
+    );
+
     const response = await fetch(ingestUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/octet-stream',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: payloadBytes,
+      body: binaryBody,
     });
 
     if (response.ok || response.status === 202) {
@@ -137,8 +145,8 @@ async function _trySend(
       return true;
     }
 
-    const body = await response.text().catch(() => '');
-    console.warn(`[Transmission] Ingest rejected: HTTP ${response.status} — ${body} — case ${caseId}`);
+    const responseBody = await response.text().catch(() => '');
+    console.warn(`[Transmission] Ingest rejected: HTTP ${response.status} — ${responseBody} — case ${caseId}`);
     return false;
   } catch (err) {
     console.error(`[Transmission] _trySend network error for case ${caseId}: ${String(err)}`);
@@ -236,13 +244,18 @@ export async function flushQueue(): Promise<void> {
       const ingestUrl = `${API_BASE_URL}/api/v1/cases/ingest`;
       console.log(`[Transmission] flushQueue POST ${ingestUrl} case=${record.case_id.slice(0, 8)} (${payloadBytes.length} bytes)`);
 
+      const flushBody = payloadBytes.buffer.slice(
+        payloadBytes.byteOffset,
+        payloadBytes.byteOffset + payloadBytes.byteLength,
+      );
+
       const response = await fetch(ingestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/octet-stream',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: payloadBytes,
+        body: flushBody,
       });
 
       if (response.ok || response.status === 202) {

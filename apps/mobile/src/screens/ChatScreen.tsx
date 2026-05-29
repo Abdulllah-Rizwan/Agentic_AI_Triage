@@ -34,7 +34,7 @@ import {
 import { encodeLeanPayload, generateCaseId, type LeanPayload } from '../proto/triage';
 import { encryptLeanPayload } from '../services/encryption/AESEncryption';
 import { transmissionService } from '../services/transmission/TransmissionService';
-import { queryGuidance } from '../services/rag/queryGuidance';
+import { queryGuidance, routeGuidance } from '../services/rag/queryGuidance';
 import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
 import { useTransmissionStore } from '../store/transmissionStore';
@@ -333,44 +333,32 @@ export default function ChatScreen({ navigation, route }: Props) {
     }
 
     // ── 3. RAG guidance with citation ─────────────────────────────────────────
-    // Only runs after triage is complete so the agent has the full symptom picture.
-    // Uses the triggered keyword as the primary query — it maps directly to article
-    // topics (e.g. "snake bite" → snake_bites_guidelines). Falls back to chief
-    // complaint. Skips guidance if score is below threshold or no citation is available.
+    // Uses LLM-based disease routing (routeGuidance) so the server can identify
+    // the correct article from the full conversation rather than a single keyword.
+    // Falls back to BM25 offline, and to generic guidance if nothing matches.
     try {
-      const MIN_SCORE = 0.3;
+      const results = await routeGuidance(
+        featureVector.conversationSummary,
+        level,
+      );
 
-      // Primary query: the exact keyword that triggered the triage (or chief complaint for GREEN)
-      const primaryQuery = triageResult.triggeredKeyword ?? featureVector.chiefComplaint;
-      let results = await queryGuidance(primaryQuery, 1);
-
-      // Secondary fallback: try chief complaint alone when keyword produced a weak match
-      if (
-        (results.length === 0 || results[0]!.score < MIN_SCORE) &&
-        triageResult.triggeredKeyword
-      ) {
-        results = await queryGuidance(featureVector.chiefComplaint, 1);
-      }
-
-      if (!unmounted.current && results.length > 0 && results[0]!.score >= MIN_SCORE) {
+      if (!unmounted.current && results.length > 0) {
         const r = results[0]!;
-        // Skip uncited guidance — if we can't say where it came from, don't show it
         const hasSource = Boolean(r.articleTitle || r.articleSource);
-        if (hasSource) {
-          const citation =
-            `\n\n📚 Source: ${r.articleTitle ? `"${r.articleTitle}" — ` : ''}${r.articleSource ?? 'WHO'}`;
-          const intro =
-            level === 'GREEN'
-              ? 'Here are some care tips while you monitor your condition:\n\n'
-              : 'While waiting for help:\n\n';
-          addMessage({
-            id: `guidance-${Date.now()}`,
-            role: 'agent',
-            type: 'guidance',
-            content: `${intro}${r.content}${citation}`,
-            timestamp: Date.now(),
-          });
-        }
+        const citation = hasSource
+          ? `\n\n📚 Source: ${r.articleTitle ? `"${r.articleTitle}" — ` : ''}${r.articleSource ?? 'WHO'}`
+          : '';
+        const intro =
+          level === 'GREEN'
+            ? 'Here are some care tips while you monitor your condition:\n\n'
+            : 'While waiting for help:\n\n';
+        addMessage({
+          id: `guidance-${Date.now()}`,
+          role: 'agent',
+          type: 'guidance',
+          content: `${intro}${r.content}${citation}`,
+          timestamp: Date.now(),
+        });
       }
     } catch { /* RAG unavailable — skip silently */ }
 

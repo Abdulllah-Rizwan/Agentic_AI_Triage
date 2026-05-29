@@ -1,43 +1,56 @@
-Understanding Triage Levels — What They Mean for You
+Understanding Triage Levels — Patient Guide
 
-WHAT TRIAGE MEANS:
-Triage is the process medical teams use to prioritize patients by urgency. When you are assessed, you will be placed into one of three categories. This helps ensure the most critically ill receive care first.
+TOPIC: triage, triage levels, RED triage, AMBER triage, GREEN triage, waiting for treatment
+
+RECOGNIZING YOUR TRIAGE CATEGORY:
+When you are assessed, you will be placed into one of three categories based on urgency.
 
 RED — CRITICAL (Immediate):
 You need life-saving care right now.
 Conditions: difficulty breathing, uncontrolled bleeding, unconsciousness, severe crush injury, seizures, heart attack symptoms.
-What happens: You will be moved to the emergency treatment area immediately. Stay calm and do not move without assistance.
+What happens: You will be moved to the emergency treatment area immediately.
 
 AMBER / YELLOW — URGENT (Can wait briefly):
 You have a serious condition that needs treatment within the hour but is not immediately life-threatening.
 Conditions: fractures, deep wounds, high fever, moderate bleeding that is controlled, severe pain.
-What happens: You will be assessed and treated as soon as a team member is available. Alert a health worker immediately if your condition gets worse.
+What happens: You will be assessed and treated as soon as a team member is available.
 
 GREEN — MINOR (Walking wounded):
 Your condition is stable. You can walk and do not have immediate life-threatening symptoms.
 Conditions: minor cuts, mild fever, sprains, nausea without vomiting.
-What happens: You will be directed to a separate area for treatment. You will wait but will be seen. Alert a health worker if you feel worse.
+What happens: You will be directed to a separate area and will wait but will be seen.
 
-WHAT TO DO WHEN WAITING FOR TREATMENT:
+WHEN TO SEEK EMERGENCY CARE:
+Alert a health worker immediately — or ask someone to go on your behalf — if:
+- Your condition is worsening after being triaged
+- You are having difficulty breathing
+- Bleeding resumes or worsens
+- You lose consciousness or feel about to faint
+- You develop new symptoms (chest pain, confusion, severe pain)
+You have the right to request reassessment if your symptoms change.
+
+WHAT TO DO WHILE WAITING:
 
 RED category — while waiting for emergency team:
-- Stay lying down.
-- Keep someone with you to monitor breathing.
-- Apply pressure to any wounds.
-- Do not eat or drink — you may need surgery.
+1. Stay lying down.
+2. Keep someone with you to monitor breathing.
+3. Apply pressure to any wounds.
+4. Do not eat or drink — you may need surgery.
 
 AMBER category — while waiting:
-- Stay in the waiting area assigned to you.
-- Immobilize injured limbs — do not walk on a possible fracture.
-- Keep the patient warm and calm.
-- Re-approach a health worker immediately if: breathing becomes difficult, bleeding resumes, or consciousness decreases.
+1. Stay in the waiting area assigned to you.
+2. Immobilize injured limbs — do not walk on a possible fracture.
+3. Keep the patient warm and calm.
+4. Re-approach a health worker immediately if: breathing becomes difficult, bleeding resumes, or consciousness decreases.
 
 GREEN category — while waiting:
-- Rest in the designated area.
-- Drink water if no abdominal injury.
-- Use basic first aid for minor wounds — clean and bandage.
-- Do not leave the assessment area without being seen.
+1. Rest in the designated area.
+2. Drink water if no abdominal injury.
+3. Use basic first aid for minor wounds — clean and bandage.
+4. Do not leave the assessment area without being seen.
+5. If you feel worse, go directly to any health worker and say: "I was triaged GREEN but my condition is getting worse — I need to be reassessed."
 
-HOW TO TELL A HEALTH WORKER YOUR CONDITION IS WORSENING:
-Go directly to any health worker and say: "I was triaged [colour] but my condition is getting worse — I need to be reassessed."
-You have the right to request reassessment if your symptoms change.
+DO NOT:
+- Do not leave the medical facility without being seen, even if you feel better — your condition may change.
+- Do not give a RED-category patient food or water before they are seen by a doctor.
+- Do not try to move a RED-category patient unnecessarily.

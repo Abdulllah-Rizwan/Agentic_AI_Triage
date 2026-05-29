@@ -133,7 +133,28 @@
       "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/health\" -Method GET -TimeoutSec 5 2>&1)",
       "PowerShell(cd \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\docs\\\\knowledge-base\"; $env:API_BASE_URL=\"http://localhost:3001\"; $env:ADMIN_EMAIL=\"admin@medireach.app\"; $env:ADMIN_PASSWORD=\"admin123\"; python upload_articles.py 2>&1)",
       "Bash(xargs -I{} sh -c 'echo \"=== {} ===\"; cat \"{}\"')",
-      "Bash(xargs grep -h \"^source:\")"
+      "Bash(xargs grep -h \"^source:\")",
+      "Bash(dir C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\docs\\\\knowledge-base\\\\articles *)",
+      "Bash(.venv\\\\Scripts\\\\python.exe -m alembic upgrade head)",
+      "Bash(\"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\api\\\\.venv\\\\Scripts\\\\python.exe\" build_baseline_index.py)",
+      "PowerShell(Set-Location *)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3001/api/v1/health\" -TimeoutSec 5 -ErrorAction SilentlyContinue | Select-Object StatusCode, Content)",
+      "PowerShell($python = \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\api\\\\.venv\\\\Scripts\\\\python.exe\"; Set-Location \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\docs\\\\knowledge-base\"; & $python reupload_all.py 2>&1 | Select-Object -First 20)",
+      "PowerShell($token = \\(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/auth/login\" -Method Post -ContentType \"application/json\" -Body '{\"email\":\"admin@medireach.app\",\"password\":\"admin123\"}'\\).access_token; $docs = \\(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/admin/knowledge/documents\" -Headers @{Authorization=\"Bearer $token\"}\\).documents; $active = \\($docs | Where-Object {$_.status -eq \"ACTIVE\"}\\).Count; $total = $docs.Count; Write-Host \"Total docs: $total | ACTIVE: $active\")",
+      "PowerShell($token = \\(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/auth/login\" -Method Post -ContentType \"application/json\" -Body '{\"email\":\"admin@medireach.app\",\"password\":\"admin123\"}'\\).access_token; $docs = \\(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/admin/knowledge/documents\" -Headers @{Authorization=\"Bearer $token\"}\\).documents; $docs | ForEach-Object { $_.filename } | Sort-Object)",
+      "PowerShell($python = \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\api\\\\.venv\\\\Scripts\\\\python.exe\"; Set-Location \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\docs\\\\knowledge-base\"; & $python upload_articles.py)",
+      "PowerShell($token = \\(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/auth/login\" -Method Post -ContentType \"application/json\" -Body '{\"email\":\"admin@medireach.app\",\"password\":\"admin123\"}'\\).access_token; $stats = Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/admin/knowledge/stats\" -Headers @{Authorization=\"Bearer $token\"}; Write-Host \"KB Version: $\\($stats.kb_version\\) | Active docs: $\\($stats.active_documents\\) | Total chunks: $\\($stats.total_chunks\\)\")",
+      "PowerShell($token = \\(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/auth/login\" -Method Post -ContentType \"application/json\" -Body '{\"email\":\"admin@medireach.app\",\"password\":\"admin123\"}'\\).access_token; $docs = \\(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/admin/knowledge/documents\" -Headers @{Authorization=\"Bearer $token\"}\\).documents; $docs | Select-Object filename, status, chunk_count | Format-Table)",
+      "PowerShell($token = \\(Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/auth/login\" -Method Post -ContentType \"application/json\" -Body '{\"email\":\"admin@medireach.app\",\"password\":\"admin123\"}'\\).access_token; Invoke-RestMethod -Uri \"http://localhost:3001/api/v1/admin/system/health\" -Headers @{Authorization=\"Bearer $token\"} | ConvertTo-Json)",
+      "PowerShell(ipconfig | Select-String \"IPv4\" | Where-Object {$_ -notmatch \"169|172|VMware|VirtualBox|WSL\"})",
+      "PowerShell(Get-Item *)",
+      "PowerShell(ipconfig | Select-String \"IPv4|Wireless|Wi-Fi\" | Where-Object { $_ -notmatch \"169\\\\.254\" })",
+      "PowerShell(winget upgrade *)",
+      "PowerShell(Get-NetConnectionProfile *)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://192.168.18.34:3001/api/v1/health\" -TimeoutSec 5 2>&1)",
+      "PowerShell(Start-Process -FilePath \"ngrok\" -ArgumentList \"http 3001\" -PassThru | Select-Object Id; Start-Sleep -Seconds 4; Invoke-WebRequest -Uri \"http://127.0.0.1:4040/api/tunnels\" -TimeoutSec 5 | Select-Object -ExpandProperty Content)",
+      "PowerShell($env:EXPO_NO_DOCTOR = \"1\"; Start-Process -FilePath \"cmd\" -ArgumentList \"/c npx --yes localtunnel --port 3001 > C:\\\\Users\\\\ABDULL~1\\\\AppData\\\\Local\\\\Temp\\\\lt_output.txt 2>&1\" -WindowStyle Hidden; Start-Sleep -Seconds 8; Get-Content \"C:\\\\Users\\\\ABDULL~1\\\\AppData\\\\Local\\\\Temp\\\\lt_output.txt\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://127.0.0.1:4040/api/tunnels\" | ConvertTo-Json -Depth 5)"
     ]
   }
 }

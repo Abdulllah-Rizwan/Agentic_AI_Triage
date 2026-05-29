@@ -1,61 +1,58 @@
-Heat Exhaustion and Heatstroke — Emergency Recognition and Action
+Heat Exhaustion and Heatstroke — First Aid Guide
 
-Heatstroke is a life-threatening emergency. The body's cooling system fails, causing brain damage and death if not treated within minutes.
+TOPIC: heatstroke, heat stroke, heat exhaustion, overheating, garmi, garmi ki bemari, hyperthermia
 
-HEAT-RELATED ILLNESS: THREE STAGES
+RECOGNIZING HEAT-RELATED ILLNESS — THREE STAGES:
 
-Understanding the progression helps you act early.
-
-Stage 1 — Heat Cramps: Painful muscle cramps in the legs or abdomen after physical activity in heat. Skin is moist. Person is alert. Move to shade, give oral rehydration salts or water with a pinch of salt.
+Stage 1 — Heat Cramps: Painful muscle cramps in the legs or abdomen after physical activity in heat. Skin is moist. Person is alert.
 
 Stage 2 — Heat Exhaustion: The body is struggling to cool itself. Symptoms: heavy sweating, cool and pale or flushed skin, fast and weak pulse, nausea or vomiting, headache, dizziness, fainting, muscle cramps, extreme tiredness. The person remains conscious and coherent.
 
-Stage 3 — Heatstroke: A medical emergency. The cooling system has failed. Symptoms: body temperature above 40°C (104°F), hot and dry skin (sweating stops), rapid and strong pulse, confusion, slurred speech, agitation, seizures, loss of consciousness. This can progress to brain damage and death within minutes.
+Stage 3 — Heatstroke (Emergency): The cooling system has failed. Symptoms: body temperature above 40°C (104°F), hot and dry skin (sweating stops), rapid and strong pulse, confusion, slurred speech, agitation, seizures, loss of consciousness.
 
-EMERGENCY ACTIONS FOR HEATSTROKE
+WHEN TO SEEK EMERGENCY CARE:
+Call for emergency help immediately for heatstroke (Stage 3):
+- Hot and dry skin (no sweating despite extreme heat)
+- Confusion, agitation, or loss of consciousness
+- Temperature above 40°C
+- Seizures
+Heatstroke can cause brain damage and death within minutes — do not wait. Call Rescue 1122 or Edhi 115.
 
-Call for emergency help immediately — Rescue 1122, Edhi 115.
-Begin aggressive cooling at once. Every minute of delay causes further organ damage.
+WHAT TO DO WHILE WAITING:
 
-Cooling methods — use as many as simultaneously available:
-Move the person to shade or a cool indoor area.
-Remove excess clothing.
-Pour cool (not ice cold) water over the entire body, especially the neck, armpits, and groin where large blood vessels run close to the skin.
-Fan the person vigorously while their skin is wet — this dramatically accelerates heat loss.
-Apply wet cloths or cool damp towels to the neck, armpits, groin, and wrists.
-If ice is available, wrap in cloth and apply to armpits, groin, and neck (do not apply ice directly to skin).
+For heatstroke (Stage 3) — begin aggressive cooling immediately while calling for help:
+1. Move the person to shade or a cool indoor area.
+2. Remove excess clothing.
+3. Pour cool (not ice cold) water over the entire body, especially the neck, armpits, and groin where large blood vessels run close to the skin.
+4. Fan the person vigorously while their skin is wet — this dramatically accelerates heat loss.
+5. Apply wet cloths or cool damp towels to the neck, armpits, groin, and wrists.
+6. If ice is available, wrap in cloth and apply to armpits, groin, and neck — do not apply ice directly to skin.
+7. If the person is conscious and not vomiting: give cool water or ORS to drink.
+8. If confused, vomiting, or unconscious: do not give anything by mouth.
+9. If unconscious: place in recovery position and monitor breathing. Begin CPR if they stop breathing.
+10. Continue cooling until the person becomes more alert or emergency help arrives.
 
-Do not give aspirin or paracetamol for heatstroke — these fever medications do not work for heatstroke, which is not caused by infection.
+For heat exhaustion (Stage 2):
+1. Move to shade or a cool area immediately.
+2. Lie the person down and elevate their legs slightly.
+3. Remove excess clothing and apply cool wet cloths to face, neck, and wrists.
+4. Give ORS or cool water to drink slowly — about 150–200 ml every 15 minutes.
+5. If not improved in 30 minutes, or if they become confused, treat as heatstroke and call for emergency help.
 
-If the person is conscious and not vomiting: give cool water or ORS to drink.
-If the person is confused, vomiting, or unconscious: do not give anything by mouth — they may inhale it.
-If the person loses consciousness: place them in the recovery position and monitor breathing. Begin CPR if they stop breathing.
+For heat cramps (Stage 1):
+1. Move to shade and rest.
+2. Give ORS or water with a pinch of salt.
 
-Continue cooling until temperature drops and the person becomes more alert, or until emergency services arrive.
+DO NOT:
+- Do not give aspirin or paracetamol for heatstroke — these medications work against infection-caused fever, not heatstroke.
+- Do not give fluids to an unconscious or confused person — they may inhale them.
+- Do not leave a heatstroke patient alone.
 
-ACTIONS FOR HEAT EXHAUSTION
+HIGH-RISK GROUPS:
+Prioritise monitoring for heatstroke in: elderly individuals, children under 5, pregnant women, people with heart disease or diabetes, and anyone performing heavy physical labour in heat. Never leave a child in a closed vehicle, tent, or enclosed space in heat.
 
-Move to shade or a cool area immediately.
-Lie the person down and elevate their legs slightly.
-Remove excess clothing and apply cool wet cloths to the face, neck, and wrists.
-Give oral rehydration salts or cool water to drink slowly — about 150–200 ml every 15 minutes.
-Monitor closely — if they do not improve within 30 minutes, or if they become confused, this has progressed to heatstroke. Begin aggressive cooling and call for emergency help.
-
-CHILDREN AND HEATSTROKE
-
-Children are more vulnerable to heatstroke than adults — they have a higher surface area to body mass ratio and cannot communicate thirst reliably.
-Never leave a child in a closed vehicle, tent, or enclosed space in heat.
-Infants in arms in direct sun can develop heatstroke rapidly — cover with a light cloth and move to shade.
-Signs in children: excessive crying, then sudden quietness, hot flushed skin, very high fever, confusion or unusual drowsiness.
-
-PREVENTION IN DISASTER SETTINGS
-
-Drink water regularly — do not wait to feel thirsty. In extreme heat, adults need at least 2–3 litres of water per day.
-Avoid physical activity during the hottest part of the day (11:00–15:00 hours).
-Wear light, loose, light-coloured clothing.
-Set up shade structures for children, elderly, and sick individuals as a priority in relief camps.
-If ORS is not available, make a solution: 1 litre of clean water + 6 teaspoons of sugar + half a teaspoon of salt.
-
-HIGH-RISK GROUPS
-
-Prioritise monitoring for heatstroke in: elderly individuals, children under 5, pregnant women, people with heart disease or diabetes, and anyone performing heavy physical labour in heat.
+PREVENTION:
+- Drink water regularly — do not wait to feel thirsty. Adults need at least 2–3 litres per day in extreme heat.
+- Avoid physical activity during the hottest part of the day (11:00–15:00).
+- Wear light, loose, light-coloured clothing.
+- Set up shade structures in relief camps as a priority for children, elderly, and sick individuals.

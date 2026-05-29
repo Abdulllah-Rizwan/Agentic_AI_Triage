@@ -48,12 +48,16 @@ export interface ChunkMetadata {
   articleUrl: string | null;
   articleAuthor: string | null;
   articleSource: string | null;
+  // Section type from the standardized article format.
+  // Values: symptoms | emergency | action | prevention | general
+  section_type?: string;
 }
 
 export interface RAGResult {
   content: string;
   articleTitle: string | null;
   articleSource: string | null;
+  sectionType?: string;
   score: number;
 }
 
@@ -221,6 +225,19 @@ class LocalRAGService {
       // when the server returns 404 — that produces a plain object, not an array.
       if (!Array.isArray(parsed) || parsed.length === 0) return false;
 
+      // Guard: reject old-format JSON that lacks section_type.
+      // Without section_type the section preference falls back to pure BM25 which
+      // returns symptom-recognition sections instead of "WHAT TO DO WHILE WAITING".
+      // The bundled knowledge_meta.json (built by build_baseline_index.py) always
+      // has section_type, so falling through here loads the correct bundled version.
+      const hasType = parsed.some(
+        (c: ChunkMetadata) => typeof c.section_type === 'string',
+      );
+      if (!hasType) {
+        console.warn('[RAG] documentDirectory index lacks section_type — falling back to bundled.');
+        return false;
+      }
+
       this.metadata = parsed as ChunkMetadata[];
       console.log('[RAG] Loaded updated index from documentDirectory.');
       return true;
@@ -286,47 +303,50 @@ class LocalRAGService {
     const rawTerms = this._tokenize(text);
     if (rawTerms.length === 0) return [];
 
-    // Expand with spelling variants and medical synonyms
     const expandedTerms = this._expandTerms(rawTerms);
 
     const scored = this.metadata.map((chunk, index) => {
       const content = chunk.content.toLowerCase();
       const title   = (chunk.articleTitle ?? '').toLowerCase();
 
-      // ── Content score ──────────────────────────────────────────────────────
-      // Count unique root terms matched in the chunk content.
-      // A term matched via synonym still counts as one hit (deduplicated by root).
       const contentRoots = new Set<string>();
       for (const term of expandedTerms) {
         if (content.includes(term)) {
           contentRoots.add(this._rootOf(term, rawTerms));
         }
       }
-      const contentScore = contentRoots.size / rawTerms.length; // [0, 1]
+      const contentScore = contentRoots.size / rawTerms.length;
 
-      // ── Title score ────────────────────────────────────────────────────────
-      // Same logic for the article title.  Multiplied by TITLE_WEIGHT so that
-      // articles specifically about the queried condition rank above articles
-      // that merely mention the symptoms in passing.
       const titleRoots = new Set<string>();
       for (const term of expandedTerms) {
         if (title.includes(term)) {
           titleRoots.add(this._rootOf(term, rawTerms));
         }
       }
-      const titleScore = (titleRoots.size / rawTerms.length) * TITLE_WEIGHT; // [0, TITLE_WEIGHT]
+      const titleScore = (titleRoots.size / rawTerms.length) * TITLE_WEIGHT;
 
       return { score: contentScore + titleScore, index };
     });
 
-    return scored
+    const allResults = scored
       .filter(({ score }) => score > 0)
-      .sort((a, b) => b.score - a.score)
+      .sort((a, b) => b.score - a.score);
+
+    // Prefer action/prevention chunks so patients see "what to do" rather than
+    // symptom descriptions. Fall back to all chunks if none are action-type.
+    const actionResults = allResults.filter(({ index }) => {
+      const st = this.metadata[index]?.section_type ?? '';
+      return st === 'action' || st === 'prevention';
+    });
+    const candidates = actionResults.length > 0 ? actionResults : allResults;
+
+    return candidates
       .slice(0, topK)
       .map(({ score, index }) => ({
         content:       this.metadata[index]!.content,
         articleTitle:  this.metadata[index]!.articleTitle,
         articleSource: this.metadata[index]!.articleSource,
+        sectionType:   this.metadata[index]?.section_type,
         score:         Math.round(score * 10000) / 10000,
       }));
   }

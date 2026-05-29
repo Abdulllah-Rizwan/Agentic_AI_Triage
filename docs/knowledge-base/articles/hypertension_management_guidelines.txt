@@ -1,66 +1,44 @@
-Hypertensive Emergency — Recognition and Immediate Action
+Hypertension and Hypertensive Emergency — First Aid Guide
 
-A hypertensive emergency is a sudden severe rise in blood pressure — typically 180/120 mmHg or higher — combined with damage to organs such as the brain, heart, or kidneys. It is a life-threatening condition requiring immediate hospital care.
+TOPIC: hypertension, high blood pressure, blood pressure emergency, stroke, heart attack, BP crisis
 
-In disaster settings, patients with existing high blood pressure often run out of their medications, face extreme stress, and cannot reach clinics. This significantly raises the risk of a hypertensive emergency.
+RECOGNIZING A HYPERTENSIVE EMERGENCY:
+A sudden severe rise in blood pressure (typically 180/120 mmHg or higher) combined with organ damage. In disaster settings, patients with existing high blood pressure often run out of medications, face extreme stress, and cannot reach clinics — raising the risk significantly.
 
-RECOGNIZING A HYPERTENSIVE EMERGENCY
+Seek emergency care immediately if a person with known or suspected high blood pressure develops any of:
+- Severe headache that comes on suddenly — often described as the worst headache of their life
+- Chest pain or tightness
+- Difficulty breathing or shortness of breath
+- Blurred vision, double vision, or sudden loss of vision
+- Confusion, difficulty speaking, or sudden weakness or numbness in the face, arm, or leg (stroke signs)
+- Nausea and vomiting with a severe headache
+- Nosebleeds that are severe and difficult to control
+- Seizures in a person with no prior history
+- Irregular heartbeat or pounding sensation in the chest
 
-Seek emergency care immediately if a person with known or suspected high blood pressure develops any of the following:
+FAST test for stroke: Face drooping, Arm weakness, Speech difficulty, Time to call for help immediately.
 
-Severe headache that comes on suddenly — often described as the worst headache of their life.
-Chest pain or tightness — may indicate a heart attack or heart failure triggered by high pressure.
-Difficulty breathing or shortness of breath — fluid may be building in the lungs.
-Blurred vision, double vision, or sudden loss of vision — high pressure can damage blood vessels in the eyes and brain.
-Confusion, difficulty speaking, or sudden weakness or numbness in the face, arm, or leg — these are signs of stroke.
-Nausea and vomiting accompanying a severe headache.
-Nosebleeds that are severe and difficult to control.
-Seizures in a person with no prior history of epilepsy.
-Irregular heartbeat or pounding sensation in the chest.
+WHEN TO SEEK EMERGENCY CARE:
+Call Rescue 1122 or transport to hospital immediately for any hypertensive emergency. Every minute without treatment during a stroke causes further brain damage. Heart attack warning signs: crushing or squeezing chest pain spreading to the left arm, jaw, or back; sweating; nausea; shortness of breath.
 
-IMMEDIATE ACTIONS
+WHAT TO DO WHILE WAITING:
+1. Keep the person calm and seated or lying down. Stress and physical exertion worsen blood pressure.
+2. If the person has their prescribed blood pressure medication available and is conscious, encourage them to take it as directed.
+3. Loosen tight clothing around the chest and neck.
+4. If the person loses consciousness, check for breathing and begin CPR if they are not breathing.
+5. Monitor and reassure the person while waiting for help. Do not leave them alone.
 
-Call for emergency help: Rescue 1122 (Punjab), Edhi Foundation 115, or transport to the nearest hospital immediately.
+DO NOT:
+- Do not give medications that have not been prescribed for them.
+- Do not give aspirin unless specifically prescribed — aspirin treats heart attacks but is not appropriate for all hypertensive events.
+- Do not allow the person to exert themselves physically.
+- Do not leave the person alone.
 
-Keep the person calm and seated or lying down. Stress and physical exertion worsen blood pressure.
-
-If the person has their prescribed blood pressure medication available and is conscious, encourage them to take it as directed.
-
-Do not give medications that have not been prescribed for them.
-
-Do not give aspirin unless specifically prescribed — aspirin treats heart attacks but is not appropriate for all hypertensive events.
-
-Loosen tight clothing around the chest and neck.
-
-If the person loses consciousness, check for breathing and begin CPR if they are not breathing.
-
-Monitor and reassure the person while waiting for help. Do not leave them alone.
-
-STROKE — RECOGNIZE FAST
-
-A hypertensive emergency can cause a stroke. Use the FAST test:
-Face — is one side of the face drooping? Ask them to smile.
-Arms — can they raise both arms? Does one drift downward?
-Speech — is their speech slurred or difficult to understand?
-Time — if any of these signs are present, get emergency help immediately.
-
-Every minute without treatment during a stroke causes further brain damage. Time is critical.
-
-HEART ATTACK WARNING SIGNS
-
-Hypertension is a major risk factor for heart attack. Warning signs include: crushing or squeezing chest pain that may spread to the left arm, jaw, or back; sweating; nausea; shortness of breath; a sense of impending doom.
-
-Call for emergency help immediately. Keep the person still and calm. Do not give food or water if a heart attack is suspected.
-
-MANAGING BLOOD PRESSURE IN A DISASTER SETTING
-
+MANAGING BLOOD PRESSURE IN A DISASTER SETTING:
 Patients who take regular blood pressure medication must not stop suddenly — sudden discontinuation can trigger a rebound hypertensive crisis.
-
 If medications are lost or unavailable:
-Reduce physical exertion and stay calm.
-Reduce salt intake — avoid processed food and excessive salt added to food.
-Drink adequate water.
-Notify relief medical teams immediately so that medication supplies can be sourced.
-
-Pakistan's NDMA and provincial disaster health teams deploy mobile medical units during major disasters. Inform them of any patient requiring regular medication for hypertension, diabetes, or epilepsy.
-
+- Reduce physical exertion and stay calm.
+- Reduce salt intake.
+- Drink adequate water.
+- Notify relief medical teams immediately so medication supplies can be sourced.
+Pakistan's NDMA and provincial disaster health teams deploy mobile medical units during major disasters — inform them of any patient requiring regular medication for hypertension, diabetes, or epilepsy.
