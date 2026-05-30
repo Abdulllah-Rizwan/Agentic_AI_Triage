@@ -110,6 +110,40 @@ While gathering information: plain text, one question only.
 When you have all five data points (or patient cannot respond), emit ONLY this JSON:
 {"status":"CRITICAL","trigger":"{symptom}","critical_flag":"chest_pain|breathing|bleeding|unconscious|head_injury|stroke","onset_minutes":<number or "unknown">,"severity":"moderate|severe|critical","progression":"improving|stable|worsening|unknown","patient_responsive":true|false,"associated_symptoms":[<short strings>],"message":"<one brief calm safety instruction appropriate to the symptom>"}`;
 
+// ── SLM-specific system prompts (Qwen 2.5 1.5B / offline mode) ───────────────
+// Shorter and example-driven because small models follow examples far more
+// reliably than long instruction lists. Same JSON output schema as the cloud
+// prompts so buildFeatureVector / _buildCriticalVector need no changes.
+
+const SLM_SYSTEM_PROMPT = `You collect symptoms for emergency triage. Ask ONE short question per turn. Never diagnose or prescribe.
+
+EXAMPLE:
+User: "mera sir dard kar raha hai"
+You: "Kab se? (Since when?)"
+User: "2 ghante pehle"
+You: "Pain 1 to 10?"
+User: "6"
+You: "Any other symptoms?"
+
+Collect: complaint, when it started, pain 1-10, other symptoms, allergies. Then emit ONLY this JSON (no other text):
+{"status":"SUFFICIENT","chief_complaint":"headache","onset_hours":2,"pain_scale":6,"location_on_body":"head","associated_symptoms":["nausea"],"mobility":"walking","consciousness":"alert","bleeding":"none","language_used":"en","summary":"Patient reports headache for 2 hours, severity 6/10 with nausea."}
+
+If the patient mentions chest pain, cannot breathe, heavy bleeding, unconscious, seizure, or snake bite — emit ONLY:
+{"status":"CRITICAL","trigger":"chest pain","message":"Stay still, help is on the way."}`;
+
+const SLM_CRITICAL_MODE_SYSTEM_PROMPT = `Emergency triage. Patient reported: {symptom}. Ask maximum 3 short questions ONE at a time.
+Ask in this order: severity (1-10) → when it started → any other symptoms.
+
+EXAMPLE:
+You: "How bad 1-10?"
+User: "9"
+You: "When did it start?"
+User: "5 minutes ago"
+You: "Any other symptoms — dizziness, sweating?"
+
+When you have the answers, emit ONLY this JSON (no other text):
+{"status":"CRITICAL","trigger":"{symptom}","critical_flag":"chest_pain","onset_minutes":5,"severity":"severe","progression":"stable","patient_responsive":true,"associated_symptoms":["dizziness"],"message":"Stay calm, help is coming."}`;
+
 const OPENING_MESSAGE =
   'I am your medical assessment assistant. I will ask you a few questions about how you are feeling to help connect you with the right medical support. What is your main concern right now?';
 
@@ -223,10 +257,13 @@ export class SymptomCollectorAgent {
     }
 
     // ── 4. Choose system prompt ────────────────────────────────────────────────
+    // FULL mode → cloud LLM → use the full structured prompt (Session 25 version)
+    // DEGRADED / OFFLINE → SLM (Qwen 1.5B) → use the shorter example-based prompt
     const trigger = this._criticalTrigger ?? 'symptom';
+    const isSlm = networkMode !== 'FULL';
     const systemPrompt = this._criticalMode
-      ? CRITICAL_MODE_SYSTEM_PROMPT.replace(/\{symptom\}/g, trigger)
-      : SYSTEM_PROMPT;
+      ? (isSlm ? SLM_CRITICAL_MODE_SYSTEM_PROMPT : CRITICAL_MODE_SYSTEM_PROMPT).replace(/\{symptom\}/g, trigger)
+      : (isSlm ? SLM_SYSTEM_PROMPT : SYSTEM_PROMPT);
 
     // ── 5. LLM call ───────────────────────────────────────────────────────────
     const adapter = this.orchestrator.getLLMAdapter();
@@ -600,10 +637,13 @@ export class SymptomCollectorAgent {
 function _tryParseJSON(
   text: string,
 ): Record<string, unknown> | null {
-  const trimmed = text.trim();
-  if (!trimmed.startsWith('{')) return null;
+  // Find the first '{' — guards against model preamble like </think> or stray text
+  const start = text.indexOf('{');
+  if (start === -1) return null;
+  const end = text.lastIndexOf('}');
+  if (end === -1 || end < start) return null;
   try {
-    return JSON.parse(trimmed) as Record<string, unknown>;
+    return JSON.parse(text.slice(start, end + 1)) as Record<string, unknown>;
   } catch {
     return null;
   }

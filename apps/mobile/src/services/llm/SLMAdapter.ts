@@ -5,18 +5,19 @@ import { logger } from '../../utils/logger';
 const TAG = 'SLMAdapter';
 const IS_DEV = process.env.EXPO_PUBLIC_ENVIRONMENT === 'development';
 const OLLAMA_URL = process.env.EXPO_PUBLIC_OLLAMA_URL ?? 'http://localhost:11434';
-const OLLAMA_MODEL = 'qwen2.5:1.5b';
+const OLLAMA_MODEL = 'qwen3:1.7b';
 const MAX_TOKENS = 512;
 const TEMPERATURE = 0.3;
+const REPEAT_PENALTY = 1.15;
 
-const MODEL_FILENAME = 'Qwen2.5-1.5B-Instruct-Q4_K_M.gguf';
+const MODEL_FILENAME = 'Qwen_Qwen3-1.7B-Q4_K_M.gguf';
 const MODEL_DIR = (FileSystem.documentDirectory ?? '') + 'models/';
 export const MODEL_PATH = MODEL_DIR + MODEL_FILENAME;
 const MODEL_URL =
-  'https://huggingface.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/' + MODEL_FILENAME;
+  'https://huggingface.co/bartowski/Qwen_Qwen3-1.7B-GGUF/resolve/main/' + MODEL_FILENAME;
 
-// Old Llama model — deleted automatically on first launch after upgrade
-const OLD_MODEL_PATH = MODEL_DIR + 'Llama-3.2-1B-Instruct-Q4_K_M.gguf';
+// Old model — deleted automatically on first launch after upgrade
+const OLD_MODEL_PATH = MODEL_DIR + 'Qwen2.5-1.5B-Instruct-Q4_K_M.gguf';
 
 // Qwen2.5 uses ChatML format
 function formatChatMLPrompt(messages: ChatMessage[], systemPrompt: string): string {
@@ -76,7 +77,7 @@ export class SLMAdapter implements LLMAdapter {
       this.llm = await initLlama({
         model: MODEL_PATH,
         use_mlock: true,
-        n_ctx: 1024,
+        n_ctx: 2048,
         n_threads: 4,
       });
 
@@ -109,7 +110,7 @@ export class SLMAdapter implements LLMAdapter {
         this.llm = await initLlama({
           model: MODEL_PATH,
           use_mlock: true,
-          n_ctx: 1024,
+          n_ctx: 2048,
           n_threads: 4,
         });
         logger.info(TAG, 'llama.rn loaded as offline fallback');
@@ -200,7 +201,7 @@ export class SLMAdapter implements LLMAdapter {
           model: OLLAMA_MODEL,
           messages: ollamaMessages,
           stream: false,
-          options: { temperature: TEMPERATURE, num_predict: MAX_TOKENS },
+          options: { temperature: TEMPERATURE, num_predict: MAX_TOKENS, repeat_penalty: REPEAT_PENALTY, think: false },
         }),
       });
 
@@ -211,7 +212,7 @@ export class SLMAdapter implements LLMAdapter {
       }
 
       const data = await response.json() as { message?: { content?: string } };
-      const text = data.message?.content ?? '';
+      const text = _stripThinkingBlocks(data.message?.content ?? '');
       logger.info(TAG, 'Ollama response received', { length: text.length });
       return text;
     } catch (err) {
@@ -239,10 +240,11 @@ export class SLMAdapter implements LLMAdapter {
         prompt,
         n_predict: MAX_TOKENS,
         temperature: TEMPERATURE,
+        repeat_penalty: REPEAT_PENALTY,
         stop: ['<|im_end|>', '<|endoftext|>'],
       });
 
-      return (result as { text: string }).text.trim();
+      return _stripThinkingBlocks((result as { text: string }).text);
     } catch (err) {
       throw new LLMUnavailableError(`llama.rn inference failed: ${String(err)}`);
     }
@@ -250,3 +252,12 @@ export class SLMAdapter implements LLMAdapter {
 }
 
 export const slmAdapter = new SLMAdapter();
+
+// Strips all Qwen3 thinking-mode artifacts from a model response.
+// Handles: complete blocks, orphaned closing tags, and leading whitespace.
+function _stripThinkingBlocks(text: string): string {
+  return text
+    .replace(/<think>[\s\S]*?<\/think>/g, '') // complete <think>...</think> blocks
+    .replace(/<\/think>/g, '')                 // orphaned </think> tags
+    .trim();
+}

@@ -3130,6 +3130,143 @@ cd docs/knowledge-base && python reupload_all.py
 
 ---
 
+## Session 28 — 2026-05-30
+
+### Goal
+Fix three unrelated issues discovered during dev session: (1) dashboard not loading on localhost:3000, (2) SLM severely underperforming (repeating words, ignoring user input, printing raw JSON), (3) Expo QR code not connecting on physical device.
+
+---
+
+### Bug 1 — Dashboard stuck on localhost:3000 (page not working)
+
+**Root cause:** `app/layout.tsx` imported `Inter` from `next/font/google`. Next.js makes a live HTTP request to `fonts.googleapis.com` the first time the root layout compiles. On Pakistani ISPs this request hangs indefinitely — the server accepts TCP connections but never sends an HTTP response. The terminal showed `✓ Ready` but every browser request timed out.
+
+**Fix (`apps/dashboard/app/layout.tsx`):** Removed the `Inter` import and the `next/font/google` dependency entirely. Replaced with Tailwind's `font-sans antialiased` on the `<body>` tag (system font stack — no network call needed).
+
+**Rule going forward:** Never use `next/font/google` in this project. Always use `next/font/local` or Tailwind system fonts.
+
+---
+
+### Bug 2 — SLM underperforming (repeating words, ignoring input, raw JSON in UI)
+
+Three root causes identified and fixed across multiple files.
+
+#### Fix A — Repetition penalty added to SLMAdapter
+
+**Root cause:** `_callLlamaRn` and `_callOllama` had no `repeat_penalty` parameter. Small models (1–2B) have a strong tendency to repeat tokens without this.
+
+**Fix (`apps/mobile/src/services/llm/SLMAdapter.ts`):** Added `REPEAT_PENALTY = 1.15` constant. Passed as `repeat_penalty` to llama.rn and as `repeat_penalty` inside Ollama `options`. Cloud LLM (`CloudLLMAdapter.ts`) untouched.
+
+#### Fix B — Separate SLM system prompts
+
+**Root cause:** The Session 25 structured prompts (`[ROLE]/[INSTRUCTION]/[CONTEXT]/[EXAMPLE]/[CONSTRAINTS]/[OUTPUT FORMAT]`) are 300+ words. Qwen 2.5 1.5B cannot reliably follow long instruction lists while simultaneously holding a conversation and emitting structured JSON. The cloud LLM handles this fine.
+
+**Fix (`apps/mobile/src/agents/SymptomCollectorAgent.ts`):** Added `SLM_SYSTEM_PROMPT` (~80 words, example-based) and `SLM_CRITICAL_MODE_SYSTEM_PROMPT` (~60 words, example-based). Step 4 of `sendMessage()` now checks `networkMode !== 'FULL'` and passes the appropriate prompt. Cloud prompts unchanged.
+
+**Key design:** Both SLM prompts use identical JSON output schemas to the cloud prompts, so `buildFeatureVector` and `_buildCriticalVector` require zero changes. The difference is format only — examples instead of rules.
+
+#### Fix C — Switched SLM from Qwen2.5 1.5B to Qwen3 1.7B
+
+**Root cause:** Qwen2.5 1.5B at Q4_K_M (~800M effective parameters after quantization) was too small to reliably handle multi-turn conversation + bilingual input + structured JSON output simultaneously. No amount of prompt engineering fully overcomes a model this small for this task.
+
+**Decision (`apps/mobile/src/services/llm/SLMAdapter.ts`):**
+- `OLLAMA_MODEL`: `qwen2.5:1.5b` → `qwen3:1.7b`
+- `MODEL_FILENAME`: `Qwen2.5-1.5B-Instruct-Q4_K_M.gguf` → `Qwen_Qwen3-1.7B-Q4_K_M.gguf`
+- `MODEL_URL`: Updated to `bartowski/Qwen_Qwen3-1.7B-GGUF` on HuggingFace
+- `OLD_MODEL_PATH`: Updated to point at Qwen2.5 file for automatic cleanup
+- `n_ctx`: 1024 → 2048 (larger model benefits from more context)
+- `think: false` added to Ollama options (Qwen3 has a thinking mode that wastes tokens)
+
+**Why Qwen3 1.7B over Gemma 3 1B:** Qwen3 1.7B has better bilingual (English/Urdu) support by design and Qwen3's architecture is a significant improvement over Qwen2.5. Gemma 3 1B is English-primary. GGUF Q4_K_M is ~1.1GB — within the device RAM budget.
+
+**Why not Gemma 4:** Gemma 4's smallest model is E2B (2B parameters) at 7.2GB on Ollama — too large for both the dev PC Ollama instance and Android device RAM. It is also a multimodal model with complex thinking tokens, adding unnecessary overhead for a text-only use case.
+
+**Chat template:** Unchanged — Qwen3 uses the same ChatML format (`<|im_start|>` / `<|im_end|>`) as Qwen2.5, so `formatChatMLPrompt` needed no changes.
+
+#### Fix D — Qwen3 thinking mode artifacts (`</think>` prefix + raw JSON in UI)
+
+**Root cause (two-part):**
+
+1. An earlier attempt injected `/no_think` at the start of the assistant turn in `formatChatMLPrompt`. The model interpreted this as being inside a thinking block and emitted `</think>` before every response. This orphaned closing tag broke `_tryParseJSON` (which required the string to start with `{`), causing raw JSON to leak to the chat UI.
+
+2. `_tryParseJSON` used `trimmed.startsWith('{')` — any preamble text before the JSON (including `</think>`) caused the function to return null and `_safeMessage` to return the raw text unchanged.
+
+**Fixes:**
+
+- **Removed `/no_think` injection** from `formatChatMLPrompt`. Ollama's `think: false` option handles thinking suppression in dev mode. The strip function handles production.
+- **`_stripThinkingBlocks`** updated to remove both complete `<think>...</think>` blocks AND orphaned `</think>` closing tags.
+- **`_tryParseJSON`** (`SymptomCollectorAgent.ts`) rewritten to use `text.indexOf('{')` and `text.lastIndexOf('}')` instead of `startsWith('{')`. Now finds JSON anywhere in the string, making the parser robust to any model preamble.
+
+---
+
+### Bug 3 — Expo QR code opening browser instead of Expo Go
+
+**Root cause (two issues):**
+
+1. The QR code was being scanned with the phone's native camera app instead of the Expo Go app. The QR code encodes an `exp://` URL which only Expo Go understands. Native camera tries to open it in a browser which fails.
+
+2. Router AP isolation blocks ALL device-to-device LAN traffic — including Metro bundler port 8081, not just API port 3001. The existing ngrok tunnel only covered port 3001.
+
+**Fix:** Use `npx expo start --tunnel --clear`. This routes Metro through Expo's own ngrok tunnel, bypassing AP isolation entirely for the bundle download. ngrok 3.39.5 (already installed) is new enough to support this. Scan the QR code from inside the Expo Go app using its built-in scanner.
+
+**Canonical Metro start command for this machine (with AP isolation):**
+```powershell
+cd apps/mobile
+$env:EXPO_NO_DOCTOR = "1"
+npx expo start --tunnel --clear
+```
+
+---
+
+### Decisions recorded
+
+#### DEC-037 — No Google Fonts in this project
+- **Date:** 2026-05-30
+- **Decision:** `next/font/google` is banned from the dashboard. Use Tailwind system fonts or `next/font/local` only.
+- **Reason:** `next/font/google` makes a live HTTP request to `fonts.googleapis.com` during page compilation. Pakistani ISPs cause this to hang indefinitely, freezing the entire Next.js dev server with no error message.
+- **Status:** Final
+
+#### DEC-038 — Separate SLM and cloud system prompts in SymptomCollectorAgent
+- **Date:** 2026-05-30
+- **Decision:** `SymptomCollectorAgent` maintains two prompt pairs: the full structured Session 25 prompts for cloud LLM (FULL mode) and short example-based prompts for SLM (DEGRADED/OFFLINE mode). Selection is based on `networkMode !== 'FULL'` in step 4 of `sendMessage()`.
+- **Reason:** Small models (1–2B parameters) follow examples more reliably than long rule lists. The 300-word structured prompts work well for cloud LLMs but overload small models, causing them to ignore instructions and repeat content.
+- **Rejected alternative:** Shortening the cloud prompt to match — would degrade cloud LLM quality which was performing well.
+- **Status:** Final
+
+#### DEC-039 — SLM upgraded to Qwen3 1.7B Q4_K_M
+- **Date:** 2026-05-30
+- **Decision:** On-device SLM switched from Qwen2.5 1.5B Instruct Q4_K_M to Qwen3 1.7B Q4_K_M.
+- **Reason:** Qwen2.5 1.5B underperformed on structured output + bilingual conversation simultaneously despite prompt and parameter tuning. Qwen3 1.7B has significantly improved instruction following, better Urdu/bilingual support, and same ChatML format (no template changes needed).
+- **Rejected alternatives:** Gemma 3 1B (English-primary, weaker bilingual); Gemma 4 (smallest is 2B at 7.2GB Ollama, too large); Qwen3 0.6B (too small for structured JSON output).
+- **Status:** Final
+
+#### DEC-040 — Qwen3 thinking mode disabled via Ollama option + output stripping
+- **Date:** 2026-05-30
+- **Decision:** Qwen3's chain-of-thought thinking mode is suppressed via `think: false` in Ollama options (dev mode) and `_stripThinkingBlocks()` post-processing (both modes). The `/no_think` prompt injection approach was tried and reverted.
+- **Reason:** `/no_think` injected into the assistant turn caused the model to emit orphaned `</think>` tags before every response, breaking JSON detection. `think: false` + output stripping is simpler and more reliable.
+- **Status:** Final
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/dashboard/app/layout.tsx` | Removed `Inter` from `next/font/google`; body uses `font-sans antialiased` |
+| `apps/mobile/src/services/llm/SLMAdapter.ts` | Model → Qwen3 1.7B; `REPEAT_PENALTY = 1.15`; `think: false` in Ollama; `n_ctx` 1024 → 2048; `_stripThinkingBlocks()` strips complete blocks + orphaned `</think>` |
+| `apps/mobile/src/agents/SymptomCollectorAgent.ts` | Added `SLM_SYSTEM_PROMPT` + `SLM_CRITICAL_MODE_SYSTEM_PROMPT`; step 4 selects prompt by `networkMode`; `_tryParseJSON` uses `indexOf('{')` instead of `startsWith('{')` |
+
+---
+
+### What is next
+- Pull Qwen3 1.7B in Ollama: `ollama pull qwen3:1.7b` (~1.1GB) then reload Metro
+- Test a 5-turn GREEN assessment via Expo Go to verify no `</think>` prefix and no raw JSON in chat
+- Test a RED path (critical keyword) to verify CRITICAL JSON is detected correctly despite any preamble
+- For production APK: trigger `eas build --platform android --profile preview` once Ollama testing confirms the model behaves correctly
+- Carry-forwards from Session 27: wire new `AuditOutput` fields into `cases.py`; test SOAP agent 150-word limit
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

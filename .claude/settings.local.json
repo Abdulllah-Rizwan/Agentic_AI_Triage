@@ -154,7 +154,18 @@
       "PowerShell(Invoke-WebRequest -Uri \"http://192.168.18.34:3001/api/v1/health\" -TimeoutSec 5 2>&1)",
       "PowerShell(Start-Process -FilePath \"ngrok\" -ArgumentList \"http 3001\" -PassThru | Select-Object Id; Start-Sleep -Seconds 4; Invoke-WebRequest -Uri \"http://127.0.0.1:4040/api/tunnels\" -TimeoutSec 5 | Select-Object -ExpandProperty Content)",
       "PowerShell($env:EXPO_NO_DOCTOR = \"1\"; Start-Process -FilePath \"cmd\" -ArgumentList \"/c npx --yes localtunnel --port 3001 > C:\\\\Users\\\\ABDULL~1\\\\AppData\\\\Local\\\\Temp\\\\lt_output.txt 2>&1\" -WindowStyle Hidden; Start-Sleep -Seconds 8; Get-Content \"C:\\\\Users\\\\ABDULL~1\\\\AppData\\\\Local\\\\Temp\\\\lt_output.txt\" -ErrorAction SilentlyContinue)",
-      "PowerShell(Invoke-RestMethod -Uri \"http://127.0.0.1:4040/api/tunnels\" | ConvertTo-Json -Depth 5)"
+      "PowerShell(Invoke-RestMethod -Uri \"http://127.0.0.1:4040/api/tunnels\" | ConvertTo-Json -Depth 5)",
+      "Bash(dir C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage *)",
+      "Bash(npx next *)",
+      "Bash(tasklist *)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 5 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty StatusCode)",
+      "PowerShell(Get-WmiObject *)",
+      "PowerShell(Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"cd 'C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\dashboard'; npm run dev\" -WindowStyle Normal)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 10 -UseBasicParsing 2>&1 | Select-Object StatusCode, StatusDescription)",
+      "PowerShell(Test-NetConnection *)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 15 -UseBasicParsing -MaximumRedirection 0 -ErrorAction SilentlyContinue | Select-Object StatusCode, Headers)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000/login\" -TimeoutSec 15 -UseBasicParsing -MaximumRedirection 0 -ErrorAction SilentlyContinue | Select-Object StatusCode, StatusDescription)",
+      "WebSearch"
     ]
   }
 }

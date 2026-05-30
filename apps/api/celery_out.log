@@ -7,89 +7,191 @@ It will be compatible before version 2.0.0.
 C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\google\adk\features\_feature_decorator.py:72: UserWarning: [EXPERIMENTAL] feature FeatureName.PLUGGABLE_AUTH is enabled.
   check_feature_enabled()
 worker created, starting...
-[2026-05-29 19:08:50,576: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-05-30 09:39:53,156: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-05-29 19:08:50,728: INFO/MainProcess] Connected to redis://localhost:6379/0
-[2026-05-29 19:08:50,730: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-05-30 09:39:57,954: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 2.00 seconds... (1/100)
+
+[2026-05-30 09:40:04,758: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 4.00 seconds... (2/100)
+
+[2026-05-30 09:40:14,250: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 6.00 seconds... (3/100)
+
+[2026-05-30 09:40:25,259: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 8.00 seconds... (4/100)
+
+[2026-05-30 09:40:38,352: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 10.00 seconds... (5/100)
+
+[2026-05-30 09:40:53,153: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 12.00 seconds... (6/100)
+
+[2026-05-30 09:41:10,158: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 14.00 seconds... (7/100)
+
+[2026-05-30 09:41:28,852: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 16.00 seconds... (8/100)
+
+[2026-05-30 09:41:49,355: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 18.00 seconds... (9/100)
+
+[2026-05-30 09:42:12,953: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 20.00 seconds... (10/100)
+
+[2026-05-30 09:42:38,451: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 22.00 seconds... (11/100)
+
+[2026-05-30 09:43:05,157: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 24.00 seconds... (12/100)
+
+[2026-05-30 09:43:33,644: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 26.00 seconds... (13/100)
+
+[2026-05-30 09:44:04,458: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 28.00 seconds... (14/100)
+
+[2026-05-30 09:44:36,851: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 30.00 seconds... (15/100)
+
+[2026-05-30 09:45:11,200: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:45:47,386: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:46:23,761: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:46:59,910: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:47:36,042: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:48:12,354: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:48:48,545: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:49:24,677: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:50:00,784: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:50:36,884: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:51:13,001: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:51:49,127: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:52:25,246: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:53:01,362: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:53:38,596: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:54:15,789: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:54:52,855: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:55:30,923: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:56:07,116: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:56:43,198: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:57:19,346: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:57:55,582: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:58:31,724: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:59:09,040: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 09:59:45,443: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 10:00:21,657: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-05-30 10:00:53,745: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2026-05-30 10:00:53,900: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-05-29 19:08:50,861: INFO/MainProcess] mingle: searching for neighbors
-[2026-05-29 19:08:52,159: INFO/MainProcess] mingle: all alone
-[2026-05-29 19:08:53,708: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
-[2026-05-29 19:11:02,399: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[a3f7ab0c-550b-47d6-ab7a-59a285b4cf6b] received
-[2026-05-29 19:11:02,552: INFO/MainProcess] Use pytorch device_name: cpu
-[2026-05-29 19:11:02,552: INFO/MainProcess] Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
-[2026-05-29 19:11:11,993: INFO/MainProcess] Loading faiss with AVX2 support.
-[2026-05-29 19:11:12,074: INFO/MainProcess] Successfully loaded faiss with AVX2 support.
-[2026-05-29 19:11:12,221: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[a3f7ab0c-550b-47d6-ab7a-59a285b4cf6b] succeeded in 9.81300000000192s: None
-[2026-05-29 19:11:22,353: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[9e9efa96-ea3a-498b-88c1-fea33abbe290] received
-[2026-05-29 19:11:22,901: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[9e9efa96-ea3a-498b-88c1-fea33abbe290] succeeded in 0.5469999999986612s: None
-[2026-05-29 19:11:26,970: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[3641c509-9be6-46fe-ac6e-f01cac57014f] received
-[2026-05-29 19:11:27,981: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[3641c509-9be6-46fe-ac6e-f01cac57014f] succeeded in 1.014999999999418s: None
-[2026-05-29 19:11:32,324: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[6318cf93-920f-4272-a96a-826edbafad68] received
-[2026-05-29 19:11:33,402: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[6318cf93-920f-4272-a96a-826edbafad68] succeeded in 1.0779999999977008s: None
-[2026-05-29 19:11:37,278: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[7e6f1f79-3ca9-4b82-9982-67b3f552ffce] received
-[2026-05-29 19:11:38,044: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[7e6f1f79-3ca9-4b82-9982-67b3f552ffce] succeeded in 0.7659999999996217s: None
-[2026-05-29 19:11:41,805: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[97c4a48c-e07f-41db-9be3-0c36f4b33dac] received
-[2026-05-29 19:11:42,321: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[97c4a48c-e07f-41db-9be3-0c36f4b33dac] succeeded in 0.5s: None
-[2026-05-29 19:11:46,397: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[5d7495df-6243-44bb-989f-db046717d5e7] received
-[2026-05-29 19:11:47,472: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[5d7495df-6243-44bb-989f-db046717d5e7] succeeded in 1.0780000000013388s: None
-[2026-05-29 19:11:51,290: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[aa77f212-8b36-4f5d-8b5b-aa78df290b68] received
-[2026-05-29 19:11:52,226: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[aa77f212-8b36-4f5d-8b5b-aa78df290b68] succeeded in 0.9220000000022992s: None
-[2026-05-29 19:11:56,033: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[bfa66d79-498e-4571-b4aa-29d32ba95dc7] received
-[2026-05-29 19:11:57,240: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[bfa66d79-498e-4571-b4aa-29d32ba95dc7] succeeded in 1.2030000000013388s: None
-[2026-05-29 19:12:00,702: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[ab0a030f-87a8-46c4-af84-cf1e3cae6693] received
-[2026-05-29 19:12:01,862: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[ab0a030f-87a8-46c4-af84-cf1e3cae6693] succeeded in 1.1559999999990396s: None
-[2026-05-29 19:12:05,288: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[560565ab-19cf-461c-accc-408d8b204514] received
-[2026-05-29 19:12:06,190: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[560565ab-19cf-461c-accc-408d8b204514] succeeded in 0.9059999999990396s: None
-[2026-05-29 19:12:09,632: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[5ec9422b-836f-411f-a1b1-9b12959af430] received
-[2026-05-29 19:12:10,861: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[5ec9422b-836f-411f-a1b1-9b12959af430] succeeded in 1.2340000000003783s: None
-[2026-05-29 19:12:14,044: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[d0ed0ddf-81e2-4292-8fa2-efacb0b4a525] received
-[2026-05-29 19:12:15,289: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[d0ed0ddf-81e2-4292-8fa2-efacb0b4a525] succeeded in 1.2340000000003783s: None
-[2026-05-29 19:12:18,250: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[58f23a4d-4509-4d7d-be7c-b7807ae20eb3] received
-[2026-05-29 19:12:18,850: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[58f23a4d-4509-4d7d-be7c-b7807ae20eb3] succeeded in 0.5940000000009604s: None
-[2026-05-29 19:12:22,497: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[045f7241-3840-4278-addd-05a9c8eb4e75] received
-[2026-05-29 19:12:23,490: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[045f7241-3840-4278-addd-05a9c8eb4e75] succeeded in 0.9840000000003783s: None
-[2026-05-29 19:12:26,898: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[4b814448-4c5c-4f74-b2d6-eaf3faaafa4b] received
-[2026-05-29 19:12:27,957: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[4b814448-4c5c-4f74-b2d6-eaf3faaafa4b] succeeded in 1.0470000000022992s: None
-[2026-05-29 19:12:31,275: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[b75e2ee9-40f9-4596-9e2e-fd5734890439] received
-[2026-05-29 19:12:32,546: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[b75e2ee9-40f9-4596-9e2e-fd5734890439] succeeded in 1.2659999999996217s: None
-[2026-05-29 19:12:35,650: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[78cce503-f6ed-46f9-9b26-8f586b168e37] received
-[2026-05-29 19:12:36,878: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[78cce503-f6ed-46f9-9b26-8f586b168e37] succeeded in 1.2190000000009604s: None
-[2026-05-29 19:12:39,898: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[b0ca5393-61c6-430e-8d74-bbaa04d43dde] received
-[2026-05-29 19:12:41,468: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[b0ca5393-61c6-430e-8d74-bbaa04d43dde] succeeded in 1.5780000000013388s: None
-[2026-05-29 19:12:44,367: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[2dba49a0-a54c-4eb6-a847-7d732d71df41] received
-[2026-05-29 19:12:45,381: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[2dba49a0-a54c-4eb6-a847-7d732d71df41] succeeded in 1.0s: None
-[2026-05-29 19:12:49,303: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[5d79e36f-7919-49c7-b315-651d59076671] received
-[2026-05-29 19:12:50,135: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[5d79e36f-7919-49c7-b315-651d59076671] succeeded in 0.8290000000015425s: None
-[2026-05-29 19:12:53,663: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[dec6c326-fdad-45dc-88e6-94bef5032205] received
-[2026-05-29 19:12:55,090: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[dec6c326-fdad-45dc-88e6-94bef5032205] succeeded in 1.4380000000019209s: None
-[2026-05-29 19:12:57,896: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[23b0a6d3-709c-48ca-a103-ddfc3c1354f0] received
-[2026-05-29 19:12:59,121: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[23b0a6d3-709c-48ca-a103-ddfc3c1354f0] succeeded in 1.2340000000003783s: None
-[2026-05-29 19:13:02,087: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[6e473c0c-e200-4b06-b517-e29814552279] received
-[2026-05-29 19:13:03,441: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[6e473c0c-e200-4b06-b517-e29814552279] succeeded in 1.3429999999971187s: None
-[2026-05-29 19:13:06,808: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[975fb2d4-c40b-41be-9e12-0c1055971e90] received
-[2026-05-29 19:13:08,091: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[975fb2d4-c40b-41be-9e12-0c1055971e90] succeeded in 1.2820000000028813s: None
-[2026-05-29 19:13:11,109: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[2dd15e7e-c95b-44ea-96f1-052aea90371f] received
-[2026-05-29 19:13:11,943: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[2dd15e7e-c95b-44ea-96f1-052aea90371f] succeeded in 0.8279999999977008s: None
-[2026-05-29 19:13:15,507: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[124bc2fe-63d8-4309-b9ab-7f1961666cf9] received
-[2026-05-29 19:13:16,387: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[124bc2fe-63d8-4309-b9ab-7f1961666cf9] succeeded in 0.875s: None
-[2026-05-29 19:13:19,808: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[df01b796-6fc4-4eb5-b162-2aa44c267d20] received
-[2026-05-29 19:13:20,908: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[df01b796-6fc4-4eb5-b162-2aa44c267d20] succeeded in 1.0940000000009604s: None
-[2026-05-29 19:13:24,121: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[8377c143-4a38-41e9-a8cc-df1dd1e8c4f9] received
-[2026-05-29 19:13:25,374: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[8377c143-4a38-41e9-a8cc-df1dd1e8c4f9] succeeded in 1.25s: None
-[2026-05-29 19:13:28,486: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[57ed8705-1754-43ee-8495-6f6e6640c3e0] received
-[2026-05-29 19:13:29,598: INFO/MainProcess] Task app.workers.ingestion_worker.ingest_document_task[57ed8705-1754-43ee-8495-6f6e6640c3e0] succeeded in 1.110000000000582s: None
-[2026-05-29 21:02:54,809: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[d3e6c45f-c202-418c-b8d9-79c27a8af119] received
-[2026-05-29 21:03:23,201: WARNING/MainProcess] [92m21:03:23 - LiteLLM:INFO[0m: utils.py:4011 - 
+[2026-05-30 10:00:53,955: INFO/MainProcess] mingle: searching for neighbors
+[2026-05-30 10:00:55,177: INFO/MainProcess] mingle: all alone
+[2026-05-30 10:00:55,393: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
+[2026-05-30 10:08:57,445: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[d641685f-a980-4c66-9b6d-f30a843a90f8] received
+[2026-05-30 10:09:11,881: WARNING/MainProcess] [92m10:09:11 - LiteLLM:INFO[0m: utils.py:4011 - 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-29 21:03:23,201: INFO/MainProcess] 
+[2026-05-30 10:09:11,880: INFO/MainProcess] 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-29 21:03:24,365: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[d3e6c45f-c202-418c-b8d9-79c27a8af119] succeeded in 29.514999999999418s: None
+[2026-05-30 10:09:12,916: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[d641685f-a980-4c66-9b6d-f30a843a90f8] succeeded in 15.469000000000051s: None
+[2026-05-30 10:30:17,986: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[01cda3c2-2abd-45f0-9a51-d51bc6b758a6] received
+[2026-05-30 10:30:18,609: WARNING/MainProcess] [92m10:30:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 10:30:18,606: INFO/MainProcess] 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 10:30:19,862: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\litellm\litellm_core_utils\logging_worker.py:75: RuntimeWarning: coroutine 'Logging.async_success_handler' was never awaited
+  self._queue = None
+
+[2026-05-30 10:30:19,929: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[01cda3c2-2abd-45f0-9a51-d51bc6b758a6] succeeded in 1.905999999999949s: None
+[2026-05-30 12:45:17,727: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[6c23a733-7f5a-4905-aeab-f30ebc22e780] received
+[2026-05-30 12:45:18,608: WARNING/MainProcess] [92m12:45:18 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 12:45:18,605: INFO/MainProcess] 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 12:45:20,119: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[6c23a733-7f5a-4905-aeab-f30ebc22e780] succeeded in 2.32799999999952s: None
+[2026-05-30 13:17:57,904: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[003626c2-bb08-4438-b418-2f3a39fecbe5] received
+[2026-05-30 13:17:58,616: WARNING/MainProcess] [92m13:17:58 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 13:17:58,612: INFO/MainProcess] 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 13:17:59,889: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[003626c2-bb08-4438-b418-2f3a39fecbe5] succeeded in 1.9380000000001019s: None
+[2026-05-30 17:12:05,596: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[e9417992-8f4c-4516-bd97-3d4945fe8d5d] received
+[2026-05-30 17:12:06,240: WARNING/MainProcess] [92m17:12:06 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 17:12:06,238: INFO/MainProcess] 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 17:12:07,554: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[e9417992-8f4c-4516-bd97-3d4945fe8d5d] succeeded in 1.9059999999990396s: None
+[2026-05-30 17:12:07,565: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[6a61d721-dfc9-4009-8021-945f5ed76983] received
+[2026-05-30 17:12:07,583: WARNING/MainProcess] [92m17:12:07 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 17:12:07,583: INFO/MainProcess] 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 17:12:08,503: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[6a61d721-dfc9-4009-8021-945f5ed76983] succeeded in 0.9380000000019209s: None
+[2026-05-30 17:21:19,796: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[cfed8db8-70a3-43cc-a466-d9afa954be2c] received
+[2026-05-30 17:21:19,818: WARNING/MainProcess] [92m17:21:19 - LiteLLM:INFO[0m: utils.py:4011 - 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 17:21:19,818: INFO/MainProcess] 
+LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
+[2026-05-30 17:21:20,885: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[cfed8db8-70a3-43cc-a466-d9afa954be2c] succeeded in 1.0940000000009604s: None
+[2026-05-30 20:57:44,113: WARNING/MainProcess] [92m20:57:44 - LiteLLM:INFO[0m: logging_worker.py:454 - [LoggingWorker] atexit: Flushing 1 remaining events...
+[2026-05-30 20:57:44,102: INFO/MainProcess] [LoggingWorker] atexit: Flushing 1 remaining events...
+[2026-05-30 20:57:44,292: WARNING/MainProcess] [92m20:57:44 - LiteLLM:INFO[0m: logging_worker.py:454 - [LoggingWorker] atexit: Successfully flushed 1 events!
+[2026-05-30 20:57:44,292: INFO/MainProcess] [LoggingWorker] atexit: Successfully flushed 1 events!
