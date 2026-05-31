@@ -11,6 +11,7 @@ from app.core.security import (
     create_device_token,
     create_refresh_token,
     decode_refresh_token,
+    get_current_user,
     hash_password,
     verify_password,
 )
@@ -131,6 +132,28 @@ async def device_register(body: schemas.DeviceRegisterRequest):
 # ── Dev-only helpers (disabled in production) ────────────────────────────────
 
 from app.core.config import settings  # noqa: E402
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+
+@router.post("/change-password")
+async def change_password(
+    body: ChangePasswordRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if not verify_password(body.current_password, current_user.password_hash):
+        raise HTTPException(status_code=401, detail="Current password is incorrect")
+    if len(body.new_password) < 8:
+        raise HTTPException(status_code=422, detail="New password must be at least 8 characters")
+    if body.current_password == body.new_password:
+        raise HTTPException(status_code=422, detail="New password must differ from current password")
+    current_user.password_hash = hash_password(body.new_password)
+    await db.commit()
+    return {"message": "Password updated successfully"}
 
 
 @router.get("/dev/users", include_in_schema=True, tags=["dev"])

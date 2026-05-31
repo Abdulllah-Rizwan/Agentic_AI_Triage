@@ -7,191 +7,19 @@ It will be compatible before version 2.0.0.
 C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\google\adk\features\_feature_decorator.py:72: UserWarning: [EXPERIMENTAL] feature FeatureName.PLUGGABLE_AUTH is enabled.
   check_feature_enabled()
 worker created, starting...
-[2026-05-30 09:39:53,156: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-05-31 20:40:06,703: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-05-30 09:39:57,954: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 2.00 seconds... (1/100)
-
-[2026-05-30 09:40:04,758: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 4.00 seconds... (2/100)
-
-[2026-05-30 09:40:14,250: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 6.00 seconds... (3/100)
-
-[2026-05-30 09:40:25,259: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 8.00 seconds... (4/100)
-
-[2026-05-30 09:40:38,352: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 10.00 seconds... (5/100)
-
-[2026-05-30 09:40:53,153: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 12.00 seconds... (6/100)
-
-[2026-05-30 09:41:10,158: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 14.00 seconds... (7/100)
-
-[2026-05-30 09:41:28,852: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 16.00 seconds... (8/100)
-
-[2026-05-30 09:41:49,355: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 18.00 seconds... (9/100)
-
-[2026-05-30 09:42:12,953: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 20.00 seconds... (10/100)
-
-[2026-05-30 09:42:38,451: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 22.00 seconds... (11/100)
-
-[2026-05-30 09:43:05,157: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 24.00 seconds... (12/100)
-
-[2026-05-30 09:43:33,644: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 26.00 seconds... (13/100)
-
-[2026-05-30 09:44:04,458: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 28.00 seconds... (14/100)
-
-[2026-05-30 09:44:36,851: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 30.00 seconds... (15/100)
-
-[2026-05-30 09:45:11,200: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:45:47,386: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:46:23,761: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:46:59,910: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:47:36,042: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:48:12,354: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:48:48,545: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:49:24,677: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:50:00,784: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:50:36,884: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:51:13,001: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:51:49,127: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:52:25,246: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:53:01,362: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:53:38,596: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:54:15,789: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:54:52,855: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:55:30,923: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:56:07,116: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:56:43,198: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:57:19,346: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:57:55,582: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:58:31,724: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:59:09,040: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 09:59:45,443: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 10:00:21,657: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
-Trying again in 32.00 seconds... (16/100)
-
-[2026-05-30 10:00:53,745: INFO/MainProcess] Connected to redis://localhost:6379/0
-[2026-05-30 10:00:53,900: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-05-31 20:40:06,722: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2026-05-31 20:40:06,724: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-05-30 10:00:53,955: INFO/MainProcess] mingle: searching for neighbors
-[2026-05-30 10:00:55,177: INFO/MainProcess] mingle: all alone
-[2026-05-30 10:00:55,393: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
-[2026-05-30 10:08:57,445: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[d641685f-a980-4c66-9b6d-f30a843a90f8] received
-[2026-05-30 10:09:11,881: WARNING/MainProcess] [92m10:09:11 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 10:09:11,880: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 10:09:12,916: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[d641685f-a980-4c66-9b6d-f30a843a90f8] succeeded in 15.469000000000051s: None
-[2026-05-30 10:30:17,986: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[01cda3c2-2abd-45f0-9a51-d51bc6b758a6] received
-[2026-05-30 10:30:18,609: WARNING/MainProcess] [92m10:30:18 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 10:30:18,606: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 10:30:19,862: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\litellm\litellm_core_utils\logging_worker.py:75: RuntimeWarning: coroutine 'Logging.async_success_handler' was never awaited
-  self._queue = None
-
-[2026-05-30 10:30:19,929: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[01cda3c2-2abd-45f0-9a51-d51bc6b758a6] succeeded in 1.905999999999949s: None
-[2026-05-30 12:45:17,727: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[6c23a733-7f5a-4905-aeab-f30ebc22e780] received
-[2026-05-30 12:45:18,608: WARNING/MainProcess] [92m12:45:18 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 12:45:18,605: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 12:45:20,119: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[6c23a733-7f5a-4905-aeab-f30ebc22e780] succeeded in 2.32799999999952s: None
-[2026-05-30 13:17:57,904: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[003626c2-bb08-4438-b418-2f3a39fecbe5] received
-[2026-05-30 13:17:58,616: WARNING/MainProcess] [92m13:17:58 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 13:17:58,612: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 13:17:59,889: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[003626c2-bb08-4438-b418-2f3a39fecbe5] succeeded in 1.9380000000001019s: None
-[2026-05-30 17:12:05,596: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[e9417992-8f4c-4516-bd97-3d4945fe8d5d] received
-[2026-05-30 17:12:06,240: WARNING/MainProcess] [92m17:12:06 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 17:12:06,238: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 17:12:07,554: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[e9417992-8f4c-4516-bd97-3d4945fe8d5d] succeeded in 1.9059999999990396s: None
-[2026-05-30 17:12:07,565: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[6a61d721-dfc9-4009-8021-945f5ed76983] received
-[2026-05-30 17:12:07,583: WARNING/MainProcess] [92m17:12:07 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 17:12:07,583: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 17:12:08,503: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[6a61d721-dfc9-4009-8021-945f5ed76983] succeeded in 0.9380000000019209s: None
-[2026-05-30 17:21:19,796: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[cfed8db8-70a3-43cc-a466-d9afa954be2c] received
-[2026-05-30 17:21:19,818: WARNING/MainProcess] [92m17:21:19 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 17:21:19,818: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-05-30 17:21:20,885: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[cfed8db8-70a3-43cc-a466-d9afa954be2c] succeeded in 1.0940000000009604s: None
-[2026-05-30 20:57:44,113: WARNING/MainProcess] [92m20:57:44 - LiteLLM:INFO[0m: logging_worker.py:454 - [LoggingWorker] atexit: Flushing 1 remaining events...
-[2026-05-30 20:57:44,102: INFO/MainProcess] [LoggingWorker] atexit: Flushing 1 remaining events...
-[2026-05-30 20:57:44,292: WARNING/MainProcess] [92m20:57:44 - LiteLLM:INFO[0m: logging_worker.py:454 - [LoggingWorker] atexit: Successfully flushed 1 events!
-[2026-05-30 20:57:44,292: INFO/MainProcess] [LoggingWorker] atexit: Successfully flushed 1 events!
+[2026-05-31 20:40:06,735: INFO/MainProcess] mingle: searching for neighbors
+[2026-05-31 20:40:07,826: INFO/MainProcess] mingle: all alone
+[2026-05-31 20:40:07,905: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.

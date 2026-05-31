@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     # File storage
     UPLOAD_DIR: str = "./uploads"
     FAISS_EXPORT_DIR: str = "./exports"
+    GUIDELINES_DIR: str = "./guideline_uploads"
     MAX_UPLOAD_SIZE_MB: int = 50
 
     @property

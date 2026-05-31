@@ -212,6 +212,22 @@ class KnowledgeChunk(Base):
     document = relationship("KnowledgeDocument", back_populates="chunks")
 
 
+class Guideline(Base):
+    """Admin-uploaded reference documents shown on the dashboard Resources page."""
+
+    __tablename__ = "guidelines"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    original_filename = Column(String, nullable=False)
+    stored_filename = Column(String, nullable=False)
+    file_path = Column(String, nullable=False)
+    file_size_bytes = Column(Integer, nullable=False)
+    uploaded_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    uploaded_at = Column(DateTime, default=datetime.utcnow)
+
+
 class KnowledgeBaseVersion(Base):
     """
     Always a single row (id=1). Version is incremented each time the
