@@ -1,23 +1,80 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import {
   FileText,
-  Brain,
-  Thermometer,
-  Phone,
-  BookOpen,
+  Upload,
+  Trash2,
+  Download,
   X,
-  ChevronRight,
+  Plus,
+  Loader2,
 } from "lucide-react";
-import { ResourceCard } from "@/components/resources/ResourceCard";
+import {
+  getGuidelines,
+  uploadGuideline,
+  deleteGuideline,
+  downloadGuideline,
+  type GuidelineItem,
+} from "@/lib/api";
 
-function Modal({ title, onClose }: { title: string; onClose: () => void }) {
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+// ── Upload modal ──────────────────────────────────────────────────────────────
+
+interface UploadModalProps {
+  onClose: () => void;
+  onUploaded: () => void;
+}
+
+function UploadModal({ onClose, onUploaded }: UploadModalProps) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!title.trim()) { setError("Title is required."); return; }
+    if (!file) { setError("Please select a file."); return; }
+
+    setLoading(true);
+    setError(null);
+    try {
+      const fd = new FormData();
+      fd.append("title", title.trim());
+      if (description.trim()) fd.append("description", description.trim());
+      fd.append("file", file);
+      await uploadGuideline(fd);
+      onUploaded();
+      onClose();
+    } catch {
+      setError("Upload failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div className="w-full max-w-md rounded-xl border border-gray-800 bg-gray-900 p-6 shadow-xl">
-        <div className="mb-4 flex items-center justify-between">
-          <p className="font-semibold text-white">{title}</p>
+        <div className="mb-5 flex items-center justify-between">
+          <p className="text-base font-semibold text-white">Upload Guideline</p>
           <button
             onClick={onClose}
             className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
@@ -25,26 +82,87 @@ function Modal({ title, onClose }: { title: string; onClose: () => void }) {
             <X size={16} />
           </button>
         </div>
-        <div className="flex flex-col items-center gap-3 py-8 text-center">
-          <div className="rounded-full bg-gray-800 p-4">
-            <Brain size={28} className="text-gray-500" />
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-gray-400">Title *</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. WHO Emergency Field Handbook"
+              className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-600 outline-none focus:border-blue-500"
+            />
           </div>
-          <p className="font-medium text-white">Coming Soon</p>
-          <p className="text-sm text-gray-400">
-            This interactive tool is under development and will be available in a
-            future release.
-          </p>
-        </div>
-        <button
-          onClick={onClose}
-          className="w-full rounded-lg bg-gray-800 py-2 text-sm text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
-        >
-          Close
-        </button>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-gray-400">Description (optional)</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              placeholder="Brief description of the document"
+              className="resize-none rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-600 outline-none focus:border-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-gray-400">File *</label>
+            <div
+              onClick={() => fileRef.current?.click()}
+              className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-gray-700 px-4 py-5 text-center transition-colors hover:border-gray-500"
+            >
+              {file ? (
+                <>
+                  <FileText size={20} className="text-blue-400" />
+                  <p className="text-sm font-medium text-white">{file.name}</p>
+                  <p className="text-xs text-gray-500">{formatBytes(file.size)}</p>
+                </>
+              ) : (
+                <>
+                  <Upload size={20} className="text-gray-600" />
+                  <p className="text-sm text-gray-400">Click to browse</p>
+                  <p className="text-xs text-gray-600">PDF, DOC, or any format · max 100 MB</p>
+                </>
+              )}
+            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              className="hidden"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            />
+          </div>
+
+          {error && (
+            <p className="rounded-lg border border-red-900 bg-red-950 px-3 py-2 text-xs text-red-400">
+              {error}
+            </p>
+          )}
+
+          <div className="flex gap-3 pt-1">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 rounded-lg border border-gray-700 py-2 text-sm text-gray-300 transition-colors hover:bg-gray-800"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:opacity-50"
+            >
+              {loading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+              {loading ? "Uploading…" : "Upload"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
+
+// ── Main page ─────────────────────────────────────────────────────────────────
 
 const contacts = [
   { name: "Aga Khan Hospital Emergency", number: "021-3493-0051", type: "Hospital" },
@@ -69,79 +187,152 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 }
 
 export default function ResourcesPage() {
-  const [modal, setModal] = useState<string | null>(null);
-  const [trainingProgress] = useState(0);
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === "ADMIN";
+
+  const [guidelines, setGuidelines] = useState<GuidelineItem[]>([]);
+  const [loadingGuidelines, setLoadingGuidelines] = useState(true);
+  const [showUpload, setShowUpload] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+
+  const loadGuidelines = useCallback(async () => {
+    try {
+      const data = await getGuidelines();
+      setGuidelines(data.guidelines);
+    } catch {
+      // silent — empty state shown
+    } finally {
+      setLoadingGuidelines(false);
+    }
+  }, []);
+
+  useEffect(() => { loadGuidelines(); }, [loadGuidelines]);
+
+  async function handleDelete(id: string) {
+    if (!confirm("Delete this guideline? This cannot be undone.")) return;
+    setDeletingId(id);
+    try {
+      await deleteGuideline(id);
+      setGuidelines((prev) => prev.filter((g) => g.id !== id));
+    } catch {
+      alert("Delete failed. Please try again.");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  async function handleDownload(g: GuidelineItem) {
+    setDownloadingId(g.id);
+    try {
+      await downloadGuideline(g.id, g.original_filename);
+    } catch {
+      alert("Download failed. Please try again.");
+    } finally {
+      setDownloadingId(null);
+    }
+  }
 
   return (
     <>
-      {modal && <Modal title={modal} onClose={() => setModal(null)} />}
+      {showUpload && (
+        <UploadModal
+          onClose={() => setShowUpload(false)}
+          onUploaded={loadGuidelines}
+        />
+      )}
 
       <div className="flex flex-col gap-8">
         <h1 className="text-lg font-semibold text-white">Medical Resources</h1>
 
         {/* Section 1 — Guidelines */}
         <section className="flex flex-col gap-3">
-          <SectionHeading>Guidelines</SectionHeading>
-          <div className="grid grid-cols-2 gap-4">
-            <ResourceCard
-              title="WHO Emergency Field Handbook"
-              description="Standard protocols for emergency medical response in disaster settings."
-              badge="WHO"
-              actionLabel="Download PDF"
-              actionHref="#"
-              icon={FileText}
-            />
-            <ResourceCard
-              title="Pakistan NDMA Flood Response Protocol"
-              description="National guidelines for medical response during flood emergencies."
-              badge="NDMA"
-              actionLabel="Download PDF"
-              actionHref="#"
-              icon={FileText}
-            />
-            <ResourceCard
-              title="Earthquake Trauma Management Guide"
-              description="Field guide for managing crush injuries and trauma after seismic events."
-              badge="WHO"
-              actionLabel="Download PDF"
-              actionHref="#"
-              icon={FileText}
-            />
-            <ResourceCard
-              title="Pediatric Emergency Quick Reference"
-              description="Age-adjusted triage and treatment guidelines for pediatric patients."
-              badge="WHO"
-              actionLabel="Download PDF"
-              actionHref="#"
-              icon={FileText}
-            />
+          <div className="flex items-center justify-between">
+            <SectionHeading>Guidelines</SectionHeading>
+            {isAdmin && (
+              <button
+                onClick={() => setShowUpload(true)}
+                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              >
+                <Plus size={12} />
+                Upload
+              </button>
+            )}
           </div>
+
+          {loadingGuidelines ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 size={20} className="animate-spin text-gray-600" />
+            </div>
+          ) : guidelines.length === 0 ? (
+            <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-gray-800 py-12 text-center">
+              <FileText size={28} className="text-gray-700" />
+              <p className="text-sm font-medium text-gray-500">No guidelines uploaded yet</p>
+              {isAdmin && (
+                <p className="text-xs text-gray-600">
+                  Click <span className="font-medium text-gray-500">Upload</span> above to add the first document.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              {guidelines.map((g) => (
+                <div
+                  key={g.id}
+                  className="flex flex-col gap-3 rounded-xl border border-gray-800 bg-gray-900 p-5"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <FileText size={20} className="mt-0.5 shrink-0 text-blue-500" />
+                    <span className="rounded-full border border-gray-700 bg-gray-800 px-2.5 py-0.5 text-xs font-medium text-gray-400">
+                      {g.original_filename.split(".").pop()?.toUpperCase() ?? "FILE"}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <p className="font-medium text-white">{g.title}</p>
+                    {g.description && (
+                      <p className="text-sm text-gray-400">{g.description}</p>
+                    )}
+                    <p className="mt-1 text-xs text-gray-600">
+                      {formatBytes(g.file_size_bytes)} · {formatDate(g.uploaded_at)}
+                    </p>
+                  </div>
+
+                  <div className="mt-auto flex items-center gap-2 pt-1">
+                    <button
+                      onClick={() => handleDownload(g)}
+                      disabled={downloadingId === g.id}
+                      className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-500 hover:text-white disabled:opacity-50"
+                    >
+                      {downloadingId === g.id ? (
+                        <Loader2 size={13} className="animate-spin" />
+                      ) : (
+                        <Download size={13} />
+                      )}
+                      Download
+                    </button>
+
+                    {isAdmin && (
+                      <button
+                        onClick={() => handleDelete(g.id)}
+                        disabled={deletingId === g.id}
+                        className="rounded-lg border border-gray-700 p-2 text-gray-500 transition-colors hover:border-red-900 hover:bg-red-950 hover:text-red-400 disabled:opacity-50"
+                      >
+                        {deletingId === g.id ? (
+                          <Loader2 size={13} className="animate-spin" />
+                        ) : (
+                          <Trash2 size={13} />
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
 
-        {/* Section 2 — Interactive Tools */}
-        <section className="flex flex-col gap-3">
-          <SectionHeading>Interactive Tools</SectionHeading>
-          <div className="grid grid-cols-2 gap-4">
-            <ResourceCard
-              title="Glasgow Coma Scale Calculator"
-              description="Calculate GCS score for head injury assessment across eye, verbal, and motor responses."
-              badge="Tool"
-              actionLabel="Open Tool"
-              onAction={() => setModal("Glasgow Coma Scale Calculator")}
-              icon={Brain}
-            />
-            <ResourceCard
-              title="Burn Surface Area Estimator"
-              description="Rule of Nines calculator for estimating total body surface area affected by burns."
-              badge="Tool"
-              actionLabel="Open Tool"
-              onAction={() => setModal("Burn Surface Area Estimator")}
-              icon={Thermometer}
-            />
-          </div>
-        </section>
-
-        {/* Section 3 — Emergency Directory */}
+        {/* Section 2 — Emergency Directory */}
         <section className="flex flex-col gap-3">
           <SectionHeading>Emergency Directory</SectionHeading>
           <div className="overflow-hidden rounded-xl border border-gray-800 bg-gray-900">
@@ -157,15 +348,14 @@ export default function ResourcesPage() {
                   <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
                     Type
                   </th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400" />
                 </tr>
               </thead>
               <tbody>
                 {contacts.map((c, i) => (
                   <tr
                     key={c.number}
-                    className={`border-b border-gray-800 transition-colors hover:bg-gray-800 ${
-                      i === contacts.length - 1 ? "border-0" : ""
+                    className={`transition-colors hover:bg-gray-800 ${
+                      i < contacts.length - 1 ? "border-b border-gray-800" : ""
                     }`}
                   >
                     <td className="px-5 py-3.5 text-sm font-medium text-white">
@@ -177,56 +367,10 @@ export default function ResourcesPage() {
                     <td className={`px-5 py-3.5 text-sm font-medium ${typeColors[c.type] ?? "text-gray-400"}`}>
                       {c.type}
                     </td>
-                    <td className="px-5 py-3.5">
-                      <a
-                        href={`tel:${c.number}`}
-                        className="flex items-center gap-1 text-xs text-gray-500 transition-colors hover:text-white"
-                      >
-                        <Phone size={12} />
-                        Call
-                      </a>
-                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        </section>
-
-        {/* Section 4 — Training */}
-        <section className="flex flex-col gap-3">
-          <SectionHeading>Training</SectionHeading>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-4 rounded-xl border border-gray-800 bg-gray-900 p-5">
-              <div className="flex items-start gap-3">
-                <BookOpen size={20} className="mt-0.5 text-blue-500" />
-                <div className="flex flex-col gap-1">
-                  <p className="font-medium text-white">AI System Onboarding Module</p>
-                  <p className="text-sm text-gray-400">
-                    Step-by-step guide to using MediReach: case management, SOAP reports,
-                    and the knowledge base.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span>Progress</span>
-                  <span>{trainingProgress}%</span>
-                </div>
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-800">
-                  <div
-                    className="h-full rounded-full bg-blue-500 transition-all"
-                    style={{ width: `${trainingProgress}%` }}
-                  />
-                </div>
-              </div>
-
-              <button className="flex w-fit items-center gap-1.5 rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 transition-colors hover:border-gray-500 hover:text-white">
-                Start Training
-                <ChevronRight size={14} />
-              </button>
-            </div>
           </div>
         </section>
       </div>

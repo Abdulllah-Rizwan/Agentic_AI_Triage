@@ -94,6 +94,11 @@ export interface DocumentListResponse { documents: DocumentItem[]; kb_version: n
 export interface DocumentResponse { id: string; title: string; status: string; message?: string }
 export interface DeleteResponse { deleted_id: string; new_kb_version: number; message: string }
 export interface StatsResponse { kb_version: number; active_documents: number; total_chunks: number; index_size_mb: number; last_updated: string; top_retrieved_documents: Array<{ id: string; title: string; retrievals_7d: number }> }
+export interface GuidelineItem { id: string; title: string; description: string | null; original_filename: string; file_size_bytes: number; uploaded_at: string }
+export interface GuidelineListResponse { guidelines: GuidelineItem[] }
+export interface GuidelineUploadResponse { id: string; title: string; message: string }
+export interface GuidelineDeleteResponse { deleted_id: string; message: string }
+
 export interface OrgItem { id: string; name: string; type: string; status: string; access_code: string; user_count: number; case_count: number; created_at: string }
 export interface OrgListResponse { organizations: OrgItem[] }
 export interface OrgResponse { org_id: string; status: string; message?: string }
@@ -110,6 +115,12 @@ export const loginUser = (email: string, password: string) =>
 
 export const registerOrg = (data: { org_name: string; org_type: string; email: string; password: string; access_code: string }) =>
   request<RegisterResponse>("/api/v1/auth/register", { method: "POST", body: JSON.stringify(data) });
+
+export const changePassword = (current_password: string, new_password: string) =>
+  request<{ message: string }>("/api/v1/auth/change-password", {
+    method: "POST",
+    body: JSON.stringify({ current_password, new_password }),
+  });
 
 // ── Cases ─────────────────────────────────────────────────────────────────────
 
@@ -189,6 +200,40 @@ export const deleteDocument = (id: string) =>
 
 export const getKBStats = () =>
   request<StatsResponse>("/api/v1/admin/knowledge/stats");
+
+// ── Guidelines ────────────────────────────────────────────────────────────────
+
+export const getGuidelines = () =>
+  request<GuidelineListResponse>("/api/v1/guidelines");
+
+export const downloadGuideline = async (id: string, filename: string): Promise<void> => {
+  const session = await getSession();
+  const res = await fetch(`${BASE_URL}/api/v1/guidelines/${id}/download`, {
+    headers: { Authorization: `Bearer ${session?.user?.access_token}` },
+  });
+  if (!res.ok) throw new Error(`Download failed: ${res.status}`);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+export const uploadGuideline = (formData: FormData) =>
+  getSession().then((session) =>
+    fetch(`${BASE_URL}/api/v1/admin/guidelines`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session?.user?.access_token}` },
+      body: formData,
+    }).then((r) => r.json() as Promise<GuidelineUploadResponse>)
+  );
+
+export const deleteGuideline = (id: string) =>
+  request<GuidelineDeleteResponse>(`/api/v1/admin/guidelines/${id}`, { method: "DELETE" });
 
 // ── Admin — Organizations ─────────────────────────────────────────────────────
 

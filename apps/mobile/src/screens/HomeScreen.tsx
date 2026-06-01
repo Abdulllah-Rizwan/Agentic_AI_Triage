@@ -95,7 +95,7 @@ export default function HomeScreen({ navigation }: Props) {
   async function handleDownloadModel() {
     if (downloadingRef.current) return;
     if (networkMode === 'OFFLINE') {
-      Alert.alert('No Connection', 'Connect to WiFi to download the offline AI model (~1 GB).');
+      Alert.alert('No Connection', 'Connect to WiFi to download the offline AI model (~2.3 GB).');
       return;
     }
     downloadingRef.current = true;
@@ -177,7 +177,7 @@ export default function HomeScreen({ navigation }: Props) {
           <View style={styles.modelCard}>
             <View style={styles.modelCardHeader}>
               <Text style={styles.modelCardTitle}>Offline AI Model</Text>
-              <Text style={styles.modelCardSize}>~1 GB</Text>
+              <Text style={styles.modelCardSize}>~2.3 GB</Text>
             </View>
             <Text style={styles.modelCardDesc}>
               Download to use AI-guided chat without internet.

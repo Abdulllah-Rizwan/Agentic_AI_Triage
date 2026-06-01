@@ -115,12 +115,12 @@ When you have all five data points (or patient cannot respond), emit ONLY this J
 // reliably than long instruction lists. Same JSON output schema as the cloud
 // prompts so buildFeatureVector / _buildCriticalVector need no changes.
 
-const SLM_SYSTEM_PROMPT = `You collect symptoms for emergency triage. Ask ONE short question per turn. Never diagnose or prescribe.
+const SLM_SYSTEM_PROMPT = `You collect symptoms for emergency triage. Ask ONE short question per turn. Never diagnose or prescribe. Mirror User's language. If they speak romman urdu, you should speak romman urdu too if they speak english then you should also speak english. By default, stick to english language
 
 EXAMPLE:
-User: "mera sir dard kar raha hai"
-You: "Kab se? (Since when?)"
-User: "2 ghante pehle"
+User: "I am experiencing headache"
+You: "Since when?"
+User: "for two hours"
 You: "Pain 1 to 10?"
 User: "6"
 You: "Any other symptoms?"
@@ -270,9 +270,13 @@ export class SymptomCollectorAgent {
     let llmResponse: string;
     try {
       llmResponse = await adapter.chat(messagesForLLM, systemPrompt);
-    } catch {
+    } catch (err) {
+      const isOffline = networkMode !== 'FULL';
+      const errorMessage = isOffline
+        ? 'The offline AI model is not available. Please go back to the Home screen and tap DOWNLOAD to get the offline model (~2.3 GB). You need WiFi to download it.'
+        : 'I am having trouble connecting to the AI service. Please check your internet connection and try again.';
       return {
-        message: 'I am having trouble connecting. Please wait a moment and try again.',
+        message: errorMessage,
         status: 'COLLECTING',
         criticalTrigger: this._criticalMode ? (this._criticalTrigger ?? undefined) : undefined,
       };

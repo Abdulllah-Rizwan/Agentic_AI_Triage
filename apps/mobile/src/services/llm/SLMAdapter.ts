@@ -5,30 +5,31 @@ import { logger } from '../../utils/logger';
 const TAG = 'SLMAdapter';
 const IS_DEV = process.env.EXPO_PUBLIC_ENVIRONMENT === 'development';
 const OLLAMA_URL = process.env.EXPO_PUBLIC_OLLAMA_URL ?? 'http://localhost:11434';
-const OLLAMA_MODEL = 'qwen3:1.7b';
-const MAX_TOKENS = 512;
+const OLLAMA_MODEL = 'phi4-mini';
+const MAX_TOKENS = 600;
 const TEMPERATURE = 0.3;
-const REPEAT_PENALTY = 1.15;
+const REPEAT_PENALTY = 1.1;
 
-const MODEL_FILENAME = 'Qwen_Qwen3-1.7B-Q4_K_M.gguf';
+const MODEL_FILENAME = 'Phi-4-mini-instruct-Q4_K_M.gguf';
 const MODEL_DIR = (FileSystem.documentDirectory ?? '') + 'models/';
 export const MODEL_PATH = MODEL_DIR + MODEL_FILENAME;
 const MODEL_URL =
-  'https://huggingface.co/bartowski/Qwen_Qwen3-1.7B-GGUF/resolve/main/' + MODEL_FILENAME;
+  'https://huggingface.co/unsloth/Phi-4-mini-instruct-GGUF/resolve/main/' + MODEL_FILENAME;
 
-// Old model — deleted automatically on first launch after upgrade
-const OLD_MODEL_PATH = MODEL_DIR + 'Qwen2.5-1.5B-Instruct-Q4_K_M.gguf';
+// Old models — deleted automatically on first launch after upgrade
+const OLD_MODEL_PATHS = [
+  MODEL_DIR + 'Qwen2.5-1.5B-Instruct-Q4_K_M.gguf',
+  MODEL_DIR + 'Qwen_Qwen3-1.7B-Q4_K_M.gguf',
+];
 
-// Qwen2.5 uses ChatML format
-function formatChatMLPrompt(messages: ChatMessage[], systemPrompt: string): string {
-  const parts: string[] = [
-    `<|im_start|>system\n${systemPrompt}<|im_end|>`,
-  ];
+// Phi-4 chat template format
+function formatPhi4Prompt(messages: ChatMessage[], systemPrompt: string): string {
+  const parts: string[] = [`<|system|>\n${systemPrompt}<|end|>`];
   for (const m of messages) {
     const role = m.role === 'assistant' ? 'assistant' : 'user';
-    parts.push(`<|im_start|>${role}\n${m.content}<|im_end|>`);
+    parts.push(`<|${role}|>\n${m.content}<|end|>`);
   }
-  parts.push('<|im_start|>assistant');
+  parts.push('<|assistant|>');
   return parts.join('\n');
 }
 
@@ -45,11 +46,13 @@ export class SLMAdapter implements LLMAdapter {
     this.isLoading = true;
 
     try {
-      // Delete the old Llama 3.2 1B model if still present — frees ~807 MB
-      const oldInfo = await FileSystem.getInfoAsync(OLD_MODEL_PATH);
-      if (oldInfo.exists) {
-        await FileSystem.deleteAsync(OLD_MODEL_PATH, { idempotent: true });
-        logger.info(TAG, 'Deleted old Llama model', { path: OLD_MODEL_PATH });
+      // Delete old model files to free storage
+      for (const oldPath of OLD_MODEL_PATHS) {
+        const oldInfo = await FileSystem.getInfoAsync(oldPath);
+        if (oldInfo.exists) {
+          await FileSystem.deleteAsync(oldPath, { idempotent: true });
+          logger.info(TAG, 'Deleted old model', { path: oldPath });
+        }
       }
 
       if (IS_DEV) {
@@ -86,6 +89,14 @@ export class SLMAdapter implements LLMAdapter {
     } catch (err) {
       logger.error(TAG, 'Failed to initialize model', { error: String(err) });
       this.isReady = false;
+      // Delete the corrupt/incompatible model file so isModelDownloaded() returns
+      // false on next check and the download button reappears on HomeScreen.
+      try {
+        await FileSystem.deleteAsync(MODEL_PATH, { idempotent: true });
+        logger.warn(TAG, 'Deleted corrupt model file — download button will reappear');
+      } catch (deleteErr) {
+        logger.error(TAG, 'Could not delete corrupt model file', { error: String(deleteErr) });
+      }
     } finally {
       this.isLoading = false;
     }
@@ -135,10 +146,19 @@ export class SLMAdapter implements LLMAdapter {
       await FileSystem.makeDirectoryAsync(MODEL_DIR, { intermediates: true });
     }
 
+    // Delete any existing partial or corrupt file so we start clean
+    const existing = await FileSystem.getInfoAsync(MODEL_PATH);
+    if (existing.exists) {
+      await FileSystem.deleteAsync(MODEL_PATH, { idempotent: true });
+    }
+
     const download = FileSystem.createDownloadResumable(
       MODEL_URL,
       MODEL_PATH,
-      {},
+      {
+        // Required: HuggingFace rejects headless downloads without a User-Agent
+        headers: { 'User-Agent': 'MediReach/1.0 (expo-file-system)' },
+      },
       (progress) => {
         onProgress?.(
           progress.totalBytesWritten,
@@ -148,12 +168,39 @@ export class SLMAdapter implements LLMAdapter {
     );
 
     await download.downloadAsync();
-    logger.info(TAG, 'Model downloaded', { path: MODEL_PATH });
+
+    // Validate the downloaded file — a real phi4-mini GGUF must be > 500 MB.
+    // If HuggingFace returned an HTML error page instead of the model file,
+    // the file will be tiny and we catch it here rather than crashing on load.
+    const info = await FileSystem.getInfoAsync(MODEL_PATH);
+    const MIN_VALID_SIZE = 500 * 1024 * 1024; // 500 MB
+    const actualSize = info.exists ? (info as { size?: number }).size ?? 0 : 0;
+    if (!info.exists || actualSize < MIN_VALID_SIZE) {
+      await FileSystem.deleteAsync(MODEL_PATH, { idempotent: true });
+      const humanSize = actualSize > 0
+        ? `${Math.round(actualSize / 1024)} KB`
+        : '0 bytes';
+      throw new Error(
+        `Download incomplete — received ${humanSize} instead of ~2.3 GB. ` +
+        `HuggingFace may have returned an error page. Check your connection and try again.`,
+      );
+    }
+
+    logger.info(TAG, 'Model downloaded and validated', { path: MODEL_PATH, bytes: actualSize });
 
     // Reset so initialize() re-runs the file-exists check
     this.isReady = false;
     this.isLoading = false;
     await this.initialize();
+
+    // initialize() swallows its own errors — surface them here so HomeScreen
+    // can show a meaningful failure message instead of silently hiding the card.
+    if (!this.isReady) {
+      await FileSystem.deleteAsync(MODEL_PATH, { idempotent: true });
+      throw new Error(
+        'Model file downloaded but failed to load — the file may be corrupted. Please try again.',
+      );
+    }
   }
 
   /** True only after model file exists and llama.rn context is fully loaded. */
@@ -163,7 +210,12 @@ export class SLMAdapter implements LLMAdapter {
 
   async isModelDownloaded(): Promise<boolean> {
     const info = await FileSystem.getInfoAsync(MODEL_PATH);
-    return info.exists;
+    if (!info.exists) return false;
+    // A valid phi4-mini GGUF must be > 500 MB. A smaller file is a corrupt
+    // or partial download (e.g. an HTML error page from HuggingFace).
+    const MIN_VALID_SIZE = 500 * 1024 * 1024;
+    const size = (info as { size?: number }).size ?? 0;
+    return size >= MIN_VALID_SIZE;
   }
 
   async isAvailable(): Promise<boolean> {
@@ -201,7 +253,7 @@ export class SLMAdapter implements LLMAdapter {
           model: OLLAMA_MODEL,
           messages: ollamaMessages,
           stream: false,
-          options: { temperature: TEMPERATURE, num_predict: MAX_TOKENS, repeat_penalty: REPEAT_PENALTY, think: false },
+          options: { temperature: TEMPERATURE, num_predict: MAX_TOKENS, repeat_penalty: REPEAT_PENALTY },
         }),
       });
 
@@ -212,7 +264,7 @@ export class SLMAdapter implements LLMAdapter {
       }
 
       const data = await response.json() as { message?: { content?: string } };
-      const text = _stripThinkingBlocks(data.message?.content ?? '');
+      const text = _stripArtifacts(data.message?.content ?? '');
       logger.info(TAG, 'Ollama response received', { length: text.length });
       return text;
     } catch (err) {
@@ -233,7 +285,7 @@ export class SLMAdapter implements LLMAdapter {
       throw new LLMUnavailableError('llama.rn context not initialized');
     }
 
-    const prompt = formatChatMLPrompt(messages, systemPrompt);
+    const prompt = formatPhi4Prompt(messages, systemPrompt);
 
     try {
       const result = await this.llm.completion({
@@ -241,10 +293,10 @@ export class SLMAdapter implements LLMAdapter {
         n_predict: MAX_TOKENS,
         temperature: TEMPERATURE,
         repeat_penalty: REPEAT_PENALTY,
-        stop: ['<|im_end|>', '<|endoftext|>'],
+        stop: ['<|end|>', '<|endoftext|>', '<|user|>'],
       });
 
-      return _stripThinkingBlocks((result as { text: string }).text);
+      return _stripArtifacts((result as { text: string }).text);
     } catch (err) {
       throw new LLMUnavailableError(`llama.rn inference failed: ${String(err)}`);
     }
@@ -253,11 +305,14 @@ export class SLMAdapter implements LLMAdapter {
 
 export const slmAdapter = new SLMAdapter();
 
-// Strips all Qwen3 thinking-mode artifacts from a model response.
-// Handles: complete blocks, orphaned closing tags, and leading whitespace.
-function _stripThinkingBlocks(text: string): string {
+// Strips known model artifacts: Qwen3 thinking blocks (kept for safety), phi4
+// template tokens that may leak, and leading/trailing whitespace.
+function _stripArtifacts(text: string): string {
   return text
-    .replace(/<think>[\s\S]*?<\/think>/g, '') // complete <think>...</think> blocks
-    .replace(/<\/think>/g, '')                 // orphaned </think> tags
+    .replace(/<think>[\s\S]*?<\/think>/g, '') // Qwen3 thinking blocks (legacy safety)
+    .replace(/<\/think>/g, '')                 // orphaned closing tags
+    .replace(/<\|end\|>/g, '')                 // phi4 stop token if it leaks
+    .replace(/<\|user\|>[\s\S]*/g, '')         // truncate if model generates next turn
+    .replace(/<\|assistant\|>/g, '')            // leading assistant tag if present
     .trim();
 }

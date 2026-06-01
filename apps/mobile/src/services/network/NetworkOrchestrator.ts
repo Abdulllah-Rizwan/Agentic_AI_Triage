@@ -7,6 +7,13 @@ import { logger } from '../../utils/logger';
 
 const TAG = 'NetworkOrchestrator';
 
+// Dev-only: set EXPO_PUBLIC_FORCE_SLM=true in .env to always use the SLM adapter
+// regardless of actual network state. Lets you test the SLM via Ollama while on WiFi.
+// Has no effect in production builds (EXPO_PUBLIC_ENVIRONMENT !== 'development').
+const FORCE_SLM =
+  process.env.EXPO_PUBLIC_ENVIRONMENT === 'development' &&
+  process.env.EXPO_PUBLIC_FORCE_SLM === 'true';
+
 type ModeChangeCallback = (mode: NetworkMode) => void;
 
 const CONNECTIVITY_RESTORED_CALLBACKS: Array<() => void> = [];
@@ -75,7 +82,11 @@ class NetworkOrchestratorClass {
 
   getLLMAdapter(): LLMAdapter {
     const mode = networkStore.getState().mode;
-    const adapter = mode === 'FULL' ? 'CloudLLM (Gemini)' : 'SLM (Ollama/on-device)';
+    if (FORCE_SLM) {
+      logger.info(TAG, 'getLLMAdapter() → SLM (FORCE_SLM override active)');
+      return slmAdapter;
+    }
+    const adapter = mode === 'FULL' ? 'CloudLLM' : 'SLM (Ollama/on-device)';
     logger.info(TAG, `getLLMAdapter() → ${adapter}`, { mode });
     return mode === 'FULL' ? this.cloudAdapter : slmAdapter;
   }

@@ -3267,6 +3267,182 @@ npx expo start --tunnel --clear
 
 ---
 
+## Session 29 — 2026-05-31
+
+### Goal
+SLM upgrade, APK download bug fix, dashboard Resources page overhaul, Settings page (was 404).
+
+---
+
+### What was built / fixed
+
+#### 1. SLM upgraded from Qwen3 1.7B to phi4-mini 3.8B (DEC-039 superseded)
+
+**Problem:** Qwen3 1.7B exhibited three live failures: (1) thinking tokens leaked into chat output despite `think: false` and `_stripThinkingBlocks()`; (2) model produced `YOU: "AI message"` dialogue-transcript format instead of a clean single response; (3) repetition even with `repeat_penalty = 1.15`.
+
+**Root cause analysis:**
+- "YOU: message" format = model treating the conversation as a transcript to continue rather than generating a single turn. Symptom of chat template mismatch or model being too small for the task.
+- Thinking leakage = Qwen3's thinking suppression is a soft hint in quantized models, not a hard architectural switch.
+- Repetition = 1.7B parameters are insufficient to hold multi-turn conversation + bilingual input + structured JSON simultaneously.
+
+**Decision:** Switched to phi4-mini 3.8B Q4_K_M from `unsloth/Phi-4-mini-instruct-GGUF`.
+
+**Why phi4-mini over gemma3:4b:**
+- phi4-mini has significantly better instruction following and structured JSON output per parameter — Microsoft specifically optimized it for reasoning tasks at small footprint
+- No thinking mode artifacts
+- Same ChatML-family format, simpler to integrate
+- gemma3:4b is English-primary with weaker bilingual support; phi4-mini performs similarly on Urdu
+
+**Files changed (`SLMAdapter.ts`):**
+- `OLLAMA_MODEL`: `qwen3:1.7b` → `phi4-mini`
+- `MODEL_FILENAME`: `Qwen_Qwen3-1.7B-Q4_K_M.gguf` → `Phi-4-mini-instruct-Q4_K_M.gguf`
+- `MODEL_URL`: `bartowski/Qwen_Qwen3-1.7B-GGUF` → `unsloth/Phi-4-mini-instruct-GGUF`
+- Chat template: `formatChatMLPrompt` (ChatML `<|im_start|>...<|im_end|>`) → `formatPhi4Prompt` (`<|system|>...<|end|>`)
+- Stop tokens: `['<|im_end|>', '<|endoftext|>']` → `['<|end|>', '<|endoftext|>', '<|user|>']` — `<|user|>` stop prevents model generating the next turn
+- `_stripThinkingBlocks` → `_stripArtifacts` — handles phi4 token leakage + Qwen legacy safety
+- `think: false` Ollama option removed (phi4 has no thinking mode)
+- `MAX_TOKENS`: 512 → 600, `REPEAT_PENALTY`: 1.15 → 1.1
+- Old model cleanup changed from single path to array (`OLD_MODEL_PATHS`) — deletes both Qwen2.5 and Qwen3 files on first launch
+
+---
+
+#### 2. `EXPO_PUBLIC_FORCE_SLM` dev flag added to NetworkOrchestrator
+
+**Problem:** Testing phi4-mini quality via Expo Go was impossible — when on WiFi the network mode is FULL, which routes to Groq (cloud LLM), not the SLM. Turning off WiFi makes Ollama unreachable. There was no way to exercise the SLM path while maintaining Ollama connectivity.
+
+**Fix:** Added `EXPO_PUBLIC_FORCE_SLM=true` env flag. When set, `NetworkOrchestrator.getLLMAdapter()` always returns the SLMAdapter regardless of actual network mode. The flag only activates when `EXPO_PUBLIC_ENVIRONMENT=development` — zero effect in production APKs.
+
+**Usage:** Set `EXPO_PUBLIC_FORCE_SLM=true` in `apps/mobile/.env`, restart Metro with `--clear`, test phi4-mini via Ollama on WiFi. Set back to `false` (the default) for normal routing.
+
+**Current state:** Set to `false` — normal routing (FULL→Groq, DEGRADED/OFFLINE→SLM) is active.
+
+---
+
+#### 3. APK model download bug fixed — silent corrupt file issue
+
+**Problem:** On the preview APK, tapping the DOWNLOAD button made it disappear instantly as if the model was downloaded, but the SLM was unavailable offline. The "trouble connecting" error appeared on every offline chat attempt.
+
+**Root cause:** HuggingFace returned a small HTML error/redirect page (likely a 403 or 302 response body) instead of the actual GGUF file. `expo-file-system`'s `createDownloadResumable` / `downloadAsync()` resolved without throwing even when receiving an HTML page. The file was saved at the correct path (~50 KB of HTML), so `getInfoAsync` returned `exists: true`. `initLlama` then failed on the corrupt file, silently caught inside `initialize()`'s try-catch, setting `isReady = false`. But `downloadModel()` had no way to know `initialize()` failed — it resolved normally. HomeScreen called `setModelState('ready')` → button disappeared. Offline → `isReady = false` → "trouble connecting".
+
+**Additionally:** The previous URL pointed to `bartowski/Phi-4-mini-instruct-GGUF` which does not exist. Correct repo is `unsloth/Phi-4-mini-instruct-GGUF`.
+
+**Fixes applied to `SLMAdapter.downloadModel()`:**
+1. Delete any existing file at `MODEL_PATH` before starting (cleans up prior corrupt/partial downloads)
+2. Add `User-Agent: MediReach/1.0` header to the download request (HuggingFace blocks headless downloads without one)
+3. After `downloadAsync()`, read `getInfoAsync` and check `size > 500 MB`. If too small, delete the file and throw a descriptive error (caught by HomeScreen which shows an Alert with the actual bytes received)
+4. After `initialize()`, check `this.isReady`. If still false, delete the file and throw — so HomeScreen can show an error and redisplay the button instead of hiding it
+
+**HomeScreen:** Updated size display from "~1 GB" to "~2.3 GB" to match phi4-mini's actual file size.
+
+---
+
+#### 4. Resources page — full overhaul
+
+**Four changes requested:**
+
+**A — Guidelines: dynamic upload/download instead of hardcoded dead links**
+
+Previous state: 4 static cards with `href="#"` pointing to documents that didn't exist.
+
+New implementation:
+- **Backend:** New `Guideline` SQLAlchemy model + Alembic migration 0005 (`guidelines` table). Two new routers:
+  - `GET /api/v1/guidelines` + `GET /api/v1/guidelines/{id}/download` (any authenticated user)
+  - `POST /api/v1/admin/guidelines` + `DELETE /api/v1/admin/guidelines/{id}` (admin only)
+  - Files stored in `./guideline_uploads/` (new `GUIDELINES_DIR` config setting)
+- **Frontend:** Guidelines grid fetches from the API. Empty state shows a dashed border with "No guidelines uploaded yet." Admin users see an **Upload** button (top-right of section heading) that opens a modal (Title, Description, file input, any format ≤ 100 MB). Each card shows file type badge, size, upload date, Download button, and (admin-only) delete trash icon. Download uses `fetch` + blob URL pattern to attach auth header.
+
+**B — Interactive Tools section removed entirely**
+The "Glasgow Coma Scale Calculator" and "Burn Surface Area Estimator" cards both opened a "Coming Soon" modal. Removed the entire section and all related code.
+
+**C — Call button removed from Emergency Directory**
+The `<a href="tel:...">` Call link and its table column were removed. The table now has three columns: Organisation, Number, Type.
+
+**D — Training section removed entirely**
+The AI System Onboarding Module card with the progress bar and "Start Training" button was removed entirely.
+
+---
+
+#### 5. Settings page — created (was 404)
+
+**Problem:** The `/settings` nav link has existed in the sidebar since Session 5 but the page file was never created, resulting in a 404 on every click.
+
+**Implementation — four cards in a 2×2 grid:**
+
+**Account card** — read-only display of: email, role (colour-coded badge: purple for ADMIN, blue for RESPONDER, gray for VIEWER), organisation name, member since.
+
+**Change Password card:**
+- Backend: Added `POST /api/v1/auth/change-password` to `routers/auth.py`. Requires `get_current_user` auth, verifies current password with `verify_password()`, enforces ≥ 8 char minimum, rejects same-as-current, hashes and saves new password.
+- Frontend: Current / New / Confirm inputs with show/hide toggles. Client-side validates length and confirmation match before calling API. Shows red error banner or green ✓ success banner inline.
+
+**Case View Preferences card:**
+- Radio button group: All cases / Critical + Urgent only / Critical only
+- Selection stored in `localStorage` key `settings_default_case_filter`
+- Requires **Save Preferences** button press; shows "✓ Saved" for 2.5 seconds on save
+
+**Notifications card:**
+- Two toggle switches (custom CSS, no library): "Sound alert for new RED cases" and "New case banner"
+- Each toggle saves to `localStorage` instantly on flip (no save button)
+- Note: sound/banner implementation in the cases page is a carry-forward — preferences are stored but not yet wired to actual alert playback
+
+---
+
+### Decisions recorded
+
+#### DEC-039 — SUPERSEDED
+DEC-039 (Qwen3 1.7B as on-device SLM) is superseded by Session 29. phi4-mini 3.8B is now the on-device SLM.
+
+#### DEC-041 — phi4-mini 3.8B as on-device SLM
+- **Date:** 2026-05-31
+- **Decision:** On-device SLM is phi4-mini 3.8B Q4_K_M from `unsloth/Phi-4-mini-instruct-GGUF`.
+- **Reason:** Qwen3 1.7B failed in live testing with thinking token leakage, dialogue-transcript format output, and repetition. phi4-mini has superior instruction following, no thinking mode, and strong structured JSON output quality for its size.
+- **Rejected alternatives:** gemma3:4b (English-primary, weaker bilingual); Qwen3 1.7B (underperformed in all three failure modes simultaneously).
+- **Status:** Final
+
+#### DEC-042 — EXPO_PUBLIC_FORCE_SLM dev flag for SLM testing without rebuilding APK
+- **Date:** 2026-05-31
+- **Decision:** A `EXPO_PUBLIC_FORCE_SLM=true` env flag in `apps/mobile/.env` forces all chat routing to the SLM adapter regardless of WiFi state. Only active when `EXPO_PUBLIC_ENVIRONMENT=development`. Default is `false`.
+- **Reason:** FULL network mode routes to Groq; OFFLINE mode makes Ollama unreachable. Without this flag there is no way to test the SLM path in Expo Go while the phone is on WiFi.
+- **Status:** Final (dev tooling only)
+
+#### DEC-043 — downloadModel() must validate file size and propagate initialize() failure
+- **Date:** 2026-05-31
+- **Decision:** After `downloadAsync()`, check that the downloaded file is > 500 MB before calling `initialize()`. After `initialize()`, check `isReady` and throw if false. Delete any corrupt file before rethrowing.
+- **Reason:** HuggingFace (and other CDNs) can return small HTML error pages that `downloadAsync()` saves silently as "successful" downloads. Without size validation, `initLlama` fails inside `initialize()`'s catch block but `downloadModel()` has no way to know, causing the UI to show "ready" with a corrupt file on disk.
+- **Status:** Final — apply this pattern to any future model download.
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/services/llm/SLMAdapter.ts` | phi4-mini model constants; `formatPhi4Prompt` template; new stop tokens; `_stripArtifacts`; download validation (User-Agent, size check, isReady check); old model paths array |
+| `apps/mobile/src/services/network/NetworkOrchestrator.ts` | Added `FORCE_SLM` flag; `getLLMAdapter()` returns SLMAdapter when flag is active |
+| `apps/mobile/.env` | Added `EXPO_PUBLIC_FORCE_SLM=false` |
+| `apps/mobile/src/screens/HomeScreen.tsx` | Size label updated to "~2.3 GB" |
+| `apps/api/app/models/db.py` | Added `Guideline` model |
+| `apps/api/app/core/config.py` | Added `GUIDELINES_DIR = "./guideline_uploads"` |
+| `apps/api/alembic/versions/20260531_0005_add_guidelines_table.py` | New migration — creates `guidelines` table |
+| `apps/api/app/routers/guidelines.py` | New — `GET /api/v1/guidelines`, `GET /api/v1/guidelines/{id}/download` |
+| `apps/api/app/routers/admin/guidelines.py` | New — `POST /api/v1/admin/guidelines`, `DELETE /api/v1/admin/guidelines/{id}` |
+| `apps/api/app/main.py` | Registered guidelines + admin/guidelines routers; `makedirs` for GUIDELINES_DIR |
+| `apps/api/app/routers/auth.py` | Added `POST /api/v1/auth/change-password`; imported `get_current_user` |
+| `apps/dashboard/lib/api.ts` | Added `GuidelineItem`, `GuidelineListResponse` types; `getGuidelines`, `downloadGuideline`, `uploadGuideline`, `deleteGuideline`, `changePassword` functions |
+| `apps/dashboard/app/(dashboard)/resources/page.tsx` | Full rewrite — dynamic guidelines, removed Interactive Tools + Training + Call button |
+| `apps/dashboard/app/(dashboard)/settings/page.tsx` | New — Account info, Change Password, Case View Preferences, Notifications |
+
+---
+
+### What is next
+- Run `alembic upgrade head` to apply migration 0005 (guidelines table)
+- Restart API server to pick up new routers
+- Test guidelines upload/download as admin; verify non-admin cannot upload (403)
+- Wire `settings_default_case_filter` localStorage value into the Cases page filter bar default
+- Wire `settings_sound_alerts` into Socket.IO `case:new` handler to play a tone for RED cases
+- Carry-forwards from prior sessions: wire new `AuditOutput` fields into `cases.py`; test SOAP agent 150-word limit; rotate Groq API key (still exposed from pre-Session 16 git history)
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
