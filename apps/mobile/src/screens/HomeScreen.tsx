@@ -14,7 +14,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { format } from 'date-fns';
 import { useNetworkStore, NetworkMode } from '../store/networkStore';
 import { useUserStore } from '../store/userStore';
-import { getCompletedCases, markCaseAcknowledged, CompletedCase } from '../db/queries';
+import { sessionStore } from '../store/sessionStore';
+import { getCompletedCases, markCaseAcknowledged, CompletedCase, clearActiveSession } from '../db/queries';
 import { slmAdapter } from '../services/llm/SLMAdapter';
 import { useTransmissionStore } from '../store/transmissionStore';
 import type { RootStackParamList } from '../../App';
@@ -65,8 +66,10 @@ export default function HomeScreen({ navigation }: Props) {
   const lastTransmittedAt     = useTransmissionStore((s) => s.lastTransmittedAt);
 
   // Refresh cases and model state every time this screen comes into focus.
+  // Also record activity so the idle timer resets on every screen visit.
   useFocusEffect(
     useCallback(() => {
+      sessionStore.getState().recordActivity();
       loadCases();
       checkModelState();
     }, []),
@@ -95,7 +98,7 @@ export default function HomeScreen({ navigation }: Props) {
   async function handleDownloadModel() {
     if (downloadingRef.current) return;
     if (networkMode === 'OFFLINE') {
-      Alert.alert('No Connection', 'Connect to WiFi to download the offline AI model (~2.3 GB).');
+      Alert.alert('No Connection', 'Connect to WiFi to download the offline AI model (~2.0 GB).');
       return;
     }
     downloadingRef.current = true;
@@ -117,6 +120,25 @@ export default function HomeScreen({ navigation }: Props) {
   async function loadCases() {
     const cases = await getCompletedCases();
     setCompletedCases(cases);
+  }
+
+  function handleSignOut() {
+    Alert.alert(
+      'Sign Out',
+      'Your assessments and profile will remain on this device. You can sign back in with your CNIC.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            sessionStore.getState().signOut();
+            await clearActiveSession();
+            navigation.replace('Login');
+          },
+        },
+      ],
+    );
   }
 
   async function checkAndUpdateCaseStatus(c: CompletedCase) {
@@ -147,8 +169,13 @@ export default function HomeScreen({ navigation }: Props) {
             <Text style={styles.greeting}>{greeting}</Text>
             <Text style={styles.tagline}>Stay safe. Help is connected.</Text>
           </View>
-          <View style={[styles.networkBadge, { backgroundColor: netCfg.bg }]}>
-            <Text style={[styles.networkBadgeText, { color: netCfg.text }]}>{netCfg.label}</Text>
+          <View style={styles.headerRight}>
+            <View style={[styles.networkBadge, { backgroundColor: netCfg.bg }]}>
+              <Text style={[styles.networkBadgeText, { color: netCfg.text }]}>{netCfg.label}</Text>
+            </View>
+            <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut} activeOpacity={0.7}>
+              <Text style={styles.signOutText}>Sign Out</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -177,7 +204,7 @@ export default function HomeScreen({ navigation }: Props) {
           <View style={styles.modelCard}>
             <View style={styles.modelCardHeader}>
               <Text style={styles.modelCardTitle}>Offline AI Model</Text>
-              <Text style={styles.modelCardSize}>~2.3 GB</Text>
+              <Text style={styles.modelCardSize}>~2.0 GB</Text>
             </View>
             <Text style={styles.modelCardDesc}>
               Download to use AI-guided chat without internet.
@@ -309,10 +336,20 @@ const styles = StyleSheet.create({
   scroll: { padding: 20, paddingBottom: 40 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 8 },
   headerText: { flex: 1, marginRight: 12 },
+  headerRight: { alignItems: 'flex-end', gap: 6 },
   greeting: { color: '#ffffff', fontSize: 22, fontWeight: '700' },
   tagline: { color: '#6b7280', fontSize: 14, marginTop: 4 },
   networkBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14 },
   networkBadgeText: { fontSize: 11, fontWeight: '700', letterSpacing: 0.5 },
+  signOutBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#374151',
+    backgroundColor: '#111111',
+  },
+  signOutText: { color: '#9ca3af', fontSize: 11, fontWeight: '600' },
   statusCard: {
     backgroundColor: '#111111',
     borderRadius: 16,

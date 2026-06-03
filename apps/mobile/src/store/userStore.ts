@@ -9,6 +9,7 @@ interface UserState {
   deviceId: string;
   setProfile: (profile: UserProfile) => void;
   setRegistered: (registered: boolean) => void;
+  clearProfile: () => void;
   loadFromDatabase: () => Promise<void>;
 }
 
@@ -26,6 +27,7 @@ export const useUserStore = create<UserState>((set) => ({
   deviceId: getDeviceId(),
   setProfile: (profile) => set({ profile, isRegistered: true }),
   setRegistered: (isRegistered) => set({ isRegistered }),
+  clearProfile: () => set({ profile: null, isRegistered: false }),
   loadFromDatabase: async () => {
     const profile = await getUserProfile();
     if (profile) {

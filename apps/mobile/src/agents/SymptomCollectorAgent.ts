@@ -110,7 +110,7 @@ While gathering information: plain text, one question only.
 When you have all five data points (or patient cannot respond), emit ONLY this JSON:
 {"status":"CRITICAL","trigger":"{symptom}","critical_flag":"chest_pain|breathing|bleeding|unconscious|head_injury|stroke","onset_minutes":<number or "unknown">,"severity":"moderate|severe|critical","progression":"improving|stable|worsening|unknown","patient_responsive":true|false,"associated_symptoms":[<short strings>],"message":"<one brief calm safety instruction appropriate to the symptom>"}`;
 
-// ── SLM-specific system prompts (Qwen 2.5 1.5B / offline mode) ───────────────
+// ── SLM-specific system prompts (Llama 3.2 3B / offline mode) ────────────────
 // Shorter and example-driven because small models follow examples far more
 // reliably than long instruction lists. Same JSON output schema as the cloud
 // prompts so buildFeatureVector / _buildCriticalVector need no changes.

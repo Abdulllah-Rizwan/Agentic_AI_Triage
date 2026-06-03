@@ -7,39 +7,79 @@ It will be compatible before version 2.0.0.
 C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\google\adk\features\_feature_decorator.py:72: UserWarning: [EXPERIMENTAL] feature FeatureName.PLUGGABLE_AUTH is enabled.
   check_feature_enabled()
 worker created, starting...
-[2026-06-01 09:39:17,282: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-06-03 11:27:25,714: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-06-01 09:39:22,021: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+[2026-06-03 11:27:30,421: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
 Trying again in 2.00 seconds... (1/100)
 
-[2026-06-01 09:39:28,969: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+[2026-06-03 11:27:36,510: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
 Trying again in 4.00 seconds... (2/100)
 
-[2026-06-01 09:39:37,824: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+[2026-06-03 11:27:45,050: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
 Trying again in 6.00 seconds... (3/100)
 
-[2026-06-01 09:39:49,059: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+[2026-06-03 11:27:56,233: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
 Trying again in 8.00 seconds... (4/100)
 
-[2026-06-01 09:40:02,020: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+[2026-06-03 11:28:08,755: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
 Trying again in 10.00 seconds... (5/100)
 
-[2026-06-01 09:40:16,970: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+[2026-06-03 11:28:22,847: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
 Trying again in 12.00 seconds... (6/100)
 
-[2026-06-01 09:40:33,769: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+[2026-06-03 11:28:38,962: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
 Trying again in 14.00 seconds... (7/100)
 
-[2026-06-01 09:40:47,949: INFO/MainProcess] Connected to redis://localhost:6379/0
-[2026-06-01 09:40:47,951: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-06-03 11:28:57,011: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 16.00 seconds... (8/100)
+
+[2026-06-03 11:29:17,095: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 18.00 seconds... (9/100)
+
+[2026-06-03 11:29:39,192: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 20.00 seconds... (10/100)
+
+[2026-06-03 11:30:03,630: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 22.00 seconds... (11/100)
+
+[2026-06-03 11:30:29,712: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 24.00 seconds... (12/100)
+
+[2026-06-03 11:30:57,861: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 26.00 seconds... (13/100)
+
+[2026-06-03 11:31:29,165: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 28.00 seconds... (14/100)
+
+[2026-06-03 11:32:02,223: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 30.00 seconds... (15/100)
+
+[2026-06-03 11:32:36,350: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-06-03 11:33:12,564: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-06-03 11:33:48,759: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-06-03 11:34:24,917: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-06-03 11:35:01,712: ERROR/MainProcess] consumer: Cannot connect to redis://localhost:6379/0: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it..
+Trying again in 32.00 seconds... (16/100)
+
+[2026-06-03 11:35:34,112: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2026-06-03 11:35:34,146: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-06-01 09:40:47,982: INFO/MainProcess] mingle: searching for neighbors
-[2026-06-01 09:40:49,224: INFO/MainProcess] mingle: all alone
+[2026-06-03 11:35:34,199: INFO/MainProcess] mingle: searching for neighbors
+[2026-06-03 11:35:35,356: INFO/MainProcess] mingle: all alone
+[2026-06-03 11:35:35,449: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.

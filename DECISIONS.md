@@ -3443,6 +3443,130 @@ DEC-039 (Qwen3 1.7B as on-device SLM) is superseded by Session 29. phi4-mini 3.8
 
 ---
 
+## Session 30 — 2026-06-01
+
+### Goal
+Fix two bugs blocking offline mode on the new phi4-mini APK, then switch the on-device SLM to Llama 3.2 3B Q4_K_M to fix unacceptable inference latency on 4GB RAM phones.
+
+---
+
+### Part 1 — Offline Mode Bugs Fixed
+
+#### Bug 1 — Download button not appearing after APK update
+
+**Symptom:** After installing the updated phi4-mini APK, the HomeScreen download card was hidden even though the model had never been successfully downloaded.
+
+**Root cause:** `isModelDownloaded()` only checked `info.exists` on the file — it did not validate file size. A previous failed download (HuggingFace returning an HTML error page, or an interrupted download) had left a small corrupt file at `MODEL_PATH`. The file existed → `isModelDownloaded()` returned `true` → download card was hidden. But `initLlama()` failed on the corrupt file during `initialize()` → `isReady = false`.
+
+**Fix (`SLMAdapter.ts` — `isModelDownloaded()`):** Added a 500 MB minimum size check. Any file smaller than 500 MB is treated as corrupt/partial and returns `false`, making the download button reappear.
+
+**Fix (`SLMAdapter.ts` — `initialize()` catch block):** On `initLlama()` failure, now deletes the corrupt model file immediately. This means on the next app launch (or next `checkModelState()` call) `isModelDownloaded()` correctly returns `false`.
+
+---
+
+#### Bug 2 — Generic "I am having trouble connecting" error when offline
+
+**Symptom:** With WiFi off and no model downloaded, the chat showed "I am having trouble connecting. Please wait a moment and try again." — giving the user no actionable guidance.
+
+**Root cause:** `SymptomCollectorAgent.sendMessage()` had a single generic catch block for all LLM errors regardless of network state or error type.
+
+**Fix (`SymptomCollectorAgent.ts` — catch block):** Now checks `networkMode`. When offline, shows: "The offline AI model is not available. Please go back to the Home screen and tap DOWNLOAD." When online (cloud LLM failure), keeps the original connectivity message.
+
+---
+
+### Part 2 — SLM Model Switch: phi4-mini 3.8B → Llama 3.2 3B Q4_K_M
+
+#### Root cause of phi4-mini latency
+phi4-mini Q4_K_M weights (~2.3 GB) + KV cache at n_ctx=2048 (~500 MB) + OS (~1.5 GB) exceeded 4 GB total RAM on the test device, causing Android to swap model pages to internal storage. Storage is 100–1000× slower than RAM, producing 5–6 minute inference times per response — completely unusable for a triage chat.
+
+#### DEC-041 — SUPERSEDED
+DEC-041 (phi4-mini 3.8B as on-device SLM) is superseded by Session 30. Llama 3.2 3B Q4_K_M is now the on-device SLM.
+
+#### DEC-044 — SLM switched to Llama 3.2 3B Q4_K_M; n_ctx reduced to 1024
+- **Date:** 2026-06-01
+- **Decision:** On-device SLM is Llama 3.2 3B Q4_K_M from `bartowski/Llama-3.2-3B-Instruct-GGUF`. `n_ctx` reduced from 2048 → 1024. phi4-mini added to `OLD_MODEL_PATHS` for automatic cleanup on first launch. Chat template updated from Phi-4 (`<|system|>...<|end|>`) to Llama 3.2 instruct (`<|begin_of_text|><|start_header_id|>...<|eot_id|>`). Stop tokens updated to `['<|eot_id|>', '<|end_of_text|>', '<|start_header_id|>']`. `_stripArtifacts` updated to strip Llama 3.2 template tokens instead of phi4 tokens.
+- **Reason:** phi4-mini 3.8B caused 5–6 minute inference on 4GB phones due to RAM exhaustion and swapping. Llama 3.2 3B Q4_K_M is ~2.0 GB — fits comfortably on 4GB phones with headroom for the OS (~1.5 GB) and KV cache at n_ctx=1024 (~200 MB), keeping total well under 4 GB. `n_ctx` reduced from 2048 to 1024 because symptom collection conversations are 5–8 turns (200–500 tokens maximum) — 1024 provides sufficient headroom with no quality loss while saving ~250 MB of KV cache RAM. The model downloads via the HomeScreen download button from HuggingFace at runtime — no GGUF file needs to be manually placed.
+- **Rejected alternatives:** Qwen3 1.7B (prior failures: thinking leakage, dialogue-format output, repetition — though many are now fixed, Llama 3.2 3B has stronger instruction-following track record); phi4-mini Q3_K_M (saves ~600 MB but 3.8B still too large for 4GB phone even at lower quant); Llama 3.2 1B (fastest but structured 8-field SUFFICIENT JSON output is unreliable at 1B scale).
+- **Status:** Final
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/services/llm/SLMAdapter.ts` | `isModelDownloaded()` — added 500 MB size validation; `initialize()` catch — deletes corrupt file on load failure; model constants → Llama 3.2 3B; `OLLAMA_MODEL` → `llama3.2:3b`; `formatPhi4Prompt` → `formatLlama32Prompt` (Llama 3.2 instruct template); `n_ctx` 2048 → 1024 in both `initialize()` and `_ensureLlamaRnLoaded()`; stop tokens updated; `_stripArtifacts` updated for Llama 3.2 tokens; phi4-mini added to `OLD_MODEL_PATHS` |
+| `apps/mobile/src/agents/SymptomCollectorAgent.ts` | LLM error catch — differentiated offline vs online error message; SLM prompt comment updated to reference Llama 3.2 3B |
+| `apps/mobile/src/screens/HomeScreen.tsx` | Size label and alert text updated from "~2.3 GB" to "~2.0 GB" |
+
+---
+
+### What is next
+- `ollama pull llama3.2:3b` already done on dev machine
+- Rebuild preview APK (`eas build --platform android --profile preview`)
+- Install APK — phi4-mini file will be auto-deleted on first launch; download button appears
+- Tap DOWNLOAD on WiFi — ~2.0 GB download from HuggingFace
+- Test 5-turn GREEN assessment offline — expected inference time 30–90 seconds vs previous 5–6 minutes
+- If inference is still too slow on 4GB phone, next fallback is Llama 3.2 1B (~700 MB)
+
+---
+
+## Session 31 — 2026-06-02
+
+### Goal
+Add sign-in / sign-out with a 17-minute idle session timeout to the mobile app.
+
+### What was built
+
+#### Sign-out flow
+- `src/store/sessionStore.ts` — new Zustand store: `isSignedIn`, `lastActivityAt`, `signIn()`, `signOut()`, `recordActivity()`, `isExpired()`. `SESSION_TIMEOUT_MS = 17 * 60 * 1000`.
+- `src/db/queries.ts` — added `deleteUserProfile()`, `getLastActivityAt()`, `setLastActivityAt()` using the `app_metadata` table.
+- `src/store/userStore.ts` — added `clearProfile()` action (clears Zustand state; does not touch SQLite — used by "switch patient" flow).
+- `HomeScreen.tsx` — sign-out button added in the header (top-right, below network badge). Pressing it shows a confirmation Alert then calls `sessionStore.signOut()`, clears the active chat session, and navigates to `Login`.
+
+#### Sign-in (returning user)
+- `src/screens/LoginScreen.tsx` — new screen. Shows the registered patient's first name, asks for CNIC verification. On match: calls `sessionStore.signIn()` and navigates to `Home`. "Different patient?" link calls `deleteUserProfile()` + `clearProfile()` and navigates to `Registration`.
+
+#### Session timeout
+- `App.tsx` — AppState listener: when the app returns to foreground (`active`), checks `sessionStore.isExpired()`. If expired: calls `signOut()` and resets the navigation stack to `Login`.
+- `App.tsx` — periodic `setInterval` (every 60 s) checks the same while the app is foregrounded.
+- `App.tsx` — on `background`/`inactive` AppState: persists current `lastActivityAt` to SQLite so the auto-resume check on next launch is accurate.
+- `App.tsx` — on bootstrap, reads `lastActivityAt` from SQLite. If within 17 minutes, auto-resumes session (`signIn()` is called) so the user isn't forced to log in on every quick reopen.
+- `ChatScreen.tsx` — calls `sessionStore.recordActivity()` on every message sent.
+- `HomeScreen.tsx` — calls `sessionStore.recordActivity()` in `useFocusEffect`.
+
+#### Navigation routing
+- `SplashScreen.tsx` updated: `!isRegistered` → Registration; `isRegistered && isSignedIn` → Home; `isRegistered && !isSignedIn` → Login.
+- `App.tsx` — `Login` route added to `RootStackParamList` and the navigator. `navigationRef` created with `CommonActions.reset` used for programmatic stack-clearing on timeout.
+
+### Key design decision
+- Patient profile is **kept in SQLite** on sign-out — the user can sign back in with CNIC alone without re-entering name/phone/GPS. Only "Different patient?" fully deletes the profile.
+- Session is **idle-based** (not absolute): any message sent or screen focus resets the 17-minute clock. This prevents ejecting a patient who is actively chatting.
+- `lastActivityAt` is only written to SQLite on sign-in, sign-out, and going to background — not on every `recordActivity()` call — to avoid excessive DB writes during active chat.
+
+### DEC-045 — Idle-based session timeout with CNIC sign-in for returning patients
+- **Date:** 2026-06-02
+- **Decision:** 17-minute idle session (resets on any user interaction). Profile stays in SQLite. Returning users verify with CNIC on the Login screen instead of re-registering.
+- **Reason:** An absolute timeout would kick out a patient mid-triage-interview. Idle-based is safer — the clock only runs when the user is not interacting. Keeping the profile avoids re-entering location, phone, and CNIC on every session.
+- **Rejected alternative:** Absolute timeout from sign-in — ejects users mid-conversation.
+- **Rejected alternative:** No sign-in screen (just delete profile on sign-out) — patients in disaster zones should not have to re-register including GPS re-detection every session.
+- **Status:** Final
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/store/sessionStore.ts` | New — `isSignedIn`, `lastActivityAt`, `signIn`, `signOut`, `recordActivity`, `isExpired` |
+| `apps/mobile/src/screens/LoginScreen.tsx` | New — CNIC verification screen for returning patients |
+| `apps/mobile/src/db/queries.ts` | Added `deleteUserProfile`, `getLastActivityAt`, `setLastActivityAt` |
+| `apps/mobile/src/store/userStore.ts` | Added `clearProfile` action |
+| `apps/mobile/App.tsx` | Added `Login` route + `navigationRef`; AppState listener + 60s idle timer; session auto-resume on bootstrap |
+| `apps/mobile/src/screens/SplashScreen.tsx` | Navigation logic updated to check `isSignedIn`; routes to Login when registered but not signed in |
+| `apps/mobile/src/screens/HomeScreen.tsx` | Sign-out button in header; `recordActivity()` in `useFocusEffect` |
+| `apps/mobile/src/screens/ChatScreen.tsx` | `recordActivity()` on every message send |
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->

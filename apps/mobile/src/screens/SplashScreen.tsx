@@ -8,6 +8,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNetworkStore } from '../store/networkStore';
 import { useUserStore } from '../store/userStore';
+import { useSessionStore } from '../store/sessionStore';
 import { slmAdapter } from '../services/llm/SLMAdapter';
 import type { RootStackParamList } from '../../App';
 
@@ -19,6 +20,7 @@ interface Props {
 export default function SplashScreen({ navigation, isModelReady }: Props) {
   const networkMode = useNetworkStore((s) => s.mode);
   const isRegistered = useUserStore((s) => s.isRegistered);
+  const isSignedIn = useSessionStore((s) => s.isSignedIn);
   const [timedOut, setTimedOut] = useState(false);
   const pulseAnim = React.useRef(new Animated.Value(1)).current;
 
@@ -40,10 +42,15 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
 
   useEffect(() => {
     if (isModelReady || timedOut) {
-      const dest = isRegistered ? 'Home' : 'Registration';
-      navigation.replace(dest);
+      if (!isRegistered) {
+        navigation.replace('Registration');
+      } else if (isSignedIn) {
+        navigation.replace('Home');
+      } else {
+        navigation.replace('Login');
+      }
     }
-  }, [isModelReady, timedOut, isRegistered, navigation]);
+  }, [isModelReady, timedOut, isRegistered, isSignedIn, navigation]);
 
   function renderSLMStatus() {
     if (!isModelReady) {

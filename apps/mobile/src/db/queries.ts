@@ -175,3 +175,21 @@ export async function loadChatHistory(caseId: string): Promise<unknown[] | null>
     return null;
   }
 }
+
+// ── Session Helpers ───────────────────────────────────────────────────────────
+
+export async function deleteUserProfile(): Promise<void> {
+  const db = getDb();
+  await db.runAsync(`DELETE FROM user_profile WHERE id = 'local_user'`);
+}
+
+export async function getLastActivityAt(): Promise<number | null> {
+  const raw = await getMetadata('session_last_activity');
+  if (!raw) return null;
+  const ts = parseInt(raw, 10);
+  return isNaN(ts) ? null : ts;
+}
+
+export async function setLastActivityAt(timestamp: number): Promise<void> {
+  await setMetadata('session_last_activity', String(timestamp));
+}

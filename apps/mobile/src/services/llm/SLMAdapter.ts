@@ -5,32 +5,36 @@ import { logger } from '../../utils/logger';
 const TAG = 'SLMAdapter';
 const IS_DEV = process.env.EXPO_PUBLIC_ENVIRONMENT === 'development';
 const OLLAMA_URL = process.env.EXPO_PUBLIC_OLLAMA_URL ?? 'http://localhost:11434';
-const OLLAMA_MODEL = 'phi4-mini';
+const OLLAMA_MODEL = 'llama3.2:3b';
 const MAX_TOKENS = 600;
 const TEMPERATURE = 0.3;
 const REPEAT_PENALTY = 1.1;
 
-const MODEL_FILENAME = 'Phi-4-mini-instruct-Q4_K_M.gguf';
+const MODEL_FILENAME = 'Llama-3.2-3B-Instruct-Q4_K_M.gguf';
 const MODEL_DIR = (FileSystem.documentDirectory ?? '') + 'models/';
 export const MODEL_PATH = MODEL_DIR + MODEL_FILENAME;
 const MODEL_URL =
-  'https://huggingface.co/unsloth/Phi-4-mini-instruct-GGUF/resolve/main/' + MODEL_FILENAME;
+  'https://huggingface.co/bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/' + MODEL_FILENAME;
 
 // Old models — deleted automatically on first launch after upgrade
 const OLD_MODEL_PATHS = [
   MODEL_DIR + 'Qwen2.5-1.5B-Instruct-Q4_K_M.gguf',
   MODEL_DIR + 'Qwen_Qwen3-1.7B-Q4_K_M.gguf',
+  MODEL_DIR + 'Phi-4-mini-instruct-Q4_K_M.gguf',
 ];
 
-// Phi-4 chat template format
-function formatPhi4Prompt(messages: ChatMessage[], systemPrompt: string): string {
-  const parts: string[] = [`<|system|>\n${systemPrompt}<|end|>`];
+// Llama 3.2 instruct chat template format
+function formatLlama32Prompt(messages: ChatMessage[], systemPrompt: string): string {
+  const parts: string[] = [
+    `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n${systemPrompt}<|eot_id|>`,
+  ];
   for (const m of messages) {
     const role = m.role === 'assistant' ? 'assistant' : 'user';
-    parts.push(`<|${role}|>\n${m.content}<|end|>`);
+    parts.push(`<|start_header_id|>${role}<|end_header_id|>\n\n${m.content}<|eot_id|>`);
   }
-  parts.push('<|assistant|>');
-  return parts.join('\n');
+  // Prime the model to generate the assistant turn
+  parts.push('<|start_header_id|>assistant<|end_header_id|>\n\n');
+  return parts.join('');
 }
 
 export class SLMAdapter implements LLMAdapter {
@@ -80,7 +84,7 @@ export class SLMAdapter implements LLMAdapter {
       this.llm = await initLlama({
         model: MODEL_PATH,
         use_mlock: true,
-        n_ctx: 2048,
+        n_ctx: 1024,
         n_threads: 4,
       });
 
@@ -121,7 +125,7 @@ export class SLMAdapter implements LLMAdapter {
         this.llm = await initLlama({
           model: MODEL_PATH,
           use_mlock: true,
-          n_ctx: 2048,
+          n_ctx: 1024,
           n_threads: 4,
         });
         logger.info(TAG, 'llama.rn loaded as offline fallback');
@@ -169,7 +173,7 @@ export class SLMAdapter implements LLMAdapter {
 
     await download.downloadAsync();
 
-    // Validate the downloaded file — a real phi4-mini GGUF must be > 500 MB.
+    // Validate the downloaded file — a real Llama 3.2 3B GGUF must be > 500 MB.
     // If HuggingFace returned an HTML error page instead of the model file,
     // the file will be tiny and we catch it here rather than crashing on load.
     const info = await FileSystem.getInfoAsync(MODEL_PATH);
@@ -181,7 +185,7 @@ export class SLMAdapter implements LLMAdapter {
         ? `${Math.round(actualSize / 1024)} KB`
         : '0 bytes';
       throw new Error(
-        `Download incomplete — received ${humanSize} instead of ~2.3 GB. ` +
+        `Download incomplete — received ${humanSize} instead of ~2.0 GB. ` +
         `HuggingFace may have returned an error page. Check your connection and try again.`,
       );
     }
@@ -211,7 +215,7 @@ export class SLMAdapter implements LLMAdapter {
   async isModelDownloaded(): Promise<boolean> {
     const info = await FileSystem.getInfoAsync(MODEL_PATH);
     if (!info.exists) return false;
-    // A valid phi4-mini GGUF must be > 500 MB. A smaller file is a corrupt
+    // A valid Llama 3.2 3B GGUF must be > 500 MB. A smaller file is a corrupt
     // or partial download (e.g. an HTML error page from HuggingFace).
     const MIN_VALID_SIZE = 500 * 1024 * 1024;
     const size = (info as { size?: number }).size ?? 0;
@@ -285,7 +289,7 @@ export class SLMAdapter implements LLMAdapter {
       throw new LLMUnavailableError('llama.rn context not initialized');
     }
 
-    const prompt = formatPhi4Prompt(messages, systemPrompt);
+    const prompt = formatLlama32Prompt(messages, systemPrompt);
 
     try {
       const result = await this.llm.completion({
@@ -293,7 +297,7 @@ export class SLMAdapter implements LLMAdapter {
         n_predict: MAX_TOKENS,
         temperature: TEMPERATURE,
         repeat_penalty: REPEAT_PENALTY,
-        stop: ['<|end|>', '<|endoftext|>', '<|user|>'],
+        stop: ['<|eot_id|>', '<|end_of_text|>', '<|start_header_id|>'],
       });
 
       return _stripArtifacts((result as { text: string }).text);
@@ -305,14 +309,14 @@ export class SLMAdapter implements LLMAdapter {
 
 export const slmAdapter = new SLMAdapter();
 
-// Strips known model artifacts: Qwen3 thinking blocks (kept for safety), phi4
-// template tokens that may leak, and leading/trailing whitespace.
+// Strips known model artifacts: Llama 3.2 template tokens that may leak,
+// legacy Qwen3 thinking blocks kept for safety, and leading/trailing whitespace.
 function _stripArtifacts(text: string): string {
   return text
-    .replace(/<think>[\s\S]*?<\/think>/g, '') // Qwen3 thinking blocks (legacy safety)
-    .replace(/<\/think>/g, '')                 // orphaned closing tags
-    .replace(/<\|end\|>/g, '')                 // phi4 stop token if it leaks
-    .replace(/<\|user\|>[\s\S]*/g, '')         // truncate if model generates next turn
-    .replace(/<\|assistant\|>/g, '')            // leading assistant tag if present
+    .replace(/<\|eot_id\|>[\s\S]*/g, '')              // truncate at end-of-turn token
+    .replace(/<\|start_header_id\|>[\s\S]*/g, '')      // truncate if model generates next turn header
+    .replace(/<\|end_of_text\|>/g, '')                 // end-of-text token
+    .replace(/<think>[\s\S]*?<\/think>/g, '')          // legacy Qwen3 thinking blocks
+    .replace(/<\/think>/g, '')                         // orphaned closing tags
     .trim();
 }

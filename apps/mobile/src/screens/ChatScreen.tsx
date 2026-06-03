@@ -38,6 +38,7 @@ import { queryGuidance, routeGuidance } from '../services/rag/queryGuidance';
 import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
 import { useTransmissionStore } from '../store/transmissionStore';
+import { sessionStore } from '../store/sessionStore';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
 const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000; // sessions older than 24 h start fresh
@@ -560,6 +561,9 @@ export default function ChatScreen({ navigation, route }: Props) {
   const handleSend = useCallback(async () => {
     const text = input.trim();
     if (!text || isInputDisabled || isAgentTyping || !agentRef.current) return;
+
+    // Sending a message counts as user activity — reset the idle session timer
+    sessionStore.getState().recordActivity();
 
     addMessage({
       id: `user-${Date.now()}`,
