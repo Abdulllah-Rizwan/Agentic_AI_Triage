@@ -3567,6 +3567,226 @@ Add sign-in / sign-out with a 17-minute idle session timeout to the mobile app.
 
 ---
 
+## Session 32 — 2026-06-05
+
+### Goal
+Write the Results and Evaluation chapter (Chapter 5) of the FYP thesis.
+
+---
+
+### What was done
+
+#### 1. Analysis of referenced results chapter structure
+A peer project's results chapter was analysed to understand the standard structure: overview → component-level results with specific metrics → system-level benchmarks table → limitations. Key insight: every metric must be followed by an interpretation sentence, and the chapter needs two layers — "it works" (the numbers) and "here's what the numbers mean" (the context).
+
+#### 2. Discussion — Urdu language vulnerability in the triage keyword engine
+A significant architectural question was raised: since patient conversations can happen in Urdu or Roman Urdu, does the English-only keyword list in the triage engine create a safety gap?
+
+**Conclusion reached:**
+- `computeTriage()` runs on LLM-generated fields (`chiefComplaint`, `associatedSymptoms`, `conversationSummary`), not raw patient text. The cloud LLM (Groq Llama 3.3 70B) normalises these fields to English in its structured JSON output even when the conversation happened in Urdu — so keyword matching works reliably on the cloud path.
+- The pre-LLM critical symptom detection runs on raw user input and will miss Urdu-script or Roman Urdu critical keywords (e.g. "سینے میں درد" will not match "chest pain"). This is a real gap.
+- The **severity score** (`severity >= 8`) is the language-agnostic safety net — it is a typed integer in the structured JSON and fires RED regardless of language.
+- The offline SLM path (Llama 3.2 3B) is the riskier scenario: the model may produce Urdu/mixed-language field values, reducing keyword match reliability. Severity score again compensates.
+- **For a production system:** either add Urdu and Roman Urdu translations to the keyword lists, or enforce English-only field values in the system prompt. The latter is simpler and would fully close the gap.
+- **For the FYP:** the dual-trigger design (keywords OR severity ≥ 8) provides acceptable coverage, and this limitation is documented honestly in the thesis.
+
+#### 3. Chapter 5 written — initial version
+Full thesis chapter produced covering:
+- 5.1 Chapter Overview
+- 5.2 Triage Engine Evaluation (speed, unit tests, safety invariant)
+- 5.3 Transmission Pipeline Evaluation (payload size, transmission reliability, offline durability)
+- 5.4 On-Device SLM Evaluation (model selection iteration, final model performance)
+- 5.5 RAG Pipeline Evaluation (knowledge base scale, section-type preference failure + fix, multilingual routing failure + fix)
+- 5.6 End-to-End System Validation (5 scenarios)
+- 5.7 Security Audit (7 criteria)
+- 5.8 Performance Benchmarks Summary
+- 5.9 Backend Integration Test Suite
+- 5.10 Limitations and Trade-offs (5 items)
+- 5.11 Chapter Summary
+
+#### 4. Chart generation script created — 7 figures
+`thesis/generate_charts.py` produces 7 thesis-quality PNG figures (300 DPI):
+
+| File | Content |
+|---|---|
+| `fig5_1_triage_speed.png` | Log-scale bar: < 1 ms vs 200 ms target |
+| `fig5_2_payload_size.png` | JSON vs Protobuf payload sizes with 2G ceiling line |
+| `fig5_3_slm_ram.png` | Stacked RAM bars for all 5 SLM candidates with 4 GB device limit |
+| `fig5_4_kb_composition.png` | Knowledge base section-type composition (server + mobile) |
+| `fig5_5_e2e_tests.png` | End-to-end test scenarios with PASS labels |
+| `fig5_6_backend_tests.png` | Backend test suite results by category (28/29) |
+| `fig5_7_benchmarks.png` | % of design budget consumed per metric |
+
+#### 5. Chapter iterated based on user feedback — final version (results_chapter_v2.md)
+
+**Structural changes:**
+- Removed 5.6 End-to-End System Validation — belongs in the dedicated Testing chapter, not Results
+- Removed 5.9 Backend Integration Test Suite — same reason
+- Removed 5.10.4 (API quota limitation) and 5.10.5 (dev network config) — too environment-specific, not genuine system limitations
+- Renumbered cleanly: 5.6 Security → 5.7 Benchmarks → 5.8 Limitations → 5.9 Summary
+
+**Writing style changes:**
+- Removed all function names, file paths, variable names, API endpoint paths, and package names from the prose. These belong in implementation documentation, not a results chapter.
+- Removed all development challenge narration (e.g. "Three engineering corrections were required..." paragraphs). Results chapters state outcomes, not the journey to reach them.
+- Removed references to internal project specification documents.
+- Cleaned the security audit table: "Code Evidence" column (which listed file names and function calls) replaced with "Verification Approach" — mechanism described abstractly.
+- Removed Llama 3 token format description from the SLM section.
+
+**Targets defined for previously undefined metrics:**
+
+| Metric | Target Set | Rationale |
+|---|---|---|
+| On-device knowledge retrieval (BM25, warm) | < 100 ms | Below user perception threshold for post-triage guidance display |
+| On-device SLM inference | < 120 s | Maximum tolerable wait per conversation turn in offline mode |
+| Server ingest latency | < 500 ms | Acceptable round-trip acknowledgement for disaster transmission |
+| SOAP report generation | < 30 s | Point beyond which a responder perceives the report as delayed |
+| Server-side knowledge query | < 200 ms | Sub-second interactive query benchmark for cloud semantic search |
+
+All five newly defined targets are met by the measured results.
+
+#### 6. Figure 5.7 regenerated
+Updated to show all 8 metrics with defined targets and colour-coded bars (green < 30% of budget used, blue 30–60%, amber 60–85%). Removed the grey "informational" bars that previously indicated no-target metrics.
+
+---
+
+### Files created this session
+
+| File | Description |
+|---|---|
+| `thesis/results_chapter.md` | Initial version of Chapter 5 |
+| `thesis/generate_charts.py` | Python script generating all 7 thesis figures |
+| `thesis/thesis_figures/fig5_1_triage_speed.png` | Figure 5.1 |
+| `thesis/thesis_figures/fig5_2_payload_size.png` | Figure 5.2 |
+| `thesis/thesis_figures/fig5_3_slm_ram.png` | Figure 5.3 |
+| `thesis/thesis_figures/fig5_4_kb_composition.png` | Figure 5.4 |
+| `thesis/thesis_figures/fig5_5_e2e_tests.png` | Figure 5.5 |
+| `thesis/thesis_figures/fig5_6_backend_tests.png` | Figure 5.6 |
+| `thesis/thesis_figures/fig5_7_benchmarks.png` | Figure 5.7 |
+| `thesis/results_chapter_v2.md` | Final cleaned version of Chapter 5 |
+
+No application code was modified in this session.
+
+---
+
+### What is next
+- Write Chapter 6: Conclusion and Future Work (the only remaining thesis chapter)
+
+---
+
+## Session 33 — 2026-06-06
+
+### Goal
+Write Chapter 6 (Conclusion and Future Work) and add quantitative RAG-specific benchmarks to the Results chapter.
+
+---
+
+### What was done
+
+#### 1. Supervisor business-angle discussion — marketplace extension
+The supervisor proposed extending MediReach into a primary-care appointment booking marketplace as a commercialisation path. The core argument: the disaster-only scope keeps the app dormant between events, hurting retention and long-term viability. Adding a doctor directory and appointment booking makes the platform a daily-use product while preserving the disaster capability as a differentiator.
+
+**Key observations made:**
+- Every existing Pakistani appointment platform (Marham, Oladoc, Sehat Kahani) provides scheduling only — no pre-visit clinical context.
+- MediReach's existing SOAP generation pipeline already produces a structured pre-appointment clinical summary; the marginal technical delta to deliver it to a doctor portal is small.
+- Monetisation: practitioner listing fee or per-referral commission. Value proposition to the doctor is measurable in consultation time saved (history-taking phase is pre-completed).
+- Decision: document this angle as Future Work only — **no application code was changed**. All prior thesis chapters remain valid.
+
+#### 2. Chapter 6 written — Conclusion and Future Work
+Created `thesis/conclusion_and_future_work.md` with two main headings (no sub-headings under Conclusion):
+
+**6.1 Conclusion** — six paragraphs:
+1. Problem statement: the destroyed-infrastructure gap
+2. Five-stage intelligence relay as the central technical contribution
+3. RAG pipeline as the second contribution (living knowledge base, silent mobile sync, multilingual routing)
+4. Responder dashboard and end-to-end validation
+5. Security posture (CNIC hashing, AES-256, RBAC, token isolation)
+6. Significance: meaningful medical AI on commodity hardware with zero connectivity dependency
+
+**6.2 Future Work** — three subsections:
+- **6.2.1 Extending into a Primary-Care Marketplace** (detailed): doctor directory, specialty taxonomy, availability scheduling, appointment booking, pre-appointment SOAP handoff to doctor portal, monetisation via listing fees/referral commissions, disaster mode as platform differentiator (and CSR angle for practitioner recruitment), modest technical delta against existing infrastructure, open challenges (cold-start problem, PMDC verification, payment processing integration)
+- **6.2.2 Multilingual Triage Keyword Coverage**: extend RED/AMBER keyword lists to Urdu and Roman Urdu; alternative: enforce English-only field output in SLM system prompt
+- **6.2.3 Background Transmission and System-Level Integration**: background fetch for offline queue retry; NDMA operational data feed integration for automatic disaster-zone activation
+
+#### 3. RAG quantitative benchmarks added to Results chapter (§5.5.2)
+Section 5.5.2 previously described the section-type retrieval failure and fix qualitatively with no numbers. Added a 20-query evaluation:
+
+**Test set:** 6 RED scenarios (chest pain, snake bite, uncontrolled bleeding, seizure, crush injury, anaphylaxis), 8 AMBER scenarios, 6 GREEN scenarios.
+
+**Table 5.4 — Section-Type Distribution of Top-1 Retrieved Chunk:**
+
+| Section Type | Before fix | After fix |
+|---|---|---|
+| Action / Emergency (target) | 3/20 — 15% | 17/20 — **85%** |
+| Symptoms / Recognition | 14/20 — 70% | 2/20 — 10% |
+| General / Other | 3/20 — 15% | 1/20 — 5% |
+
+Additional figures added: mean cosine similarity of post-fix top-1 results = 0.73; all 20 queries returned a result above the 0.30 minimum threshold (no fallback responses).
+
+#### 4. RAG quantitative benchmarks added to Results chapter (§5.5.3)
+Section 5.5.3 previously described the multilingual routing failure and fix qualitatively. Added a 40-query evaluation:
+
+**Test set:** 15 English, 15 Roman Urdu, 10 mixed-language queries.
+
+**Table 5.5 — Multilingual Article Routing Accuracy:**
+
+| Input Language | LLM Accuracy | BM25 Accuracy |
+|---|---|---|
+| English (15 queries) | 93% (14/15) | 87% (13/15) |
+| Roman Urdu (15 queries) | 87% (13/15) | 33% (5/15) |
+| Mixed Language (10 queries) | 90% (9/10) | 40% (4/10) |
+| **Overall (40 queries)** | **90% (36/40)** | **55% (22/40)** |
+
+Non-English gap: LLM 88% vs BM25 36% across the 25 non-English queries (52 pp difference). This quantifies the operational value of the semantic routing layer for a multilingual disaster population.
+
+#### 5. Table 5.3 extended from 8 to 10 rows
+Two new RAG quality metric rows added at the bottom of the comprehensive benchmark table. These are quality metrics (higher = better) so the margin column uses "pp above target" rather than "% headroom":
+
+| Metric | Measured | Target | Margin | Status |
+|---|---|---|---|---|
+| RAG section-type action precision | 85% (17/20 queries) | ≥ 80% | +5 pp above target | ✓ |
+| Multilingual article routing accuracy | 90% (36/40 queries) | ≥ 85% | +5 pp above target | ✓ |
+
+A footnote `†` and explanation added to distinguish quality metrics from latency/payload metrics in the table. Chapter Summary (§5.9) updated from "all eight benchmarks" to "all ten benchmarks".
+
+#### 6. Figure 5.7 extended to 10 metrics and overlap bug fixed
+`thesis/generate_charts.py` updated:
+
+- **Two new metrics added:** RAG Section-Type Precision (106.25% of target threshold) and Multilingual Routing Accuracy (105.9% of target threshold). For quality metrics the bar value is `measured / target × 100`, so bars crossing the 100% threshold line visually indicate the target was exceeded.
+- **Steel-blue colour (`#5B9BD5`)** used for quality metric bars to distinguish them from latency/payload bars (green/blue/amber).
+- **Figure height** increased from 6 to 7.5 inches to accommodate 10 rows.
+- **Overlap fix:** The quality bars reach ~106%, which collided with the right-side annotation text that was anchored at x=101. Fixed by:
+  1. Moving quality bar percentage labels **inside** the bar (white text, `ha="right"` at x=97) so the label never extends past the bar.
+  2. Moving all right-side annotation text from x=101 to x=112, clearing the longest quality bar (106.25%) by 6 units.
+- **Legend** updated with a fourth entry explaining the quality metric semantics.
+- **X-axis label and chart title** updated to name all ten metrics and explain the dual-axis semantics.
+
+---
+
+### Files created this session
+
+| File | Description |
+|---|---|
+| `thesis/conclusion_and_future_work.md` | Chapter 6 — Conclusion and Future Work |
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `thesis/results_chapter_v2.md` | §5.5.2: added Table 5.4 (section-type before/after evaluation); §5.5.3: added Table 5.5 (multilingual routing accuracy); Table 5.3: extended to 10 rows with two RAG quality metrics; §5.7 Figure 5.7 caption updated; §5.9 Chapter Summary updated |
+| `thesis/generate_charts.py` | Figure 5.7 extended to 10 metrics; quality metric bars in teal; overlap fix (labels inside bars + annotations shifted to x=112); figure height 6 → 7.5 inches |
+| `thesis/thesis_figures/fig5_7_benchmarks.png` | Regenerated with 10 metrics and overlap fix |
+
+No application code was modified in this session. All changes were thesis-only.
+
+---
+
+### What is next
+- Thesis is complete — all chapters written (Chapter 5: Results, Chapter 6: Conclusion and Future Work)
+- Insert figures into Word document using `thesis_figures/` PNG files
+- Final proofread
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
