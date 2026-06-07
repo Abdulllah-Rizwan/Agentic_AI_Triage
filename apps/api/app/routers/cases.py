@@ -121,7 +121,7 @@ async def list_cases(
     offset: int = 0,
     sort: str = "received_at:desc",
     db: AsyncSession = Depends(get_db),
-    _current_user: CurrentUser = Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     limit = min(limit, 100)
 
@@ -140,6 +140,11 @@ async def list_cases(
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=f"Invalid status: {exc}")
         conditions.append(Case.status.in_(statuses))
+        # History queries (no PENDING in filter) are scoped to the requester's org
+        # so each responder only sees cases their organization handled.
+        # ADMINs bypass this and see all orgs' history.
+        if CaseStatus.PENDING not in statuses and current_user.role != "ADMIN":
+            conditions.append(Case.claimed_by_org_id == current_user.org_id)
 
     where_clause = and_(*conditions) if conditions else True
 
@@ -270,7 +275,7 @@ async def claim_case(
     await socket_emitter.emit_case_claimed(
         case_id=case_id,
         claimed_by_org_name=org_name,
-        org_id=str(current_user.org_id),
+        org_id=None,  # broadcast to all orgs so every dashboard removes the case immediately
     )
 
     return schemas.ClaimResponse(
