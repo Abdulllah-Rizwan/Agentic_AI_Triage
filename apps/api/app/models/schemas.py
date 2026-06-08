@@ -335,6 +335,99 @@ class OrgSuspendResponse(BaseModel):
     status: str
 
 
+# ── Practitioners & Appointments ─────────────────────────────────────────────
+
+
+class PractitionerSlotItem(BaseModel):
+    id: UUID
+    slot_date: str
+    slot_time: str
+    is_booked: bool
+
+
+class PractitionerItem(BaseModel):
+    id: UUID
+    org_id: UUID
+    name: str
+    specialty: str
+    city: str
+    clinic_name: str
+    phone: Optional[str] = None
+    bio: Optional[str] = None
+    available_slot_count: int = 0
+
+
+class PractitionerDetailResponse(BaseModel):
+    id: UUID
+    org_id: UUID
+    name: str
+    specialty: str
+    city: str
+    clinic_name: str
+    phone: Optional[str] = None
+    bio: Optional[str] = None
+    slots: list[PractitionerSlotItem]
+
+
+class PractitionerListResponse(BaseModel):
+    practitioners: list[PractitionerItem]
+
+
+class CreatePractitionerRequest(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    specialty: str
+    city: str = Field(..., min_length=2)
+    clinic_name: str = Field(..., min_length=2)
+    phone: Optional[str] = None
+    bio: Optional[str] = None
+
+
+class AddSlotsRequest(BaseModel):
+    slots: list[dict]   # [{"slot_date": "YYYY-MM-DD", "slot_time": "HH:MM"}, ...]
+
+
+class BookAppointmentRequest(BaseModel):
+    practitioner_id: UUID
+    slot_id: UUID
+    case_id: Optional[str] = None
+    patient_name: str = Field(..., min_length=1)
+    patient_phone: str = Field(..., min_length=5)
+    chief_complaint: str = Field(..., min_length=1)
+    triage_level: str   # GREEN | AMBER
+
+
+class AppointmentResponse(BaseModel):
+    id: UUID
+    practitioner_name: str
+    clinic_name: str
+    slot_date: str
+    slot_time: str
+    status: str
+    booked_at: datetime
+
+
+class AppointmentDetailResponse(BaseModel):
+    id: UUID
+    practitioner_name: str
+    practitioner_specialty: str
+    clinic_name: str
+    city: str
+    slot_date: str
+    slot_time: str
+    patient_name: str
+    patient_phone: str
+    chief_complaint: str
+    triage_level: str
+    status: str
+    booked_at: datetime
+    notes: Optional[str] = None
+    soap_report: Optional[SoapReportSchema] = None
+
+
+class AppointmentListResponse(BaseModel):
+    appointments: list[AppointmentDetailResponse]
+
+
 # ── Admin — System ────────────────────────────────────────────────────────────
 
 

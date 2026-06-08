@@ -9,28 +9,32 @@ import {
   BarChart3,
   BookOpen,
   Building2,
+  CalendarDays,
   ChevronLeft,
   ChevronRight,
   FileText,
   LayoutDashboard,
   LogOut,
   Settings,
+  Stethoscope,
   Wifi,
   WifiOff,
 } from "lucide-react";
 import { useSocket } from "@/lib/socket";
 
-const navItems = [
-  { href: "/cases",     label: "Cases",     icon: LayoutDashboard },
-  { href: "/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/resources", label: "Resources", icon: BookOpen },
-  { href: "/settings",  label: "Settings",  icon: Settings },
+const baseNavItems = [
+  { href: "/cases",        label: "Cases",        icon: LayoutDashboard },
+  { href: "/analytics",    label: "Analytics",    icon: BarChart3 },
+  { href: "/appointments", label: "Appointments", icon: CalendarDays, hospitalOnly: true },
+  { href: "/resources",    label: "Resources",    icon: BookOpen },
+  { href: "/settings",     label: "Settings",     icon: Settings },
 ];
 
-const adminItems = [
-  { href: "/admin/knowledge",     label: "Knowledge Base", icon: FileText },
-  { href: "/admin/organizations", label: "Organizations",  icon: Building2 },
-  { href: "/admin/system",        label: "System Health",  icon: AlertTriangle },
+const baseAdminItems = [
+  { href: "/admin/knowledge",     label: "Knowledge Base", icon: FileText,      hospitalOnly: false },
+  { href: "/admin/practitioners", label: "Practitioners",  icon: Stethoscope,   hospitalOnly: false },
+  { href: "/admin/organizations", label: "Organizations",  icon: Building2,     hospitalOnly: false },
+  { href: "/admin/system",        label: "System Health",  icon: AlertTriangle, hospitalOnly: false },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -38,6 +42,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { data: session } = useSession();
   const { isConnected } = useSocket(session?.user?.access_token, session?.user?.org_id);
   const [collapsed, setCollapsed] = useState(false);
+
+  const isHospital = session?.user?.org_type === "HOSPITAL";
+  const navItems   = baseNavItems.filter((i) => !i.hospitalOnly || isHospital);
+  const adminItems = baseAdminItems.filter((i) => !i.hospitalOnly || isHospital);
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");

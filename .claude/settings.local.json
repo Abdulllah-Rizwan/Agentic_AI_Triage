@@ -171,7 +171,12 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\thesis\\\\thesis_figures\" | Select-Object Name, @{N=\"Size KB\";E={[math]::Round\\($_.Length/1KB,1\\)}})",
       "PowerShell(cd \"C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\thesis\"; python generate_charts.py; Write-Output \"Exit: $LASTEXITCODE\")",
       "Bash(dir C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\thesis *)",
-      "Bash(python generate_charts.py)"
+      "Bash(python generate_charts.py)",
+      "Bash(.venv/Scripts/python.exe -c \"from app.routers import appointments; print\\('OK'\\)\")",
+      "Bash(./node_modules/.bin/tsc --noEmit --skipLibCheck)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(dir C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\dashboard\\\\app\\\\api\\\\auth *)",
+      "Bash(dir *)"
     ]
   }
 }

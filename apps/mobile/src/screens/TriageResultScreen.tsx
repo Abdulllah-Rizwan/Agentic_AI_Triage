@@ -173,6 +173,17 @@ export default function TriageResultScreen({ navigation, route }: Props) {
     navigation.navigate('Home');
   }, [clearChat, navigation]);
 
+  const handleBookAppointment = useCallback(() => {
+    const { profile } = userStore.getState();
+    navigation.navigate('AppointmentBooking', {
+      caseId: level !== 'GREEN' ? caseId || null : null,
+      chiefComplaint: featureVector.chiefComplaint,
+      triageLevel: level,
+      patientName: profile?.full_name ?? '',
+      patientPhone: profile?.phone ?? '',
+    });
+  }, [navigation, caseId, level, featureVector]);
+
   // ── GREEN layout ───────────────────────────────────────────────────────────
 
   if (level === 'GREEN') {
@@ -213,6 +224,14 @@ export default function TriageResultScreen({ navigation, route }: Props) {
             </Text>
           </View>
         </View>
+
+        <TouchableOpacity style={styles.bookingCard} onPress={handleBookAppointment}>
+          <Text style={styles.bookingCardHeading}>Want to see a doctor?</Text>
+          <Text style={styles.bookingCardBody}>
+            Book a follow-up appointment. Your clinical summary will be shared with the doctor before your visit.
+          </Text>
+          <Text style={styles.bookingCardCta}>Book Appointment →</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.newAssessmentBtn} onPress={handleNewAssessment}>
           <Text style={styles.newAssessmentText}>Start New Assessment</Text>
@@ -271,6 +290,17 @@ export default function TriageResultScreen({ navigation, route }: Props) {
             📚 {ragResults[0]!.articleTitle ?? ragResults[0]!.articleSource}
           </Text>
         </View>
+      )}
+
+      {/* ── AMBER only: appointment booking prompt ── */}
+      {!isRed && (
+        <TouchableOpacity style={styles.bookingCard} onPress={handleBookAppointment}>
+          <Text style={styles.bookingCardHeading}>Book a follow-up appointment</Text>
+          <Text style={styles.bookingCardBody}>
+            Your clinical summary will be shared with the doctor before your visit.
+          </Text>
+          <Text style={styles.bookingCardCta}>Book Appointment →</Text>
+        </TouchableOpacity>
       )}
 
       <TouchableOpacity style={styles.newAssessmentBtn} onPress={handleNewAssessment}>
@@ -472,6 +502,34 @@ const styles = StyleSheet.create({
   ragCardHeading: { color: '#fca5a5', fontSize: 14, fontWeight: '700', marginBottom: 8 },
   ragCardText:    { color: '#fecaca', fontSize: 13, lineHeight: 18 },
   ragCardSource:  { color: '#f87171', fontSize: 11, marginTop: 8, fontStyle: 'italic' },
+
+  // Appointment booking card
+  bookingCard: {
+    width: '100%',
+    backgroundColor: '#0c1a2e',
+    borderRadius: 16,
+    padding: 18,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#1e3a5f',
+  },
+  bookingCardHeading: {
+    color: '#93c5fd',
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 6,
+  },
+  bookingCardBody: {
+    color: '#9ca3af',
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 10,
+  },
+  bookingCardCta: {
+    color: '#60a5fa',
+    fontSize: 13,
+    fontWeight: '600',
+  },
 
   // New assessment button
   newAssessmentBtn: {

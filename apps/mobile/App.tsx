@@ -28,6 +28,7 @@ import RegistrationScreen from './src/screens/RegistrationScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ChatScreen from './src/screens/ChatScreen';
 import TriageResultScreen from './src/screens/TriageResultScreen';
+import AppointmentBookingScreen from './src/screens/AppointmentBookingScreen';
 import type { TriageResult } from './src/services/triage/TriageEngine';
 import type { MedicalFeatureVector } from './src/services/triage/TriageEngine';
 
@@ -38,6 +39,13 @@ export type RootStackParamList = {
   Home: undefined;
   Chat: { readonlySession?: { caseId: string; triageLevel: string } } | undefined;
   TriageResult: { triageResult: TriageResult; featureVector: MedicalFeatureVector };
+  AppointmentBooking: {
+    caseId: string | null;
+    chiefComplaint: string;
+    triageLevel: string;
+    patientName: string;
+    patientPhone: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -169,6 +177,12 @@ export default function App() {
           name="TriageResult"
           component={TriageResultScreen}
           options={{ headerShown: false, gestureEnabled: false }}
+        />
+
+        <Stack.Screen
+          name="AppointmentBooking"
+          component={AppointmentBookingScreen}
+          options={{ title: 'Book Appointment', headerBackVisible: true }}
         />
       </Stack.Navigator>
     </NavigationContainer>

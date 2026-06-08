@@ -249,6 +249,60 @@ export const suspendOrg = (id: string, reason: string) =>
     body: JSON.stringify({ reason }),
   });
 
+// ── Practitioners & Appointments ─────────────────────────────────────────────
+
+export interface PractitionerSlotItem { id: string; slot_date: string; slot_time: string; is_booked: boolean }
+export interface PractitionerItem { id: string; org_id: string; name: string; specialty: string; city: string; clinic_name: string; phone: string | null; bio: string | null; available_slot_count: number }
+export interface PractitionerDetailResponse { id: string; org_id: string; name: string; specialty: string; city: string; clinic_name: string; phone: string | null; bio: string | null; slots: PractitionerSlotItem[] }
+export interface PractitionerListResponse { practitioners: PractitionerItem[] }
+
+export interface AppointmentDetailResponse {
+  id: string
+  practitioner_name: string
+  practitioner_specialty: string
+  clinic_name: string
+  city: string
+  slot_date: string
+  slot_time: string
+  patient_name: string
+  patient_phone: string
+  chief_complaint: string
+  triage_level: string
+  status: string
+  booked_at: string
+  notes: string | null
+  soap_report: SoapReport | null
+}
+export interface AppointmentListResponse { appointments: AppointmentDetailResponse[] }
+
+export const getPractitioners = (specialty?: string, city?: string) => {
+  const params = new URLSearchParams()
+  if (specialty) params.set("specialty", specialty)
+  if (city) params.set("city", city)
+  return request<PractitionerListResponse>(`/api/v1/practitioners?${params.toString()}`)
+}
+
+export const getPractitionerSlots = (id: string) =>
+  request<PractitionerDetailResponse>(`/api/v1/practitioners/${id}/slots`)
+
+export const getAppointments = () =>
+  request<AppointmentListResponse>("/api/v1/appointments")
+
+export const adminGetPractitioners = () =>
+  request<PractitionerListResponse>("/api/v1/admin/practitioners")
+
+export const adminCreatePractitioner = (data: { name: string; specialty: string; city: string; clinic_name: string; phone?: string; bio?: string }) =>
+  request<PractitionerItem>("/api/v1/admin/practitioners", { method: "POST", body: JSON.stringify(data) })
+
+export const adminDeletePractitioner = (id: string) =>
+  request<void>(`/api/v1/admin/practitioners/${id}`, { method: "DELETE" })
+
+export const adminAddSlots = (practitionerId: string, slots: { slot_date: string; slot_time: string }[]) =>
+  request<{ created: number }>(`/api/v1/admin/practitioners/${practitionerId}/slots`, { method: "POST", body: JSON.stringify({ slots }) })
+
+export const adminDeleteSlot = (practitionerId: string, slotId: string) =>
+  request<void>(`/api/v1/admin/practitioners/${practitionerId}/slots/${slotId}`, { method: "DELETE" })
+
 // ── Admin — System ────────────────────────────────────────────────────────────
 
 export const getSystemHealth = () =>

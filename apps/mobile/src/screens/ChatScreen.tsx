@@ -73,6 +73,11 @@ export default function ChatScreen({ navigation, route }: Props) {
   const [criticalCaseId, setCriticalCaseId]     = useState<string | null>(null);
 
   const [hasCompletedTriage, setHasCompletedTriage] = useState(false);
+  const [postTriageState, setPostTriageState]       = useState<{
+    level: 'GREEN' | 'AMBER' | 'RED';
+    caseId: string | null;
+    chiefComplaint: string;
+  } | null>(null);
   const [keyboardVisible, setKeyboardVisible]       = useState(false);
   const [keyboardHeight, setKeyboardHeight]         = useState(0);
 
@@ -423,7 +428,13 @@ export default function ChatScreen({ navigation, route }: Props) {
     // active slot ensures the next "BEGIN ASSESSMENT" opens a fresh chat — no
     // completed session ever comes back as an in-progress one.
     clearActiveSession().catch(() => {});
-    if (!unmounted.current) setHasCompletedTriage(true);
+    if (!unmounted.current) {
+      const txCaseId = level !== 'GREEN'
+        ? (criticalTxFired.current ? criticalCaseIdRef.current : caseIdForPoll)
+        : null;
+      setPostTriageState({ level, caseId: txCaseId, chiefComplaint: featureVector.chiefComplaint });
+      setHasCompletedTriage(true);
+    }
   };
 
   // Keep the ref in sync every render so handleSend always calls the latest closure.
@@ -794,6 +805,25 @@ export default function ChatScreen({ navigation, route }: Props) {
         {/* ── Post-triage action bar OR live input ── */}
         {hasCompletedTriage ? (
           <View style={[styles.postTriageBar, { paddingBottom: Platform.OS === 'android' && keyboardVisible ? 0 : 14 + insets.bottom }]}>
+            {postTriageState &&
+              (postTriageState.level === 'GREEN' || postTriageState.level === 'AMBER') &&
+              !route.params?.readonlySession && (
+                <TouchableOpacity
+                  style={styles.bookAppointmentBtn}
+                  onPress={() => {
+                    const { profile } = userStore.getState();
+                    navigation.navigate('AppointmentBooking', {
+                      caseId: postTriageState.level === 'AMBER' ? postTriageState.caseId : null,
+                      chiefComplaint: postTriageState.chiefComplaint,
+                      triageLevel: postTriageState.level,
+                      patientName: profile?.full_name ?? '',
+                      patientPhone: profile?.phone ?? '',
+                    });
+                  }}
+                >
+                  <Text style={styles.bookAppointmentBtnText}>Book Appointment →</Text>
+                </TouchableOpacity>
+              )}
             <TouchableOpacity
               style={styles.newAssessmentBtn}
               onPress={() => {
@@ -1109,6 +1139,22 @@ const styles = StyleSheet.create({
     borderTopColor: '#1f2937',
     backgroundColor: '#0a0a0a',
     alignItems: 'center',
+  },
+  bookAppointmentBtn: {
+    backgroundColor: '#0c1a2e',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 48,
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#1e3a5f',
+  },
+  bookAppointmentBtnText: {
+    color: '#60a5fa',
+    fontSize: 15,
+    fontWeight: '600',
   },
   newAssessmentBtn: {
     backgroundColor: '#dc2626',

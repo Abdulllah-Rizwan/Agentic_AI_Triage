@@ -7,11 +7,12 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.security import _decode_token
-from app.routers import analytics, auth, cases, guidelines, knowledge_base
+from app.routers import analytics, auth, cases, guidelines, knowledge_base, appointments
 from app.routers.admin import guidelines as admin_guidelines
 from app.routers.admin import knowledge as admin_knowledge
 from app.routers.admin import organizations as admin_orgs
 from app.routers.admin import system as admin_system
+from app.routers.admin import practitioners as admin_practitioners
 from app.services import socket_emitter
 
 # ── Socket.IO ─────────────────────────────────────────────────────────────────
@@ -44,12 +45,14 @@ app.include_router(cases.router,          prefix="/api/v1/cases")
 app.include_router(analytics.router,      prefix="/api/v1/analytics")
 app.include_router(knowledge_base.router, prefix="/api/v1/knowledge")
 app.include_router(guidelines.router,     prefix="/api/v1/guidelines")
+app.include_router(appointments.router,   prefix="/api/v1")
 
 # Admin routes (role=ADMIN enforced inside each router)
-app.include_router(admin_knowledge.router,   prefix="/api/v1/admin/knowledge")
-app.include_router(admin_guidelines.router,  prefix="/api/v1/admin/guidelines")
-app.include_router(admin_orgs.router,        prefix="/api/v1/admin/organizations")
-app.include_router(admin_system.router,      prefix="/api/v1/admin/system")
+app.include_router(admin_knowledge.router,      prefix="/api/v1/admin/knowledge")
+app.include_router(admin_guidelines.router,     prefix="/api/v1/admin/guidelines")
+app.include_router(admin_orgs.router,           prefix="/api/v1/admin/organizations")
+app.include_router(admin_system.router,         prefix="/api/v1/admin/system")
+app.include_router(admin_practitioners.router,  prefix="/api/v1/admin")
 
 # ── Static file serving ───────────────────────────────────────────────────────
 

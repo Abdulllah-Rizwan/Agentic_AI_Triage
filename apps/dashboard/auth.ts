@@ -36,6 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             role: data.user.role,
             org_id: data.user.org_id,
             org_name: data.user.org_name,
+            org_type: data.user.org_type,
             access_token: data.access_token,
             refresh_token: data.refresh_token,
           };
@@ -56,6 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           role: (user as Record<string, unknown>).role as string,
           org_id: (user as Record<string, unknown>).org_id as string,
           org_name: (user as Record<string, unknown>).org_name as string,
+          org_type: (user as Record<string, unknown>).org_type as string,
           access_token: (user as Record<string, unknown>).access_token as string,
           refresh_token: (user as Record<string, unknown>).refresh_token as string,
           access_token_expires_at: Date.now() + ACCESS_TOKEN_TTL_MS,
@@ -99,6 +101,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.role = token.role as string;
       session.user.org_id = token.org_id as string;
       session.user.org_name = token.org_name as string;
+      session.user.org_type = token.org_type as string;
       session.user.access_token = token.access_token as string;
       session.error = token.error as string | undefined;
       return session;

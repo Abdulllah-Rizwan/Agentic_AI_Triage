@@ -5,6 +5,7 @@ import uuid
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     ARRAY,
+    Boolean,
     Column,
     DateTime,
     Enum,
@@ -226,6 +227,93 @@ class Guideline(Base):
     file_size_bytes = Column(Integer, nullable=False)
     uploaded_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     uploaded_at = Column(DateTime, default=datetime.utcnow)
+
+
+# ── Appointment Tables ────────────────────────────────────────────────────────
+
+
+class Specialty(str, enum.Enum):
+    GENERAL_PHYSICIAN = "GENERAL_PHYSICIAN"
+    CARDIOLOGIST = "CARDIOLOGIST"
+    DERMATOLOGIST = "DERMATOLOGIST"
+    ORTHOPEDIC = "ORTHOPEDIC"
+    PEDIATRICIAN = "PEDIATRICIAN"
+    PULMONOLOGIST = "PULMONOLOGIST"
+    NEUROLOGIST = "NEUROLOGIST"
+    OTHER = "OTHER"
+
+
+class AppointmentStatus(str, enum.Enum):
+    PENDING = "PENDING"
+    CONFIRMED = "CONFIRMED"
+    CANCELLED = "CANCELLED"
+
+
+class Practitioner(Base):
+    """
+    A doctor or healthcare provider listed on the platform.
+    Added manually by ADMIN users. Linked to an Organization (hospital/clinic).
+    """
+    __tablename__ = "practitioners"
+
+    id          = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    org_id      = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
+    name        = Column(String, nullable=False)
+    specialty   = Column(String, nullable=False)
+    city        = Column(String, nullable=False)
+    clinic_name = Column(String, nullable=False)
+    phone       = Column(String, nullable=True)
+    bio         = Column(Text, nullable=True)
+    is_active   = Column(Boolean, nullable=False, default=True)
+    created_at  = Column(DateTime, default=datetime.utcnow)
+
+    org          = relationship("Organization")
+    slots        = relationship("PractitionerSlot", back_populates="practitioner",
+                                cascade="all, delete-orphan")
+    appointments = relationship("Appointment", back_populates="practitioner")
+
+
+class PractitionerSlot(Base):
+    """One bookable time slot belonging to a Practitioner."""
+    __tablename__ = "practitioner_slots"
+
+    id              = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    practitioner_id = Column(UUID(as_uuid=True),
+                             ForeignKey("practitioners.id", ondelete="CASCADE"),
+                             nullable=False)
+    slot_date   = Column(String, nullable=False)   # YYYY-MM-DD
+    slot_time   = Column(String, nullable=False)   # HH:MM  (24-hour)
+    is_booked   = Column(Boolean, nullable=False, default=False)
+    created_at  = Column(DateTime, default=datetime.utcnow)
+
+    practitioner = relationship("Practitioner", back_populates="slots")
+    appointment  = relationship("Appointment", back_populates="slot", uselist=False)
+
+
+class Appointment(Base):
+    """
+    A booking made by a patient (from the mobile app) with a Practitioner.
+    case_id is nullable — GREEN-triage patients book without a case on the server.
+    When case_id is set and a SOAP report exists, the practitioner dashboard
+    surfaces it before the appointment.
+    """
+    __tablename__ = "appointments"
+
+    id              = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    practitioner_id = Column(UUID(as_uuid=True), ForeignKey("practitioners.id"), nullable=False)
+    slot_id         = Column(UUID(as_uuid=True), ForeignKey("practitioner_slots.id"), nullable=False)
+    case_id         = Column(String, ForeignKey("cases.id"), nullable=True)
+    patient_name    = Column(String, nullable=False)
+    patient_phone   = Column(String, nullable=False)
+    chief_complaint = Column(String, nullable=False)
+    triage_level    = Column(String, nullable=False)   # GREEN | AMBER
+    status          = Column(String, nullable=False, default="PENDING")
+    booked_at       = Column(DateTime, default=datetime.utcnow)
+    notes           = Column(Text, nullable=True)
+
+    practitioner = relationship("Practitioner", back_populates="appointments")
+    slot         = relationship("PractitionerSlot", back_populates="appointment")
+    case         = relationship("Case")
 
 
 class KnowledgeBaseVersion(Base):
