@@ -377,7 +377,7 @@ class CreatePractitionerRequest(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
     specialty: str
     city: str = Field(..., min_length=2)
-    clinic_name: str = Field(..., min_length=2)
+    org_id: UUID
     phone: Optional[str] = None
     bio: Optional[str] = None
 

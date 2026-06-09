@@ -174,11 +174,16 @@ export default function AppointmentBookingScreen({ navigation, route }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error('Booking failed');
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        console.warn('[Booking] HTTP', res.status, errText);
+        throw new Error('Booking failed');
+      }
       setBookedSlot(selectedSlot);
       setBookedDoctor(selectedPractitioner);
       setBookingState('SUCCESS');
-    } catch {
+    } catch (err) {
+      console.warn('[Booking] failed:', err);
       setBookingState('ERROR');
     }
   };

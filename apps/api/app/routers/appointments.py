@@ -132,7 +132,7 @@ async def book_appointment(
         patient_phone=body.patient_phone,
         chief_complaint=body.chief_complaint,
         triage_level=body.triage_level,
-        status=AppointmentStatus.PENDING,
+        status="PENDING",
     )
     db.add(appointment)
     await db.commit()
@@ -144,7 +144,7 @@ async def book_appointment(
         clinic_name=practitioner.clinic_name,
         slot_date=slot.slot_date,
         slot_time=slot.slot_time,
-        status=appointment.status.value,
+        status=appointment.status,
         booked_at=appointment.booked_at,
     )
 
@@ -202,7 +202,7 @@ async def list_appointments(
             patient_phone=a.patient_phone,
             chief_complaint=a.chief_complaint,
             triage_level=a.triage_level,
-            status=a.status.value,
+            status=a.status,
             booked_at=a.booked_at,
             notes=a.notes,
             soap_report=soap,

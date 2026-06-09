@@ -7,8 +7,9 @@ import {
   adminCreatePractitioner,
   adminDeletePractitioner,
   adminAddSlots,
+  getOrganizations,
 } from "@/lib/api";
-import type { PractitionerItem } from "@/lib/api";
+import type { PractitionerItem, OrgItem } from "@/lib/api";
 
 const SPECIALTIES = [
   "GENERAL_PHYSICIAN",
@@ -46,12 +47,13 @@ const TIME_OPTIONS = generateTimeSlots();
 export default function AdminPractitionersPage() {
   const [practitioners, setPractitioners] = useState<PractitionerItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hospitalOrgs, setHospitalOrgs] = useState<OrgItem[]>([]);
 
   // Create form
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState(SPECIALTIES[0]);
   const [city, setCity] = useState("");
-  const [clinicName, setClinicName] = useState("");
+  const [selectedOrgId, setSelectedOrgId] = useState("");
   const [phone, setPhone] = useState("");
   const [bio, setBio] = useState("");
   const [customSpecialty, setCustomSpecialty] = useState("");
@@ -71,16 +73,27 @@ export default function AdminPractitionersPage() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    getOrganizations()
+      .then((res) => {
+        const hospitals = res.organizations.filter(
+          (o) => o.type === "HOSPITAL" && o.status === "ACTIVE"
+        );
+        setHospitalOrgs(hospitals);
+        if (hospitals.length > 0) setSelectedOrgId(hospitals[0].id);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !city.trim() || !clinicName.trim()) return;
+    if (!name.trim() || !city.trim() || !selectedOrgId) return;
     setCreating(true);
     try {
       const resolvedSpecialty = specialty === "OTHER" ? customSpecialty.trim() || "OTHER" : specialty;
-      await adminCreatePractitioner({ name, specialty: resolvedSpecialty, city, clinic_name: clinicName, phone: phone || undefined, bio: bio || undefined });
-      setName(""); setCity(""); setClinicName(""); setPhone(""); setBio(""); setCustomSpecialty("");
+      await adminCreatePractitioner({ name, specialty: resolvedSpecialty, city, org_id: selectedOrgId, phone: phone || undefined, bio: bio || undefined });
+      setName(""); setCity(""); setPhone(""); setBio(""); setCustomSpecialty("");
       load();
     } catch {}
     setCreating(false);
@@ -252,14 +265,23 @@ export default function AdminPractitionersPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Clinic / Hospital *</label>
-              <input
-                value={clinicName}
-                onChange={(e) => setClinicName(e.target.value)}
-                placeholder="Aga Khan Hospital"
-                required
-                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-gray-500"
-              />
+              <label className="block text-xs text-gray-400 mb-1">Hospital Organization *</label>
+              {hospitalOrgs.length === 0 ? (
+                <p className="text-xs text-amber-400 rounded-lg border border-amber-800 bg-amber-950/40 px-3 py-2">
+                  No active HOSPITAL organizations found. Register and approve a hospital org first.
+                </p>
+              ) : (
+                <select
+                  value={selectedOrgId}
+                  onChange={(e) => setSelectedOrgId(e.target.value)}
+                  required
+                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white focus:outline-none focus:border-gray-500"
+                >
+                  {hospitalOrgs.map((o) => (
+                    <option key={o.id} value={o.id}>{o.name}</option>
+                  ))}
+                </select>
+              )}
             </div>
 
             <div>
@@ -296,7 +318,7 @@ export default function AdminPractitionersPage() {
 
             <button
               type="submit"
-              disabled={creating}
+              disabled={creating || hospitalOrgs.length === 0}
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-700 py-2 text-sm font-medium text-white hover:bg-blue-600 disabled:opacity-50 transition"
             >
               <Plus size={14} />

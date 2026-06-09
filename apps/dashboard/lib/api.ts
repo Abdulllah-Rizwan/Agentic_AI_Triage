@@ -291,7 +291,7 @@ export const getAppointments = () =>
 export const adminGetPractitioners = () =>
   request<PractitionerListResponse>("/api/v1/admin/practitioners")
 
-export const adminCreatePractitioner = (data: { name: string; specialty: string; city: string; clinic_name: string; phone?: string; bio?: string }) =>
+export const adminCreatePractitioner = (data: { name: string; specialty: string; city: string; org_id: string; phone?: string; bio?: string }) =>
   request<PractitionerItem>("/api/v1/admin/practitioners", { method: "POST", body: JSON.stringify(data) })
 
 export const adminDeletePractitioner = (id: string) =>

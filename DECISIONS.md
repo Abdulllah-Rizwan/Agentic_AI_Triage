@@ -3787,6 +3787,95 @@ No application code was modified in this session. All changes were thesis-only.
 
 ---
 
+---
+
+## Session 34 — 2026-06-09
+
+### Bugs fixed
+
+#### Fix 1 — Appointment booking "Booking failed" (POST /appointments → 500)
+
+**Root cause:** Fix 12 (Session 33) changed `Appointment.status` from `Column(Enum(AppointmentStatus))` to `Column(String, default="PENDING")` to resolve the PostgreSQL `type "appointmentstatus" does not exist` error. The router was not updated to match. Two lines caused the 500:
+
+- `status=AppointmentStatus.PENDING` — passed a Python enum object to a String column (works on write due to `str` inheritance, but semantically wrong)
+- `status=appointment.status.value` — after `db.refresh()` the column returns a plain Python string; calling `.value` on a string throws `AttributeError` → unhandled 500 → mobile received non-2xx → catch block set `bookingState = 'ERROR'`
+
+**Fix (`apps/api/app/routers/appointments.py`):**
+- Line 135: `status=AppointmentStatus.PENDING` → `status="PENDING"`
+- Line 147: `status=appointment.status.value` → `status=appointment.status`
+
+Also added HTTP status logging to `AppointmentBookingScreen.tsx` catch block so server errors are visible in the Metro debugger.
+
+---
+
+#### Fix 2 — Appointments tab always empty (GET /appointments → 500)
+
+Same `.value` bug existed in the list endpoint. After `db.refresh()` / ORM load, `a.status` is a plain string; `a.status.value` threw `AttributeError` for every row, crashing the entire response.
+
+**Fix (`apps/api/app/routers/appointments.py`):**
+- Line 205: `status=a.status.value` → `status=a.status`
+
+---
+
+#### Fix 3 — Practitioners not linked to real organizations
+
+**Problem:** The "Add Practitioner" form had a free-text `clinic_name` field (e.g. "Iqra Hospital") with no validation against the organizations table. The backend silently ignored any org input and set `org_id = admin.org_id` — the admin account's own org — regardless of what clinic name was typed. Consequences:
+
+1. All practitioners ended up linked to the admin's org, not the named hospital
+2. The appointments tab filters by `Practitioner.org_id == current_user.org_id`, so "Iqra Hospital" dashboard users saw zero appointments even after the booking succeeded
+3. There was no enforcement that practitioners can only belong to HOSPITAL-type organizations
+
+**Fix — backend (`apps/api/app/models/schemas.py`):**
+- `CreatePractitionerRequest`: removed `clinic_name: str` field, added `org_id: UUID`
+
+**Fix — backend (`apps/api/app/routers/admin/practitioners.py`):**
+- `create_practitioner` now accepts `body.org_id` and validates: org must exist (404 if not), status must be `ACTIVE` (400 if not), type must be `HOSPITAL` (400 if not)
+- `clinic_name` is derived from `org.name` — no longer free text
+- Fixed the same `.value` bug on `specialty`: stored as `specialty.value` (string), returned as `p.specialty` (already a string, no `.value` call)
+
+**Fix — dashboard (`apps/dashboard/lib/api.ts`):**
+- `adminCreatePractitioner` signature: `clinic_name: string` → `org_id: string`
+
+**Fix — dashboard (`apps/dashboard/app/(dashboard)/admin/practitioners/page.tsx`):**
+- Loads registered HOSPITAL+ACTIVE orgs from `getOrganizations()` on mount
+- "Clinic / Hospital" free-text input replaced with a `<select>` dropdown of real hospital orgs
+- If no HOSPITAL orgs are registered and active, shows an amber warning and disables the submit button — forces admin to register + approve a hospital org first
+- `selectedOrgId` (org UUID) sent to the backend instead of free-text clinic name
+
+**Correct flow going forward:** Register hospital org → Admin approves it → Admin adds practitioner, selects the org from dropdown → Practitioners are correctly scoped to that org → Appointments tab shows correctly for that org's dashboard users.
+
+---
+
+#### Fix 4 — Practitioners with appointments could not be deleted
+
+**Problem:** Deleting a practitioner who had at least one appointment failed silently. The `Appointment` table has a FK `practitioner_id → practitioners.id` with no `ON DELETE CASCADE`. PostgreSQL raised a foreign key constraint violation, the endpoint returned 500, and the dashboard swallowed the error with `catch(() => {})` — the delete button appeared to do nothing.
+
+**Fix (`apps/api/app/routers/admin/practitioners.py`):**
+- Before `db.delete(p)`, execute `DELETE FROM appointments WHERE practitioner_id = :id` using `sa_delete`
+- Appointments are cleared first, then SQLAlchemy's existing `cascade="all, delete-orphan"` on the `slots` relationship handles slot cleanup, and the practitioner row is removed cleanly
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/api/app/routers/appointments.py` | Fix 1: `status="PENDING"` + `status=appointment.status` in POST handler; Fix 2: `status=a.status` in GET list handler |
+| `apps/api/app/models/schemas.py` | `CreatePractitionerRequest`: `clinic_name` → `org_id: UUID` |
+| `apps/api/app/routers/admin/practitioners.py` | Fix 3: org validation + `clinic_name` derived from org; Fix 4: delete appointments before practitioner; import `Appointment`, `Organization`, `OrgStatus`, `OrgType`, `sa_delete` |
+| `apps/dashboard/lib/api.ts` | `adminCreatePractitioner` signature: `clinic_name` → `org_id` |
+| `apps/dashboard/app/(dashboard)/admin/practitioners/page.tsx` | Org dropdown replaces free-text clinic input; loads HOSPITAL orgs on mount; submit disabled if no HOSPITAL orgs exist |
+| `apps/mobile/src/screens/AppointmentBookingScreen.tsx` | Added HTTP status + error logging to catch block |
+
+---
+
+### What is next
+- Register "Iqra Hospital" (or any target hospital) as a HOSPITAL org and approve it
+- Re-add practitioners using the new org dropdown (old practitioners linked to admin org should be deleted first)
+- Re-book appointments — they will now appear correctly in the hospital org's Appointments tab
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
