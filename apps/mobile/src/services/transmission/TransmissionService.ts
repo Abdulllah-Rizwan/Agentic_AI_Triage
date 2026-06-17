@@ -11,6 +11,8 @@ import {
   saveCompletedCase,
   getMetadata,
   setMetadata,
+  loadChatHistory,
+  saveChatHistory,
 } from '../../db/queries';
 import {
   deriveKey,
@@ -22,6 +24,17 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
 const RETRY_INTERVAL_MS = 60_000;
 const MAX_ATTEMPTS = 5;
 const DEVICE_TOKEN_KEY = 'medireach_device_token';
+// Abort ingest fetches after 10 s so a dead server doesn't block _handlePostTriage
+// for the full OS TCP timeout (~75 s), which delays guidance and the post-triage UI.
+const INGEST_TIMEOUT_MS = 10_000;
+
+function fetchWithTimeout(url: string, init: RequestInit, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { ...init, signal: controller.signal }).finally(() =>
+    clearTimeout(id),
+  );
+}
 
 let retryInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -123,14 +136,14 @@ async function _trySend(
       payloadBytes.byteOffset + payloadBytes.byteLength,
     );
 
-    const response = await fetch(ingestUrl, {
+    const response = await fetchWithTimeout(ingestUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/octet-stream',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       body: binaryBody,
-    });
+    }, INGEST_TIMEOUT_MS);
 
     if (response.ok || response.status === 202) {
       console.log(`[Transmission] Case ${caseId} accepted by server (HTTP ${response.status})`);
@@ -249,14 +262,14 @@ export async function flushQueue(): Promise<void> {
         payloadBytes.byteOffset + payloadBytes.byteLength,
       );
 
-      const response = await fetch(ingestUrl, {
+      const response = await fetchWithTimeout(ingestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/octet-stream',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: flushBody,
-      });
+      }, INGEST_TIMEOUT_MS);
 
       if (response.ok || response.status === 202) {
         console.log(`[Transmission] flushQueue: case ${record.case_id.slice(0, 8)} accepted (HTTP ${response.status})`);
@@ -267,6 +280,27 @@ export async function flushQueue(): Promise<void> {
           chief_complaint: 'Transmitted',
           completed_at: Date.now(),
         });
+
+        // Persist "transmitted" confirmation into the saved chat history so
+        // the patient sees it even if they navigate away from ChatScreen before
+        // the Zustand effect fires (e.g. they pressed Back while guidance was
+        // loading, or they're viewing the readonly conversation later).
+        try {
+          const existingHistory = await loadChatHistory(record.case_id);
+          if (Array.isArray(existingHistory) && existingHistory.length > 0) {
+            await saveChatHistory(record.case_id, [
+              ...existingHistory,
+              {
+                id: `tx-transmitted-${Date.now()}`,
+                role: 'agent',
+                type: 'system',
+                content: '✓ Report transmitted — your case has been relayed to the emergency network.',
+                timestamp: Date.now(),
+              },
+            ]);
+          }
+        } catch { /* non-critical — Zustand effect already handles live notification */ }
+
         useTransmissionStore.getState().setLastTransmitted(record.case_id);
       } else {
         const body = await response.text().catch(() => '');

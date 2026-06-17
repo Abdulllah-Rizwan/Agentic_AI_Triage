@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -10,6 +10,8 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../../App';
+import { useThemeStore } from '../store/themeStore';
+import { darkColors, lightColors, type ThemeColors } from '../theme/colors';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -80,6 +82,9 @@ function inferSpecialty(complaint: string): string | null {
 
 export default function AppointmentBookingScreen({ navigation, route }: Props) {
   const { caseId, chiefComplaint, triageLevel, patientName, patientPhone } = route.params;
+  const isDark = useThemeStore((s) => s.isDark);
+  const colors = isDark ? darkColors : lightColors;
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const [practitioners, setPractitioners]   = useState<Practitioner[]>([]);
   const [loadingList, setLoadingList]       = useState(true);
@@ -350,147 +355,65 @@ export default function AppointmentBookingScreen({ navigation, route }: Props) {
 
 // ── Styles ─────────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
-  bg:      { flex: 1, backgroundColor: '#030712' },
-  content: { padding: 20, paddingTop: 24, paddingBottom: 40 },
-  container: { flex: 1, backgroundColor: '#030712', justifyContent: 'center', padding: 24 },
-
-  heading:    { color: '#ffffff', fontSize: 22, fontWeight: '700', marginBottom: 6 },
-  subheading: { color: '#6b7280', fontSize: 14, lineHeight: 20, marginBottom: 20 },
-
-  loader: { marginTop: 40 },
-
-  emptyCard: {
-    backgroundColor: '#111827',
-    borderRadius: 12,
-    padding: 24,
-    alignItems: 'center',
-  },
-  emptyText: { color: '#6b7280', fontSize: 14 },
-
-  // Practitioner card
-  card: {
-    backgroundColor: '#111827',
-    borderRadius: 16,
-    marginBottom: 14,
-    borderWidth: 1,
-    borderColor: '#1f2937',
-    overflow: 'hidden',
-  },
-  cardSelected: { borderColor: '#2563eb' },
-  cardHeader: {
-    flexDirection: 'row',
-    padding: 16,
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  cardInfo: { flex: 1 },
-  doctorName: { color: '#ffffff', fontSize: 16, fontWeight: '600', marginBottom: 3 },
-  doctorMeta: { color: '#9ca3af', fontSize: 13, lineHeight: 18 },
-  doctorPhone: { color: '#6b7280', fontSize: 12, marginTop: 2 },
-  bio: { color: '#6b7280', fontSize: 13, lineHeight: 18, paddingHorizontal: 16, paddingBottom: 12 },
-
-  slotCountBadge: {
-    alignItems: 'center',
-    backgroundColor: '#1f2937',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    minWidth: 48,
-  },
-  slotCountText:  { color: '#60a5fa', fontSize: 18, fontWeight: '700' },
-  slotCountLabel: { color: '#6b7280', fontSize: 10 },
-
-  // Slot section
-  slotSection: {
-    borderTopWidth: 1,
-    borderTopColor: '#1f2937',
-    padding: 16,
-  },
-  slotSectionLabel: { color: '#9ca3af', fontSize: 12, fontWeight: '600', marginBottom: 10 },
-  noSlotsText: { color: '#6b7280', fontSize: 13 },
-  slotGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-
-  slotChip: {
-    borderWidth: 1,
-    borderColor: '#374151',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    alignItems: 'center',
-  },
-  slotChipSelected: { borderColor: '#2563eb', backgroundColor: '#1d3461' },
-  slotDate: { color: '#9ca3af', fontSize: 11 },
-  slotTime: { color: '#d1d5db', fontSize: 13, fontWeight: '600' },
-  slotTextSelected: { color: '#93c5fd' },
-
-  confirmBtn: {
-    backgroundColor: '#2563eb',
-    borderRadius: 12,
-    paddingVertical: 13,
-    alignItems: 'center',
-    marginTop: 14,
-  },
-  confirmBtnDisabled: { opacity: 0.5 },
-  confirmBtnText: { color: '#ffffff', fontSize: 14, fontWeight: '600' },
-
-  // Success
-  successCard: {
-    backgroundColor: '#052e16',
-    borderRadius: 20,
-    padding: 28,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#166534',
-  },
-  successIcon:    { fontSize: 44, color: '#4ade80', marginBottom: 12 },
-  successHeading: { color: '#ffffff', fontSize: 22, fontWeight: '700', marginBottom: 10 },
-  successBody: {
-    color: '#d1d5db',
-    fontSize: 15,
-    lineHeight: 22,
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  slotBox: {
-    backgroundColor: '#14532d',
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginBottom: 16,
-  },
-  slotBoxText: { color: '#86efac', fontSize: 15, fontWeight: '600' },
-  successNote: {
-    color: '#6b7280',
-    fontSize: 13,
-    lineHeight: 18,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  doneBtn: {
-    width: '100%',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 12,
-    paddingVertical: 13,
-    alignItems: 'center',
-  },
-  doneBtnText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
-
-  // Error
-  errorCard: {
-    backgroundColor: '#1c0202',
-    borderRadius: 16,
-    padding: 24,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#7f1d1d',
-  },
-  errorText: { color: '#fca5a5', fontSize: 15, marginBottom: 20, textAlign: 'center' },
-  retryBtn: {
-    backgroundColor: '#374151',
-    borderRadius: 10,
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-  },
-  retryBtnText: { color: '#ffffff', fontSize: 14, fontWeight: '600' },
-});
+function makeStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    bg:      { flex: 1, backgroundColor: colors.bgPrimary },
+    content: { padding: 20, paddingTop: 24, paddingBottom: 40 },
+    container: { flex: 1, backgroundColor: colors.bgPrimary, justifyContent: 'center', padding: 24 },
+    heading:    { color: colors.textPrimary, fontSize: 22, fontWeight: '700', marginBottom: 6 },
+    subheading: { color: colors.textSubtle, fontSize: 14, lineHeight: 20, marginBottom: 20 },
+    loader: { marginTop: 40 },
+    emptyCard: { backgroundColor: colors.bgCard, borderRadius: 12, padding: 24, alignItems: 'center' },
+    emptyText: { color: colors.textSubtle, fontSize: 14 },
+    card: {
+      backgroundColor: colors.bgCard, borderRadius: 16, marginBottom: 14,
+      borderWidth: 1, borderColor: colors.borderSecondary, overflow: 'hidden',
+    },
+    cardSelected: { borderColor: '#2563eb' },
+    cardHeader: { flexDirection: 'row', padding: 16, alignItems: 'flex-start', gap: 12 },
+    cardInfo: { flex: 1 },
+    doctorName: { color: colors.textPrimary, fontSize: 16, fontWeight: '600', marginBottom: 3 },
+    doctorMeta: { color: colors.textMuted, fontSize: 13, lineHeight: 18 },
+    doctorPhone: { color: colors.textSubtle, fontSize: 12, marginTop: 2 },
+    bio: { color: colors.textSubtle, fontSize: 13, lineHeight: 18, paddingHorizontal: 16, paddingBottom: 12 },
+    slotCountBadge: {
+      alignItems: 'center', backgroundColor: colors.bgTertiary,
+      borderRadius: 10, paddingHorizontal: 10, paddingVertical: 6, minWidth: 48,
+    },
+    slotCountText:  { color: '#60a5fa', fontSize: 18, fontWeight: '700' },
+    slotCountLabel: { color: colors.textSubtle, fontSize: 10 },
+    slotSection: { borderTopWidth: 1, borderTopColor: colors.borderSecondary, padding: 16 },
+    slotSectionLabel: { color: colors.textMuted, fontSize: 12, fontWeight: '600', marginBottom: 10 },
+    noSlotsText: { color: colors.textSubtle, fontSize: 13 },
+    slotGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+    slotChip: {
+      borderWidth: 1, borderColor: colors.border, borderRadius: 8,
+      paddingHorizontal: 12, paddingVertical: 8, alignItems: 'center',
+    },
+    slotChipSelected: { borderColor: '#2563eb', backgroundColor: '#1d3461' },
+    slotDate: { color: colors.textMuted, fontSize: 11 },
+    slotTime: { color: colors.textSecondary, fontSize: 13, fontWeight: '600' },
+    slotTextSelected: { color: '#93c5fd' },
+    confirmBtn: { backgroundColor: '#2563eb', borderRadius: 12, paddingVertical: 13, alignItems: 'center', marginTop: 14 },
+    confirmBtnDisabled: { opacity: 0.5 },
+    confirmBtnText: { color: '#ffffff', fontSize: 14, fontWeight: '600' },
+    // Success — always dark green (intentional color for positive outcome)
+    successCard: {
+      backgroundColor: '#052e16', borderRadius: 20, padding: 28,
+      alignItems: 'center', borderWidth: 1, borderColor: '#166534',
+    },
+    successIcon:    { fontSize: 44, color: '#4ade80', marginBottom: 12 },
+    successHeading: { color: '#ffffff', fontSize: 22, fontWeight: '700', marginBottom: 10 },
+    successBody: { color: '#d1d5db', fontSize: 15, lineHeight: 22, textAlign: 'center', marginBottom: 16 },
+    slotBox: { backgroundColor: '#14532d', borderRadius: 10, paddingHorizontal: 20, paddingVertical: 10, marginBottom: 16 },
+    slotBoxText: { color: '#86efac', fontSize: 15, fontWeight: '600' },
+    successNote: { color: '#6b7280', fontSize: 13, lineHeight: 18, textAlign: 'center', marginBottom: 24 },
+    doneBtn: { width: '100%', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 12, paddingVertical: 13, alignItems: 'center' },
+    doneBtnText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
+    // Error
+    errorCard: { backgroundColor: '#1c0202', borderRadius: 16, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: '#7f1d1d' },
+    errorText: { color: '#fca5a5', fontSize: 15, marginBottom: 20, textAlign: 'center' },
+    retryBtn: { backgroundColor: colors.bgTertiary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
+    retryBtnText: { color: colors.textPrimary, fontSize: 14, fontWeight: '600' },
+  });
+}

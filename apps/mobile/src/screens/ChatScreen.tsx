@@ -1,6 +1,7 @@
 import React, {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -39,6 +40,8 @@ import { userStore } from '../store/userStore';
 import { networkStore } from '../store/networkStore';
 import { useTransmissionStore } from '../store/transmissionStore';
 import { sessionStore } from '../store/sessionStore';
+import { useThemeStore } from '../store/themeStore';
+import { darkColors, lightColors, type ThemeColors } from '../theme/colors';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
 const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000; // sessions older than 24 h start fresh
@@ -65,6 +68,10 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Chat'>;
 // ── Screen ────────────────────────────────────────────────────────────────────
 
 export default function ChatScreen({ navigation, route }: Props) {
+  const isDark = useThemeStore((s) => s.isDark);
+  const colors = isDark ? darkColors : lightColors;
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   const [input, setInput]                       = useState('');
   const [isInputDisabled, setIsInputDisabled]   = useState(false);
   const [turnCount, setTurnCount]               = useState(0);
@@ -696,7 +703,7 @@ export default function ChatScreen({ navigation, route }: Props) {
           </View>
         )}
         <View style={[styles.bubble, isUser ? styles.bubbleUser : styles.bubbleAgent]}>
-          <Text style={styles.bubbleText}>{item.content}</Text>
+          <Text style={isUser ? styles.bubbleUserText : styles.bubbleText}>{item.content}</Text>
         </View>
       </View>
     );
@@ -873,301 +880,119 @@ export default function ChatScreen({ navigation, route }: Props) {
 }
 
 // ── Styles ────────────────────────────────────────────────────────────────────
+// Styles are defined below the component as a function so the component can
+// call makeStyles(colors) and React.useMemo() to avoid re-creation every render.
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0a0a0a',
-  },
-  flex1: {
-    flex: 1,
-  },
+function makeStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.bgPrimary },
+    flex1: { flex: 1 },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.borderSecondary,
+      backgroundColor: colors.bgPrimary,
+    },
+    backBtn: { marginRight: 12 },
+    backBtnDisabled: { opacity: 0.3 },
+    backBtnText: { color: colors.textPrimary, fontSize: 20 },
+    backBtnTextDisabled: { color: colors.textSubtle },
+    headerTitle: { flex: 1, color: colors.textPrimary, fontSize: 16, fontWeight: '600' },
+    stepText: { color: colors.textSubtle, fontSize: 12 },
+    messageList: { paddingHorizontal: 16, paddingVertical: 12, flexGrow: 1 },
+    messageRow: { flexDirection: 'row', marginBottom: 12, maxWidth: '85%' },
+    rowLeft: { alignSelf: 'flex-start', alignItems: 'flex-end' },
+    rowRight: { alignSelf: 'flex-end', flexDirection: 'row-reverse' },
+    avatar: {
+      width: 28, height: 28, borderRadius: 14, backgroundColor: '#dc2626',
+      alignItems: 'center', justifyContent: 'center', marginRight: 8, flexShrink: 0,
+    },
+    avatarText: { color: '#ffffff', fontSize: 12, fontWeight: '700' },
+    bubble: { borderRadius: 16, paddingHorizontal: 14, paddingVertical: 10, flexShrink: 1 },
+    bubbleAgent: { backgroundColor: colors.bubbleAgent },
+    bubbleUser: { backgroundColor: '#dc2626' },
+    bubbleText: { color: colors.bubbleAgentText, fontSize: 14, lineHeight: 20 },
+    bubbleUserText: { color: '#ffffff', fontSize: 14, lineHeight: 20 },
+    typingRow: { flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 16, paddingBottom: 8 },
+    typingBubble: {
+      backgroundColor: colors.bubbleAgent,
+      borderRadius: 16, paddingHorizontal: 16, paddingVertical: 12,
+      flexDirection: 'row', alignItems: 'center', gap: 5,
+    },
+    dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.textMuted },
+    // Emergency bar — always dark red regardless of theme (safety critical)
+    emergencyBar: {
+      backgroundColor: '#7f1d1d', padding: 16, marginHorizontal: 0,
+      borderTopWidth: 1, borderTopColor: '#991b1b',
+    },
+    emergencyTitle: { color: '#ffffff', fontSize: 16, fontWeight: '700', marginBottom: 4 },
+    emergencySubtitle: { color: '#d1d5db', fontSize: 14, marginBottom: 8 },
+    ragBox: { marginTop: 4 },
+    ragLabel: { color: '#fbbf24', fontSize: 13, fontWeight: '600', marginBottom: 2 },
+    ragText: { color: '#fde68a', fontSize: 13, fontStyle: 'italic', lineHeight: 18 },
+    inputRow: {
+      flexDirection: 'row', alignItems: 'flex-end',
+      paddingHorizontal: 16, paddingVertical: 12,
+      borderTopWidth: 1, borderTopColor: colors.borderSecondary,
+      backgroundColor: colors.bgPrimary, gap: 10,
+    },
+    textInput: {
+      flex: 1, backgroundColor: colors.bgInput,
+      borderWidth: 1, borderColor: colors.border,
+      borderRadius: 16, paddingHorizontal: 14, paddingVertical: 10,
+      color: colors.textPrimary, fontSize: 14, maxHeight: 100,
+    },
+    sendBtn: {
+      backgroundColor: '#dc2626', borderRadius: 12,
+      width: 44, height: 44, alignItems: 'center', justifyContent: 'center',
+    },
+    sendBtnDisabled: { backgroundColor: colors.bgTertiary },
+    sendBtnText: { color: '#ffffff', fontSize: 20, fontWeight: '700' },
+    txStatusBar: {
+      backgroundColor: colors.bgTertiary, paddingHorizontal: 16, paddingVertical: 8,
+      borderTopWidth: 1, borderTopColor: colors.border,
+    },
+    txStatusBarSent: { backgroundColor: '#14532d', borderTopColor: '#166534' },
+    txStatusBarCached: { backgroundColor: colors.bgTertiary },
+    txStatusBarError: { backgroundColor: '#450a0a', borderTopColor: '#7f1d1d' },
+    txStatusText: { color: colors.textSecondary, fontSize: 12, textAlign: 'center' },
+    systemMsgContainer: {
+      alignSelf: 'center', maxWidth: '90%',
+      backgroundColor: colors.bubbleSystem,
+      borderRadius: 12, paddingHorizontal: 16, paddingVertical: 10,
+      marginBottom: 12, borderWidth: 1, borderColor: colors.border,
+    },
+    systemMsgText: {
+      color: colors.bubbleSystemText, fontSize: 13, textAlign: 'center', lineHeight: 18,
+    },
+    guidanceContainer: {
+      alignSelf: 'flex-start', maxWidth: '92%',
+      backgroundColor: colors.bubbleGuidance,
+      borderRadius: 10, borderWidth: 1, borderColor: colors.bubbleGuidanceBorder,
+      paddingHorizontal: 12, paddingVertical: 8, marginBottom: 8, marginLeft: 36,
+    },
+    guidanceText: { color: colors.bubbleGuidanceText, fontSize: 12, lineHeight: 17, fontStyle: 'italic' },
+    postTriageBar: {
+      paddingHorizontal: 16, paddingVertical: 14,
+      borderTopWidth: 1, borderTopColor: colors.borderSecondary,
+      backgroundColor: colors.bgPrimary, alignItems: 'center',
+    },
+    bookAppointmentBtn: {
+      backgroundColor: colors.bgTertiary,
+      borderRadius: 12, paddingVertical: 12, paddingHorizontal: 48,
+      alignItems: 'center', width: '100%', marginBottom: 10,
+      borderWidth: 1, borderColor: colors.border,
+    },
+    bookAppointmentBtnText: { color: '#60a5fa', fontSize: 15, fontWeight: '600' },
+    newAssessmentBtn: {
+      backgroundColor: '#dc2626', borderRadius: 12,
+      paddingVertical: 14, paddingHorizontal: 48,
+      alignItems: 'center', width: '100%',
+    },
+    newAssessmentBtnText: { color: '#ffffff', fontSize: 15, fontWeight: '700', letterSpacing: 0.3 },
+  });
+}
 
-  // Header
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#1f2937',
-    backgroundColor: '#0a0a0a',
-  },
-  backBtn: {
-    marginRight: 12,
-  },
-  backBtnDisabled: {
-    opacity: 0.3,
-  },
-  backBtnText: {
-    color: '#ffffff',
-    fontSize: 20,
-  },
-  backBtnTextDisabled: {
-    color: '#6b7280',
-  },
-  headerTitle: {
-    flex: 1,
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  stepText: {
-    color: '#6b7280',
-    fontSize: 12,
-  },
-
-  // Messages
-  messageList: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    flexGrow: 1,
-  },
-  messageRow: {
-    flexDirection: 'row',
-    marginBottom: 12,
-    maxWidth: '85%',
-  },
-  rowLeft: {
-    alignSelf: 'flex-start',
-    alignItems: 'flex-end',
-  },
-  rowRight: {
-    alignSelf: 'flex-end',
-    flexDirection: 'row-reverse',
-  },
-  avatar: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#dc2626',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 8,
-    flexShrink: 0,
-  },
-  avatarText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  bubble: {
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    flexShrink: 1,
-  },
-  bubbleAgent: {
-    backgroundColor: '#1a1a2e',
-  },
-  bubbleUser: {
-    backgroundColor: '#dc2626',
-  },
-  bubbleText: {
-    color: '#ffffff',
-    fontSize: 14,
-    lineHeight: 20,
-  },
-
-  // Typing indicator
-  typingRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    paddingHorizontal: 16,
-    paddingBottom: 8,
-  },
-  typingBubble: {
-    backgroundColor: '#1a1a2e',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-  },
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: '#9ca3af',
-  },
-
-  // Emergency bar
-  emergencyBar: {
-    backgroundColor: '#7f1d1d',
-    padding: 16,
-    marginHorizontal: 0,
-    borderTopWidth: 1,
-    borderTopColor: '#991b1b',
-  },
-  emergencyTitle: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 4,
-  },
-  emergencySubtitle: {
-    color: '#d1d5db',
-    fontSize: 14,
-    marginBottom: 8,
-  },
-  ragBox: {
-    marginTop: 4,
-  },
-  ragLabel: {
-    color: '#fbbf24',
-    fontSize: 13,
-    fontWeight: '600',
-    marginBottom: 2,
-  },
-  ragText: {
-    color: '#fde68a',
-    fontSize: 13,
-    fontStyle: 'italic',
-    lineHeight: 18,
-  },
-
-  // Input
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#1f2937',
-    backgroundColor: '#0a0a0a',
-    gap: 10,
-  },
-  textInput: {
-    flex: 1,
-    backgroundColor: '#111827',
-    borderWidth: 1,
-    borderColor: '#374151',
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    color: '#ffffff',
-    fontSize: 14,
-    maxHeight: 100,
-  },
-  sendBtn: {
-    backgroundColor: '#dc2626',
-    borderRadius: 12,
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sendBtnDisabled: {
-    backgroundColor: '#374151',
-  },
-  sendBtnText: {
-    color: '#ffffff',
-    fontSize: 20,
-    fontWeight: '700',
-  },
-
-  // Critical transmission status bar
-  txStatusBar: {
-    backgroundColor: '#1c1917',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderTopWidth: 1,
-    borderTopColor: '#292524',
-  },
-  txStatusBarSent: {
-    backgroundColor: '#14532d',
-    borderTopColor: '#166534',
-  },
-  txStatusBarCached: {
-    backgroundColor: '#1c1917',
-  },
-  txStatusBarError: {
-    backgroundColor: '#450a0a',
-    borderTopColor: '#7f1d1d',
-  },
-  txStatusText: {
-    color: '#d1d5db',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-
-  // System messages (triage verdict, transmission status, acknowledgement)
-  systemMsgContainer: {
-    alignSelf: 'center',
-    maxWidth: '90%',
-    backgroundColor: '#1f2937',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#374151',
-  },
-  systemMsgText: {
-    color: '#d1d5db',
-    fontSize: 13,
-    textAlign: 'center',
-    lineHeight: 18,
-  },
-
-  // Guidance / citation notes from the knowledge base
-  guidanceContainer: {
-    alignSelf: 'flex-start',
-    maxWidth: '92%',
-    backgroundColor: '#0d2439',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#1e4068',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 8,
-    marginLeft: 36,
-  },
-  guidanceText: {
-    color: '#93c5fd',
-    fontSize: 12,
-    lineHeight: 17,
-    fontStyle: 'italic',
-  },
-
-  // Post-triage sticky bar — replaces the input row once assessment is done
-  postTriageBar: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderTopWidth: 1,
-    borderTopColor: '#1f2937',
-    backgroundColor: '#0a0a0a',
-    alignItems: 'center',
-  },
-  bookAppointmentBtn: {
-    backgroundColor: '#0c1a2e',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 48,
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#1e3a5f',
-  },
-  bookAppointmentBtnText: {
-    color: '#60a5fa',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  newAssessmentBtn: {
-    backgroundColor: '#dc2626',
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 48,
-    alignItems: 'center',
-    width: '100%',
-  },
-  newAssessmentBtnText: {
-    color: '#ffffff',
-    fontSize: 15,
-    fontWeight: '700',
-    letterSpacing: 0.3,
-  },
-});

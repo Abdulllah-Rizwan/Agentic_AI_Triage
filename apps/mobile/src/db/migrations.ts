@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 
 export async function runMigrations(db: SQLite.SQLiteDatabase): Promise<void> {
+  // ── v0 → initial schema ───────────────────────────────────────────────────
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS user_profile (
       id            TEXT PRIMARY KEY DEFAULT 'local_user',
@@ -34,4 +35,18 @@ export async function runMigrations(db: SQLite.SQLiteDatabase): Promise<void> {
       value TEXT NOT NULL
     );
   `);
+
+  // ── v1 → add password_hash to user_profile ───────────────────────────────
+  // PRAGMA user_version tracks which migrations have been applied.
+  const versionRow = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
+  const dbVersion = versionRow?.user_version ?? 0;
+
+  if (dbVersion < 1) {
+    try {
+      await db.execAsync('ALTER TABLE user_profile ADD COLUMN password_hash TEXT');
+    } catch {
+      // Column already exists on fresh installs where the table was created above
+    }
+    await db.execAsync('PRAGMA user_version = 1');
+  }
 }

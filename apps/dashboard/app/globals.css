@@ -1,3 +1,58 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Light mode overrides ─────────────────────────────────────────────────────
+   Applied when html does NOT have the .dark class.
+   These override Tailwind's gray utility classes to produce a clean light theme
+   without needing to change every component file.
+*/
+
+html:not(.dark) body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* Backgrounds */
+html:not(.dark) .bg-gray-950 { background-color: #f1f5f9; }
+html:not(.dark) .bg-gray-900 { background-color: #ffffff; }
+html:not(.dark) .bg-gray-800 { background-color: #f1f5f9; }
+
+/* Borders */
+html:not(.dark) .border-gray-800 { border-color: #e2e8f0; }
+html:not(.dark) .border-gray-700 { border-color: #e2e8f0; }
+html:not(.dark) .divide-gray-800 > * + * { border-color: #e2e8f0; }
+
+/* Text */
+html:not(.dark) .text-white  { color: #0f172a; }
+html:not(.dark) .text-gray-100 { color: #1e293b; }
+html:not(.dark) .text-gray-200 { color: #334155; }
+html:not(.dark) .text-gray-300 { color: #374151; }
+html:not(.dark) .text-gray-400 { color: #4b5563; }
+html:not(.dark) .text-gray-500 { color: #64748b; }
+html:not(.dark) .text-gray-600 { color: #94a3b8; }
+
+/* Hover states */
+html:not(.dark) .hover\:bg-gray-800:hover { background-color: #e2e8f0; }
+html:not(.dark) .hover\:text-white:hover  { color: #0f172a; }
+
+/* Active / selected nav item */
+html:not(.dark) .bg-gray-800.text-white,
+html:not(.dark) a.bg-gray-800 {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* Inputs */
+html:not(.dark) .bg-gray-800 input,
+html:not(.dark) input.bg-transparent {
+  color: #0f172a;
+}
+
+/* Placeholder text */
+html:not(.dark) ::placeholder { color: #94a3b8; }
+
+/* Collapse toggle button */
+html:not(.dark) .bg-gray-900.border-gray-700 { background-color: #ffffff; border-color: #e2e8f0; }
+
+/* Accent colors stay the same — blue, red, green, amber are intentional */

@@ -1,4 +1,5 @@
 import { getDb } from './database';
+import Aes from 'react-native-aes-crypto';
 
 export interface UserProfile {
   id: string;
@@ -8,6 +9,15 @@ export interface UserProfile {
   lat: number | null;
   lng: number | null;
   registered_at: number;
+  password_hash: string | null;
+}
+
+// ── Password hashing ──────────────────────────────────────────────────────────
+
+const PW_SALT = 'medireach_pw_salt_v1';
+
+export function hashPassword(password: string): Promise<string> {
+  return Aes.pbkdf2(password, PW_SALT, 50_000, 32, 'sha256');
 }
 
 export interface PendingPayload {
@@ -33,8 +43,8 @@ export async function saveUserProfile(profile: Omit<UserProfile, 'id'>): Promise
   const db = getDb();
   await db.runAsync(
     `INSERT OR REPLACE INTO user_profile
-      (id, full_name, phone, cnic, lat, lng, registered_at)
-     VALUES ('local_user', ?, ?, ?, ?, ?, ?)`,
+      (id, full_name, phone, cnic, lat, lng, registered_at, password_hash)
+     VALUES ('local_user', ?, ?, ?, ?, ?, ?, ?)`,
     [
       profile.full_name,
       profile.phone,
@@ -42,6 +52,7 @@ export async function saveUserProfile(profile: Omit<UserProfile, 'id'>): Promise
       profile.lat ?? null,
       profile.lng ?? null,
       profile.registered_at,
+      profile.password_hash ?? null,
     ],
   );
 }

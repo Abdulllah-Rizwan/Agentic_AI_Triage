@@ -20,7 +20,9 @@ import { localRAG } from './src/services/rag/LocalRAG';
 import {
   getLastActivityAt,
   setLastActivityAt,
+  getMetadata,
 } from './src/db/queries';
+import { themeStore } from './src/store/themeStore';
 
 import SplashScreen from './src/screens/SplashScreen';
 import LoginScreen from './src/screens/LoginScreen';
@@ -78,6 +80,12 @@ export default function App() {
 
       // 3. Load user profile → determines routing on SplashScreen
       await loadFromDatabase();
+
+      // 3b. Restore saved theme preference
+      const savedTheme = await getMetadata('theme_is_dark');
+      if (savedTheme !== null) {
+        themeStore.getState().setIsDark(savedTheme !== '0');
+      }
 
       // 4. Auto-resume session if last activity was within the timeout window
       const lastActivity = await getLastActivityAt();

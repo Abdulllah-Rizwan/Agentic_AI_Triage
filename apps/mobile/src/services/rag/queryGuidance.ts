@@ -111,12 +111,26 @@ async function _getToken(): Promise<string | null> {
   }
 }
 
+// How long to wait for a server response before falling back to local RAG.
+// A dead server causes fetch to hang until the OS TCP timeout (~75 s).
+// 8 seconds is enough for a healthy server; shorter means faster fallback
+// to local BM25 / generic guidance when the server is unreachable.
+const SERVER_TIMEOUT_MS = 8_000;
+
+function fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), SERVER_TIMEOUT_MS);
+  return fetch(url, { ...init, signal: controller.signal }).finally(() =>
+    clearTimeout(id),
+  );
+}
+
 async function _queryServer(queryText: string, topK: number): Promise<RAGResult[]> {
   try {
     const token = await _getToken();
     if (!token) return localRAG.query(queryText, topK);
 
-    const response = await fetch(`${API_BASE_URL}/api/v1/knowledge/query`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/v1/knowledge/query`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -142,7 +156,7 @@ async function _routeServer(
     const token = await _getToken();
     if (!token) return [];
 
-    const response = await fetch(`${API_BASE_URL}/api/v1/knowledge/route`, {
+    const response = await fetchWithTimeout(`${API_BASE_URL}/api/v1/knowledge/route`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,8 @@ import { sessionStore } from '../store/sessionStore';
 import { getCompletedCases, markCaseAcknowledged, CompletedCase, clearActiveSession } from '../db/queries';
 import { slmAdapter } from '../services/llm/SLMAdapter';
 import { useTransmissionStore } from '../store/transmissionStore';
+import { useThemeStore } from '../store/themeStore';
+import { darkColors, lightColors, type ThemeColors } from '../theme/colors';
 import type { RootStackParamList } from '../../App';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
@@ -54,6 +56,10 @@ type DownloadState = 'unknown' | 'not_downloaded' | 'downloading' | 'ready';
 export default function HomeScreen({ navigation }: Props) {
   const networkMode = useNetworkStore((s) => s.mode);
   const profile = useUserStore((s) => s.profile);
+  const isDark = useThemeStore((s) => s.isDark);
+  const toggle = useThemeStore((s) => s.toggle);
+  const colors = isDark ? darkColors : lightColors;
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [completedCases, setCompletedCases] = useState<CompletedCase[]>([]);
   const [selectedCase, setSelectedCase] = useState<CompletedCase | null>(null);
   const [modelState, setModelState] = useState<DownloadState>('unknown');
@@ -173,9 +179,14 @@ export default function HomeScreen({ navigation }: Props) {
             <View style={[styles.networkBadge, { backgroundColor: netCfg.bg }]}>
               <Text style={[styles.networkBadgeText, { color: netCfg.text }]}>{netCfg.label}</Text>
             </View>
-            <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut} activeOpacity={0.7}>
-              <Text style={styles.signOutText}>Sign Out</Text>
-            </TouchableOpacity>
+            <View style={styles.headerActions}>
+              <TouchableOpacity style={styles.themeToggle} onPress={toggle} activeOpacity={0.7}>
+                <Text style={styles.themeToggleText}>{isDark ? '☀' : '🌙'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut} activeOpacity={0.7}>
+                <Text style={styles.signOutText}>Sign Out</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -331,109 +342,114 @@ export default function HomeScreen({ navigation }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0a0a0a' },
-  scroll: { padding: 20, paddingBottom: 40 },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 8 },
-  headerText: { flex: 1, marginRight: 12 },
-  headerRight: { alignItems: 'flex-end', gap: 6 },
-  greeting: { color: '#ffffff', fontSize: 22, fontWeight: '700' },
-  tagline: { color: '#6b7280', fontSize: 14, marginTop: 4 },
-  networkBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14 },
-  networkBadgeText: { fontSize: 11, fontWeight: '700', letterSpacing: 0.5 },
-  signOutBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#374151',
-    backgroundColor: '#111111',
-  },
-  signOutText: { color: '#9ca3af', fontSize: 11, fontWeight: '600' },
-  statusCard: {
-    backgroundColor: '#111111',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#1f2937',
-    padding: 20,
-    marginTop: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
-  statusIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
-  statusIconGreen: { backgroundColor: '#14532d' },
-  statusIconAmber: { backgroundColor: '#78350f' },
-  statusIconText: { fontSize: 20 },
-  statusContent: { flex: 1 },
-  statusTitle: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
-  statusDetail: { color: '#9ca3af', fontSize: 13, marginTop: 2 },
-  debugUrl: { color: '#4b5563', fontSize: 10, marginTop: 4, fontFamily: 'monospace' },
-  ctaBtn: {
-    backgroundColor: '#dc2626',
-    borderRadius: 16,
-    paddingVertical: 18,
-    alignItems: 'center',
-    marginTop: 28,
-  },
-  ctaText: { color: '#ffffff', fontSize: 18, fontWeight: '700', letterSpacing: 0.5 },
-  ctaSubtext: { color: '#6b7280', fontSize: 13, textAlign: 'center', marginTop: 10 },
-  sectionTitle: { color: '#6b7280', fontSize: 12, fontWeight: '700', letterSpacing: 1, marginTop: 36, marginBottom: 12 },
-  emptyText: { color: '#4b5563', fontSize: 14, textAlign: 'center', paddingVertical: 24 },
-  caseRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#111111',
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#1f2937',
-    gap: 12,
-  },
-  triageDot: { width: 10, height: 10, borderRadius: 5, flexShrink: 0 },
-  caseInfo: { flex: 1 },
-  caseComplaint: { color: '#e5e7eb', fontSize: 14, fontWeight: '500' },
-  caseDate: { color: '#6b7280', fontSize: 12, marginTop: 2 },
-  triageLabel: { fontSize: 12, fontWeight: '700', letterSpacing: 0.5 },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'flex-end' },
-  modalCard: { backgroundColor: '#111111', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, gap: 12 },
-  modalTitle: { color: '#ffffff', fontSize: 18, fontWeight: '700', marginBottom: 4 },
-  modalField: { color: '#d1d5db', fontSize: 14, lineHeight: 22 },
-  modalLabel: { color: '#9ca3af', fontWeight: '600' },
-  modalViewChat: { backgroundColor: '#dc2626', borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
-  modalViewChatText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
-  modalClose: { backgroundColor: '#1f2937', borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
-  modalCloseText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
-  modelCard: {
-    backgroundColor: '#111111',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#1f2937',
-    padding: 16,
-    marginTop: 16,
-  },
-  modelCardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-  modelCardTitle: { color: '#e5e7eb', fontSize: 15, fontWeight: '700' },
-  modelCardSize: { color: '#6b7280', fontSize: 12 },
-  modelCardDesc: { color: '#9ca3af', fontSize: 13, marginBottom: 12 },
-  progressWrapper: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  progressTrack: { flex: 1, height: 6, backgroundColor: '#1f2937', borderRadius: 3, overflow: 'hidden' },
-  progressFill: { height: 6, backgroundColor: '#f59e0b', borderRadius: 3 },
-  progressLabel: { color: '#f59e0b', fontSize: 13, fontWeight: '600', width: 40, textAlign: 'right' },
-  downloadBtn: { backgroundColor: '#1d4ed8', borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
-  downloadBtnText: { color: '#ffffff', fontSize: 14, fontWeight: '700', letterSpacing: 0.5 },
-  transmittedToast: {
-    position: 'absolute',
-    bottom: 32,
-    left: 20,
-    right: 20,
-    backgroundColor: '#14532d',
-    borderRadius: 10,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#22c55e',
-    alignItems: 'center',
-  },
-  transmittedToastText: { color: '#4ade80', fontSize: 14, fontWeight: '600' },
-});
+function makeStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.bgPrimary },
+    scroll: { padding: 20, paddingBottom: 40 },
+    headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 8 },
+    headerText: { flex: 1, marginRight: 12 },
+    headerRight: { alignItems: 'flex-end', gap: 6 },
+    headerActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    greeting: { color: colors.textPrimary, fontSize: 22, fontWeight: '700' },
+    tagline: { color: colors.textSubtle, fontSize: 14, marginTop: 4 },
+    networkBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14 },
+    networkBadgeText: { fontSize: 11, fontWeight: '700', letterSpacing: 0.5 },
+    themeToggle: { padding: 4 },
+    themeToggleText: { fontSize: 18 },
+    signOutBtn: {
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.bgCard,
+    },
+    signOutText: { color: colors.textMuted, fontSize: 11, fontWeight: '600' },
+    statusCard: {
+      backgroundColor: colors.bgCard,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.borderSecondary,
+      padding: 20,
+      marginTop: 24,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+    },
+    statusIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+    statusIconGreen: { backgroundColor: '#14532d' },
+    statusIconAmber: { backgroundColor: '#78350f' },
+    statusIconText: { fontSize: 20 },
+    statusContent: { flex: 1 },
+    statusTitle: { color: colors.textPrimary, fontSize: 16, fontWeight: '700' },
+    statusDetail: { color: colors.textMuted, fontSize: 13, marginTop: 2 },
+    debugUrl: { color: colors.textFaint, fontSize: 10, marginTop: 4, fontFamily: 'monospace' },
+    ctaBtn: {
+      backgroundColor: '#dc2626',
+      borderRadius: 16,
+      paddingVertical: 18,
+      alignItems: 'center',
+      marginTop: 28,
+    },
+    ctaText: { color: '#ffffff', fontSize: 18, fontWeight: '700', letterSpacing: 0.5 },
+    ctaSubtext: { color: colors.textSubtle, fontSize: 13, textAlign: 'center', marginTop: 10 },
+    sectionTitle: { color: colors.textSubtle, fontSize: 12, fontWeight: '700', letterSpacing: 1, marginTop: 36, marginBottom: 12 },
+    emptyText: { color: colors.textFaint, fontSize: 14, textAlign: 'center', paddingVertical: 24 },
+    caseRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.bgCard,
+      borderRadius: 10,
+      padding: 14,
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: colors.borderSecondary,
+      gap: 12,
+    },
+    triageDot: { width: 10, height: 10, borderRadius: 5, flexShrink: 0 },
+    caseInfo: { flex: 1 },
+    caseComplaint: { color: colors.textSecondary, fontSize: 14, fontWeight: '500' },
+    caseDate: { color: colors.textSubtle, fontSize: 12, marginTop: 2 },
+    triageLabel: { fontSize: 12, fontWeight: '700', letterSpacing: 0.5 },
+    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'flex-end' },
+    modalCard: { backgroundColor: colors.bgModal, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, gap: 12 },
+    modalTitle: { color: colors.textPrimary, fontSize: 18, fontWeight: '700', marginBottom: 4 },
+    modalField: { color: colors.textSecondary, fontSize: 14, lineHeight: 22 },
+    modalLabel: { color: colors.textMuted, fontWeight: '600' },
+    modalViewChat: { backgroundColor: '#dc2626', borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
+    modalViewChatText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
+    modalClose: { backgroundColor: colors.bgTertiary, borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
+    modalCloseText: { color: colors.textPrimary, fontSize: 15, fontWeight: '600' },
+    modelCard: {
+      backgroundColor: colors.bgCard,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.borderSecondary,
+      padding: 16,
+      marginTop: 16,
+    },
+    modelCardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
+    modelCardTitle: { color: colors.textSecondary, fontSize: 15, fontWeight: '700' },
+    modelCardSize: { color: colors.textSubtle, fontSize: 12 },
+    modelCardDesc: { color: colors.textMuted, fontSize: 13, marginBottom: 12 },
+    progressWrapper: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    progressTrack: { flex: 1, height: 6, backgroundColor: colors.bgTertiary, borderRadius: 3, overflow: 'hidden' },
+    progressFill: { height: 6, backgroundColor: '#f59e0b', borderRadius: 3 },
+    progressLabel: { color: '#f59e0b', fontSize: 13, fontWeight: '600', width: 40, textAlign: 'right' },
+    downloadBtn: { backgroundColor: '#1d4ed8', borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
+    downloadBtnText: { color: '#ffffff', fontSize: 14, fontWeight: '700', letterSpacing: 0.5 },
+    transmittedToast: {
+      position: 'absolute',
+      bottom: 32,
+      left: 20,
+      right: 20,
+      backgroundColor: '#14532d',
+      borderRadius: 10,
+      padding: 14,
+      borderWidth: 1,
+      borderColor: '#22c55e',
+      alignItems: 'center',
+    },
+    transmittedToastText: { color: '#4ade80', fontSize: 14, fontWeight: '600' },
+  });
+}

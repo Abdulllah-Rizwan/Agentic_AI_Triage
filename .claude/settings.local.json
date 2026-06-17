@@ -177,7 +177,9 @@
       "Bash(echo \"EXIT:$?\")",
       "Bash(dir C:\\\\Users\\\\ABDULLAH RIZWAN\\\\OneDrive\\\\Desktop\\\\FYP Project\\\\Agentic_AI_Triage\\\\apps\\\\dashboard\\\\app\\\\api\\\\auth *)",
       "Bash(dir *)",
-      "Bash(xargs grep -l \"appointment\\\\|getAppointments\")"
+      "Bash(xargs grep -l \"appointment\\\\|getAppointments\")",
+      "PowerShell(Head *)",
+      "PowerShell(Copy-Item *)"
     ]
   }
 }

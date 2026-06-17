@@ -1,0 +1,51 @@
+export const darkColors = {
+  bgPrimary: '#0a0a0a',
+  bgSecondary: '#111111',
+  bgTertiary: '#1f2937',
+  bgCard: '#111111',
+  bgInput: '#111111',
+  bgModal: '#111111',
+  border: '#374151',
+  borderSecondary: '#1f2937',
+  textPrimary: '#ffffff',
+  textSecondary: '#d1d5db',
+  textMuted: '#9ca3af',
+  textSubtle: '#6b7280',
+  textFaint: '#4b5563',
+  placeholderText: '#6b7280',
+  // Chat bubbles
+  bubbleAgent: '#1a1a2e',
+  bubbleAgentText: '#ffffff',
+  bubbleSystem: '#1f2937',
+  bubbleSystemText: '#d1d5db',
+  bubbleGuidance: '#0d2439',
+  bubbleGuidanceBorder: '#1e4068',
+  bubbleGuidanceText: '#93c5fd',
+};
+
+export const lightColors = {
+  bgPrimary: '#f8fafc',
+  bgSecondary: '#ffffff',
+  bgTertiary: '#f1f5f9',
+  bgCard: '#ffffff',
+  bgInput: '#ffffff',
+  bgModal: '#ffffff',
+  border: '#e2e8f0',
+  borderSecondary: '#e2e8f0',
+  textPrimary: '#0f172a',
+  textSecondary: '#1e293b',
+  textMuted: '#64748b',
+  textSubtle: '#94a3b8',
+  textFaint: '#cbd5e1',
+  placeholderText: '#9ca3af',
+  // Chat bubbles
+  bubbleAgent: '#e0e7ff',
+  bubbleAgentText: '#1e1b4b',
+  bubbleSystem: '#f1f5f9',
+  bubbleSystemText: '#374151',
+  bubbleGuidance: '#eff6ff',
+  bubbleGuidanceBorder: '#bfdbfe',
+  bubbleGuidanceText: '#1d4ed8',
+};
+
+export type ThemeColors = typeof darkColors;

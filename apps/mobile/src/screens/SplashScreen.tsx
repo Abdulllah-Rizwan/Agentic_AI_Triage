@@ -4,11 +4,14 @@ import {
   Text,
   StyleSheet,
   Animated,
+  Image,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNetworkStore } from '../store/networkStore';
 import { useUserStore } from '../store/userStore';
 import { useSessionStore } from '../store/sessionStore';
+import { useThemeStore } from '../store/themeStore';
+import { darkColors, lightColors } from '../theme/colors';
 import { slmAdapter } from '../services/llm/SLMAdapter';
 import type { RootStackParamList } from '../../App';
 
@@ -21,6 +24,9 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
   const networkMode = useNetworkStore((s) => s.mode);
   const isRegistered = useUserStore((s) => s.isRegistered);
   const isSignedIn = useSessionStore((s) => s.isSignedIn);
+  const isDark = useThemeStore((s) => s.isDark);
+  const colors = isDark ? darkColors : lightColors;
+
   const [timedOut, setTimedOut] = useState(false);
   const pulseAnim = React.useRef(new Animated.Value(1)).current;
 
@@ -54,11 +60,10 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
 
   function renderSLMStatus() {
     if (!isModelReady) {
-      // Still initializing
       return (
         <View style={styles.statusRow}>
           <Animated.View style={[styles.dot, styles.dotAmber, { opacity: pulseAnim }]} />
-          <Text style={styles.statusText}>Loading Device AI...</Text>
+          <Text style={[styles.statusText, { color: colors.textSecondary }]}>Loading Device AI...</Text>
         </View>
       );
     }
@@ -66,15 +71,14 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
       return (
         <View style={styles.statusRow}>
           <View style={[styles.dot, styles.dotGreen]} />
-          <Text style={styles.statusText}>Device AI Ready</Text>
+          <Text style={[styles.statusText, { color: colors.textSecondary }]}>Device AI Ready</Text>
         </View>
       );
     }
-    // Model not downloaded — cloud-only mode
     return (
       <View style={styles.statusRow}>
         <View style={[styles.dot, styles.dotAmber]} />
-        <Text style={styles.statusText}>Cloud AI Mode</Text>
+        <Text style={[styles.statusText, { color: colors.textSecondary }]}>Cloud AI Mode</Text>
       </View>
     );
   }
@@ -94,20 +98,22 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logoCircle}>
-        <Text style={styles.logoLetter}>M</Text>
-      </View>
-      <Text style={styles.appName}>MediReach</Text>
-      <Text style={styles.appSubtitle}>Emergency Medical Assessment</Text>
+    <View style={[styles.container, { backgroundColor: colors.bgPrimary }]}>
+      <Image
+        source={require('../assets/logo.jpg')}
+        style={styles.logoImage}
+        resizeMode="contain"
+      />
+      <Text style={[styles.appName, { color: colors.textPrimary }]}>MediReach</Text>
+      <Text style={[styles.appSubtitle, { color: colors.textMuted }]}>Emergency Medical Assessment</Text>
 
       <View style={styles.statusSection}>
         {renderSLMStatus()}
         {renderNetworkBadge()}
       </View>
 
-      <View style={styles.offlineBadge}>
-        <Text style={styles.offlineBadgeText}>OFFLINE READY</Text>
+      <View style={[styles.offlineBadge, { backgroundColor: colors.bgTertiary, borderColor: colors.border }]}>
+        <Text style={[styles.offlineBadgeText, { color: colors.textMuted }]}>OFFLINE READY</Text>
       </View>
     </View>
   );
@@ -116,82 +122,31 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a0a',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
-  logoCircle: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: '#dc2626',
-    alignItems: 'center',
-    justifyContent: 'center',
+  logoImage: {
+    width: 120,
+    height: 120,
   },
-  logoLetter: {
-    color: '#ffffff',
-    fontSize: 44,
-    fontWeight: '700',
-  },
-  appName: {
-    color: '#ffffff',
-    fontSize: 32,
-    fontWeight: '700',
-    marginTop: 16,
-  },
-  appSubtitle: {
-    color: '#9ca3af',
-    fontSize: 16,
-    marginTop: 8,
-  },
-  statusSection: {
-    marginTop: 48,
-    alignItems: 'center',
-    gap: 12,
-  },
-  statusRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
+  appName: { fontSize: 32, fontWeight: '700', marginTop: 16 },
+  appSubtitle: { fontSize: 16, marginTop: 8 },
+  statusSection: { marginTop: 48, alignItems: 'center', gap: 12 },
+  statusRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  dot: { width: 10, height: 10, borderRadius: 5 },
   dotGreen: { backgroundColor: '#22c55e' },
   dotAmber: { backgroundColor: '#f59e0b' },
-  dotRed: { backgroundColor: '#ef4444' },
-  statusText: {
-    color: '#d1d5db',
-    fontSize: 14,
-  },
-  networkBadge: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 20,
-    marginTop: 4,
-  },
-  networkBadgeText: {
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
+  statusText: { fontSize: 14 },
+  networkBadge: { paddingHorizontal: 16, paddingVertical: 6, borderRadius: 20, marginTop: 4 },
+  networkBadgeText: { fontSize: 12, fontWeight: '700', letterSpacing: 0.5 },
   offlineBadge: {
     position: 'absolute',
     bottom: 48,
     paddingHorizontal: 20,
     paddingVertical: 8,
-    backgroundColor: '#1f2937',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#374151',
   },
-  offlineBadgeText: {
-    color: '#9ca3af',
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 1,
-  },
+  offlineBadgeText: { fontSize: 12, fontWeight: '600', letterSpacing: 1 },
 });
