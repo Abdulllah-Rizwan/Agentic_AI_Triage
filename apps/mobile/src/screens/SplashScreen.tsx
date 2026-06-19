@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Animated,
-  Image,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNetworkStore } from '../store/networkStore';
@@ -14,6 +13,39 @@ import { useThemeStore } from '../store/themeStore';
 import { darkColors, lightColors } from '../theme/colors';
 import { slmAdapter } from '../services/llm/SLMAdapter';
 import type { RootStackParamList } from '../../App';
+
+function MedicalCrossLogo({ size }: { size: number }) {
+  const border = Math.round(size * 0.055);
+  const barThick = Math.round(size * 0.22);
+  const barLong = Math.round(size * 0.52);
+  const radius = size / 2;
+  return (
+    <View style={{
+      width: size,
+      height: size,
+      borderRadius: radius,
+      borderWidth: border,
+      borderColor: '#DC2626',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+      <View style={{
+        position: 'absolute',
+        width: barThick,
+        height: barLong,
+        backgroundColor: '#DC2626',
+        borderRadius: 4,
+      }} />
+      <View style={{
+        position: 'absolute',
+        width: barLong,
+        height: barThick,
+        backgroundColor: '#DC2626',
+        borderRadius: 4,
+      }} />
+    </View>
+  );
+}
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Splash'>;
@@ -99,11 +131,7 @@ export default function SplashScreen({ navigation, isModelReady }: Props) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bgPrimary }]}>
-      <Image
-        source={require('../assets/logo.jpg')}
-        style={styles.logoImage}
-        resizeMode="contain"
-      />
+      <MedicalCrossLogo size={120} />
       <Text style={[styles.appName, { color: colors.textPrimary }]}>MediReach</Text>
       <Text style={[styles.appSubtitle, { color: colors.textMuted }]}>Emergency Medical Assessment</Text>
 
@@ -125,10 +153,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
-  },
-  logoImage: {
-    width: 120,
-    height: 120,
   },
   appName: { fontSize: 32, fontWeight: '700', marginTop: 16 },
   appSubtitle: { fontSize: 16, marginTop: 8 },

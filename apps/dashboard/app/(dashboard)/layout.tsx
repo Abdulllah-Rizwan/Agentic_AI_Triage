@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
+import MedicalCrossLogo from "@/components/MedicalCrossLogo";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 import {
@@ -73,10 +73,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo / brand */}
         <div className="flex h-16 items-center px-4 overflow-hidden">
           {collapsed ? (
-            <Image src="/logo.jpg" alt="MediReach" width={32} height={32} className="rounded-full" />
+            <MedicalCrossLogo size={32} />
           ) : (
             <div className="flex items-center gap-2">
-              <Image src="/logo.jpg" alt="MediReach" width={36} height={36} className="rounded-full shrink-0" />
+              <MedicalCrossLogo size={36} className="shrink-0" />
               <span className="text-lg font-bold text-white truncate">MediReach</span>
             </div>
           )}

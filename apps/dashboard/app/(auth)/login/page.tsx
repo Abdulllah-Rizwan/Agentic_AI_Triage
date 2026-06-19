@@ -4,8 +4,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Loader2 } from "lucide-react";
+import MedicalCrossLogo from "@/components/MedicalCrossLogo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="mb-8 text-center">
           <div className="flex justify-center mb-3">
-            <Image src="/logo.jpg" alt="MediReach" width={72} height={72} className="rounded-full" />
+            <MedicalCrossLogo size={72} />
           </div>
           <h1 className="text-2xl font-bold text-white">MediReach</h1>
           <p className="mt-1 text-sm text-gray-400">Disaster Medical Intelligence</p>

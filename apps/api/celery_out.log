@@ -7,50 +7,44 @@ It will be compatible before version 2.0.0.
 C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\google\adk\features\_feature_decorator.py:72: UserWarning: [EXPERIMENTAL] feature FeatureName.PLUGGABLE_AUTH is enabled.
   check_feature_enabled()
 worker created, starting...
-[2026-06-15 10:26:15,037: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-06-19 10:05:23,295: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-06-15 10:26:15,202: INFO/MainProcess] Connected to redis://localhost:6379/0
-[2026-06-15 10:26:15,204: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+[2026-06-19 10:05:23,469: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2026-06-19 10:05:23,471: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\celery\worker\consumer\consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
 whether broker connection retries are made during startup in Celery 6.0 and above.
 If you wish to retain the existing behavior for retrying connections on startup,
 you should set broker_connection_retry_on_startup to True.
   warnings.warn(
 
-[2026-06-15 10:26:15,321: INFO/MainProcess] mingle: searching for neighbors
-[2026-06-15 10:26:16,449: INFO/MainProcess] mingle: all alone
-[2026-06-15 10:26:16,685: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
-[2026-06-15 10:30:26,773: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[9a6125c4-22a5-4767-9dd2-bece1986a4d1] received
-[2026-06-15 10:30:44,652: WARNING/MainProcess] [92m10:30:44 - LiteLLM:INFO[0m: utils.py:4011 - 
+[2026-06-19 10:05:23,556: INFO/MainProcess] mingle: searching for neighbors
+[2026-06-19 10:05:24,755: INFO/MainProcess] mingle: all alone
+[2026-06-19 10:05:24,923: INFO/MainProcess] celery@DESKTOP-7P1DM2I ready.
+[2026-06-19 10:28:44,890: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[2e61610a-643a-4146-87ae-72029f75258e] received
+[2026-06-19 10:29:36,908: WARNING/MainProcess] [92m10:29:36 - LiteLLM:INFO[0m: utils.py:4011 - 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-06-15 10:30:44,652: INFO/MainProcess] 
+[2026-06-19 10:29:36,907: INFO/MainProcess] 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-06-15 10:30:46,759: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[9a6125c4-22a5-4767-9dd2-bece1986a4d1] succeeded in 19.985000000000127s: None
-[2026-06-15 10:52:32,940: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[a35702e1-e944-470c-925c-1378da1b1bc6] received
-[2026-06-15 10:52:33,104: WARNING/MainProcess] [92m10:52:33 - LiteLLM:INFO[0m: utils.py:4011 - 
+[2026-06-19 10:29:38,221: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[2e61610a-643a-4146-87ae-72029f75258e] succeeded in 53.297000000000025s: None
+[2026-06-19 16:48:42,345: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[77280b95-9386-4f69-939f-b6c14f45b327] received
+[2026-06-19 16:48:43,634: WARNING/MainProcess] [92m16:48:43 - LiteLLM:INFO[0m: utils.py:4011 - 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-06-15 10:52:33,103: INFO/MainProcess] 
+[2026-06-19 16:48:43,631: INFO/MainProcess] 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-06-15 10:52:34,015: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\litellm\litellm_core_utils\logging_worker.py:75: RuntimeWarning: coroutine 'Logging.async_success_handler' was never awaited
+[2026-06-19 16:48:45,655: WARNING/MainProcess] C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\litellm\litellm_core_utils\logging_worker.py:75: RuntimeWarning: coroutine 'Logging.async_success_handler' was never awaited
   self._queue = None
 
-[2026-06-15 10:52:34,038: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[a35702e1-e944-470c-925c-1378da1b1bc6] succeeded in 1.0780000000004293s: None
-[2026-06-15 10:54:29,193: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[941b4e78-c4c6-44a5-9b6c-3e56df2e364b] received
-[2026-06-15 10:54:29,213: WARNING/MainProcess] [92m10:54:29 - LiteLLM:INFO[0m: utils.py:4011 - 
+[2026-06-19 16:48:45,736: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[77280b95-9386-4f69-939f-b6c14f45b327] succeeded in 3.3280000000013388s: None
+[2026-06-19 16:50:58,077: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[4b6bc8f3-f3e3-4d00-bd8f-9e2613c90f50] received
+[2026-06-19 16:50:58,140: WARNING/MainProcess] [92m16:50:58 - LiteLLM:INFO[0m: utils.py:4011 - 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-06-15 10:54:29,212: INFO/MainProcess] 
+[2026-06-19 16:50:58,140: INFO/MainProcess] 
 LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-06-15 10:54:30,054: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[941b4e78-c4c6-44a5-9b6c-3e56df2e364b] succeeded in 0.8599999999996726s: None
-[2026-06-15 11:37:14,056: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[f7931351-8741-4db5-9f13-488fbc919ab3] received
-[2026-06-15 11:37:15,104: WARNING/MainProcess] [92m11:37:15 - LiteLLM:INFO[0m: utils.py:4011 - 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-06-15 11:37:15,091: INFO/MainProcess] 
-LiteLLM completion() model= llama-3.3-70b-versatile; provider = groq
-[2026-06-15 11:37:16,829: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[f7931351-8741-4db5-9f13-488fbc919ab3] succeeded in 2.719000000000051s: None
-[2026-06-15 20:53:34,528: WARNING/MainProcess] [92m20:53:34 - LiteLLM:INFO[0m: logging_worker.py:454 - [LoggingWorker] atexit: Flushing 1 remaining events...
-[2026-06-15 20:53:34,517: INFO/MainProcess] [LoggingWorker] atexit: Flushing 1 remaining events...
-[2026-06-15 20:53:34,696: WARNING/MainProcess] [92m20:53:34 - LiteLLM:INFO[0m: logging_worker.py:454 - [LoggingWorker] atexit: Successfully flushed 1 events!
-[2026-06-15 20:53:34,696: INFO/MainProcess] [LoggingWorker] atexit: Successfully flushed 1 events!
+[2026-06-19 16:50:58,958: INFO/MainProcess] Task app.workers.soap_worker.generate_soap_task[4b6bc8f3-f3e3-4d00-bd8f-9e2613c90f50] succeeded in 0.875s: None
+[2026-06-19 21:08:05,450: WARNING/MainProcess] [92m21:08:05 - LiteLLM:INFO[0m: logging_worker.py:454 - [LoggingWorker] atexit: Flushing 1 remaining events...
+[2026-06-19 21:08:05,439: INFO/MainProcess] [LoggingWorker] atexit: Flushing 1 remaining events...
+[2026-06-19 21:08:05,624: WARNING/MainProcess] [92m21:08:05 - LiteLLM:INFO[0m: logging_worker.py:454 - [LoggingWorker] atexit: Successfully flushed 1 events!
+[2026-06-19 21:08:05,623: INFO/MainProcess] [LoggingWorker] atexit: Successfully flushed 1 events!

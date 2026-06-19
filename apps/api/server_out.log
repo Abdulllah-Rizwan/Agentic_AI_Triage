@@ -7,27 +7,1545 @@ It will be compatible before version 2.0.0.
   from authlib.jose import ECKey
 C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\google\adk\features\_feature_decorator.py:72: UserWarning: [EXPERIMENTAL] feature FeatureName.PLUGGABLE_AUTH is enabled.
   check_feature_enabled()
-Started server process [19452]
-Started server process [19452]
-2026-06-17 16:24:50,056 INFO uvicorn.error: Started server process [19452]
+Started server process [2904]
+Started server process [2904]
+2026-06-19 10:05:23,613 INFO uvicorn.error: Started server process [2904]
 Waiting for application startup.
 Waiting for application startup.
-2026-06-17 16:24:50,057 INFO uvicorn.error: Waiting for application startup.
+2026-06-19 10:05:23,613 INFO uvicorn.error: Waiting for application startup.
 Application startup complete.
 Application startup complete.
-2026-06-17 16:24:50,059 INFO uvicorn.error: Application startup complete.
-[Errno 10048] error while attempting to bind on address ('0.0.0.0', 3001): only one usage of each socket address (protocol/network address/port) is normally permitted
-[Errno 10048] error while attempting to bind on address ('0.0.Shutting down
+2026-06-19 10:05:23,617 INFO uvicorn.error: Application startup complete.
+Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
+Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
+2026-06-19 10:05:23,619 INFO uvicorn.error: Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
+2026-06-19 10:26:09,399 INFO sqlalchemy.engine.Engine select pg_catalog.version()
+2026-06-19 10:26:09,399 INFO sqlalchemy.engine.Engine: select pg_catalog.version()
+2026-06-19 10:26:09,402 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-06-19 10:26:09,402 INFO sqlalchemy.engine.Engine: [raw sql] ()
+2026-06-19 10:26:09,438 INFO sqlalchemy.engine.Engine select current_schema()
+2026-06-19 10:26:09,438 INFO sqlalchemy.engine.Engine: select current_schema()
+2026-06-19 10:26:09,438 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-06-19 10:26:09,438 INFO sqlalchemy.engine.Engine: [raw sql] ()
+2026-06-19 10:26:09,466 INFO sqlalchemy.engine.Engine show standard_conforming_strings
+2026-06-19 10:26:09,466 INFO sqlalchemy.engine.Engine: show standard_conforming_strings
+2026-06-19 10:26:09,466 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-06-19 10:26:09,466 INFO sqlalchemy.engine.Engine: [raw sql] ()
+2026-06-19 10:26:09,485 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:26:09,485 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:26:09,747 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 10:26:09,747 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 10:26:09,748 INFO sqlalchemy.engine.Engine [generated in 0.00183s] (1,)
+2026-06-19 10:26:09,748 INFO sqlalchemy.engine.Engine: [generated in 0.00183s] (1,)
+192.168.18.95:58940 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:58940 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 10:26:09,795 INFO uvicorn.access: 192.168.18.95:58940 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 10:26:09,799 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:26:09,799 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:27:43,741 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:27:43,741 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:27:43,761 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:27:43,761 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:27:43,762 INFO sqlalchemy.engine.Engine [generated in 0.00189s] ('14c47d94-ff60-4be4-bd01-1fe5d2a7779f',)
+2026-06-19 10:27:43,762 INFO sqlalchemy.engine.Engine: [generated in 0.00189s] ('14c47d94-ff60-4be4-bd01-1fe5d2a7779f',)
+2026-06-19 10:27:44,083 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:27:44,083 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:35790 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+192.168.18.95:35790 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+2026-06-19 10:27:44,091 INFO uvicorn.access: 192.168.18.95:35790 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+2026-06-19 10:28:43,985 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:28:43,985 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:28:43,985 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:28:43,985 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:28:43,986 INFO sqlalchemy.engine.Engine [cached since 60.23s ago] ('72df07aa-8510-45e7-84e6-9b381249b164',)
+2026-06-19 10:28:43,986 INFO sqlalchemy.engine.Engine: [cached since 60.23s ago] ('72df07aa-8510-45e7-84e6-9b381249b164',)
+2026-06-19 10:28:44,189 INFO sqlalchemy.engine.Engine INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
+2026-06-19 10:28:44,189 INFO sqlalchemy.engine.Engine: INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
+2026-06-19 10:28:44,189 INFO sqlalchemy.engine.Engine [generated in 0.00061s] ('72df07aa-8510-45e7-84e6-9b381249b164', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah Rizwan', '+92-341-2959275', 24.9621698, 67.0597153, 'high fever', ['4 din hogae henn', 'Hann', 'Nhee'], 6, 'AMBER', 'Urgent symptom detected: high fever. Medical attention needed soon.', 'The patient has a high fever for 4 days with a pain scale of 6, but is able to walk and has no other symptoms. Additional: Mobility: walking, Consciousness: alert.', 'PENDING', None, None, datetime.datetime(2026, 6, 19, 5, 28, 44, 189612), None, "samsung-abdullah's-a06", None)
+2026-06-19 10:28:44,189 INFO sqlalchemy.engine.Engine: [generated in 0.00061s] ('72df07aa-8510-45e7-84e6-9b381249b164', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah Rizwan', '+92-341-2959275', 24.9621698, 67.0597153, 'high fever', ['4 din hogae henn', 'Hann', 'Nhee'], 6, 'AMBER', 'Urgent symptom detected: high fever. Medical attention needed soon.', 'The patient has a high fever for 4 days with a pain scale of 6, but is able to walk and has no other symptoms. Additional: Mobility: walking, Consciousness: alert.', 'PENDING', None, None, datetime.datetime(2026, 6, 19, 5, 28, 44, 189612), None, "samsung-abdullah's-a06", None)
+2026-06-19 10:28:44,219 INFO sqlalchemy.engine.Engine COMMIT
+2026-06-19 10:28:44,219 INFO sqlalchemy.engine.Engine: COMMIT
+192.168.18.95:50664 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+192.168.18.95:50664 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-06-19 10:28:44,804 INFO uvicorn.access: 192.168.18.95:50664 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-06-19 10:28:45,182 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:28:45,182 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:28:45,188 INFO sqlalchemy.engine.Engine SELECT knowledge_documents.id, knowledge_documents.topic_keywords 
+FROM knowledge_documents 
+WHERE knowledge_documents.status = $1::documentstatus AND knowledge_documents.topic_keywords IS NOT NULL
+2026-06-19 10:28:45,188 INFO sqlalchemy.engine.Engine: SELECT knowledge_documents.id, knowledge_documents.topic_keywords 
+FROM knowledge_documents 
+WHERE knowledge_documents.status = $1::documentstatus AND knowledge_documents.topic_keywords IS NOT NULL
+2026-06-19 10:28:45,189 INFO sqlalchemy.engine.Engine [generated in 0.00077s] ('ACTIVE',)
+2026-06-19 10:28:45,189 INFO sqlalchemy.engine.Engine: [generated in 0.00077s] ('ACTIVE',)
+2026-06-19 10:28:46,740 INFO httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-19 10:28:46,752 INFO sqlalchemy.engine.Engine 
+                SELECT
+                    kc.content,
+                    kc.article_title,
+                    kc.article_url,
+                    kc.article_author,
+                    kc.article_source,
+                    kc.section_type,
+                    kc.document_id
+                FROM knowledge_chunks kc
+                JOIN knowledge_documents kd ON kd.id = kc.document_id
+                WHERE kd.status = 'ACTIVE'
+                  AND kc.embedding IS NOT NULL
+                  AND kd.id = ANY(CAST($1 AS uuid[]))
+                ORDER BY kc.chunk_index ASC
+            
+2026-06-19 10:28:46,752 INFO sqlalchemy.engine.Engine: 
+                SELECT
+                    kc.content,
+                    kc.article_title,
+                    kc.article_url,
+                    kc.article_author,
+                    kc.article_source,
+                    kc.section_type,
+                    kc.document_id
+                FROM knowledge_chunks kc
+                JOIN knowledge_documents kd ON kd.id = kc.document_id
+                WHERE kd.status = 'ACTIVE'
+                  AND kc.embedding IS NOT NULL
+                  AND kd.id = ANY(CAST($1 AS uuid[]))
+                ORDER BY kc.chunk_index ASC
+            
+2026-06-19 10:28:46,753 INFO sqlalchemy.engine.Engine [generated in 0.00076s] (['0430bec4-c9e1-4cc2-aa67-5938cac8072b'],)
+2026-06-19 10:28:46,753 INFO sqlalchemy.engine.Engine: [generated in 0.00076s] (['0430bec4-c9e1-4cc2-aa67-5938cac8072b'],)
+2026-06-19 10:28:46,967 INFO sqlalchemy.engine.Engine 
+                    UPDATE knowledge_documents
+                    SET retrieval_count = retrieval_count + 1
+                    WHERE id = ANY(CAST($1 AS uuid[]))
+                
+2026-06-19 10:28:46,967 INFO sqlalchemy.engine.Engine: 
+                    UPDATE knowledge_documents
+                    SET retrieval_count = retrieval_count + 1
+                    WHERE id = ANY(CAST($1 AS uuid[]))
+                
+2026-06-19 10:28:46,968 INFO sqlalchemy.engine.Engine [generated in 0.00047s] (['0430bec4-c9e1-4cc2-aa67-5938cac8072b'],)
+2026-06-19 10:28:46,968 INFO sqlalchemy.engine.Engine: [generated in 0.00047s] (['0430bec4-c9e1-4cc2-aa67-5938cac8072b'],)
+2026-06-19 10:28:46,979 INFO sqlalchemy.engine.Engine COMMIT
+2026-06-19 10:28:46,979 INFO sqlalchemy.engine.Engine: COMMIT
+192.168.18.95:50664 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+192.168.18.95:50664 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+2026-06-19 10:28:46,988 INFO uvicorn.access: 192.168.18.95:50664 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+2026-06-19 10:28:55,600 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:28:55,600 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:28:55,648 INFO sqlalchemy.engine.Engine SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.is_active = true AND practitioners.specialty = $1::VARCHAR
+2026-06-19 10:28:55,648 INFO sqlalchemy.engine.Engine: SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.is_active = true AND practitioners.specialty = $1::VARCHAR
+2026-06-19 10:28:55,649 INFO sqlalchemy.engine.Engine [generated in 0.00089s] ('GENERAL_PHYSICIAN',)
+2026-06-19 10:28:55,649 INFO sqlalchemy.engine.Engine: [generated in 0.00089s] ('GENERAL_PHYSICIAN',)
+192.168.18.95:33626 - "GET /api/v1/practitioners?specialty=GENERAL_PHYSICIAN HTTP/1.1" 200
+192.168.18.95:33626 - "GET /api/v1/practitioners?specialty=GENERAL_PHYSICIAN HTTP/1.1" 200
+2026-06-19 10:28:55,698 INFO uvicorn.access: 192.168.18.95:33626 - "GET /api/v1/practitioners?specialty=GENERAL_PHYSICIAN HTTP/1.1" 200
+2026-06-19 10:28:55,700 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:28:55,700 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:33626 - "GET /api/v1/cases/72df07aa-8510-45e7-84e6-9b381249b164 HTTP/1.1" 401
+192.168.18.95:33626 - "GET /api/v1/cases/72df07aa-8510-45e7-84e6-9b381249b164 HTTP/1.1" 401
+2026-06-19 10:28:57,052 INFO uvicorn.access: 192.168.18.95:33626 - "GET /api/v1/cases/72df07aa-8510-45e7-84e6-9b381249b164 HTTP/1.1" 401
+2026-06-19 10:29:03,068 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:29:03,068 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:29:03,076 INFO sqlalchemy.engine.Engine SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.id = $1::UUID AND practitioners.is_active = true
+2026-06-19 10:29:03,076 INFO sqlalchemy.engine.Engine: SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.id = $1::UUID AND practitioners.is_active = true
+2026-06-19 10:29:03,077 INFO sqlalchemy.engine.Engine [generated in 0.00072s] ('5afdb602-d367-4bfb-b7fd-0006acd23179',)
+2026-06-19 10:29:03,077 INFO sqlalchemy.engine.Engine: [generated in 0.00072s] ('5afdb602-d367-4bfb-b7fd-0006acd23179',)
+192.168.18.95:39146 - "GET /api/v1/practitioners/5afdb602-d367-4bfb-b7fd-0006acd23179/slots HTTP/1.1" 200
+192.168.18.95:39146 - "GET /api/v1/practitioners/5afdb602-d367-4bfb-b7fd-0006acd23179/slots HTTP/1.1" 200
+2026-06-19 10:29:03,091 INFO uvicorn.access: 192.168.18.95:39146 - "GET /api/v1/practitioners/5afdb602-d367-4bfb-b7fd-0006acd23179/slots HTTP/1.1" 200
+2026-06-19 10:29:03,093 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:29:03,093 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:29:05,240 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:29:05,240 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:29:05,241 INFO sqlalchemy.engine.Engine SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.id = $1::UUID AND practitioners.is_active = true
+2026-06-19 10:29:05,241 INFO sqlalchemy.engine.Engine: SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.id = $1::UUID AND practitioners.is_active = true
+2026-06-19 10:29:05,242 INFO sqlalchemy.engine.Engine [cached since 2.166s ago] ('5afdb602-d367-4bfb-b7fd-0006acd23179',)
+2026-06-19 10:29:05,242 INFO sqlalchemy.engine.Engine: [cached since 2.166s ago] ('5afdb602-d367-4bfb-b7fd-0006acd23179',)
+192.168.18.95:39146 - "GET /api/v1/practitioners/5afdb602-d367-4bfb-b7fd-0006acd23179/slots HTTP/1.1" 200
+192.168.18.95:39146 - "GET /api/v1/practitioners/5afdb602-d367-4bfb-b7fd-0006acd23179/slots HTTP/1.1" 200
+2026-06-19 10:29:05,255 INFO uvicorn.access: 192.168.18.95:39146 - "GET /api/v1/practitioners/5afdb602-d367-4bfb-b7fd-0006acd23179/slots HTTP/1.1" 200
+2026-06-19 10:29:05,256 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:29:05,256 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:29:06,989 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:29:06,989 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:29:06,994 INFO sqlalchemy.engine.Engine SELECT practitioner_slots.id AS practitioner_slots_id, practitioner_slots.practitioner_id AS practitioner_slots_practitioner_id, practitioner_slots.slot_date AS practitioner_slots_slot_date, practitioner_slots.slot_time AS practitioner_slots_slot_time, practitioner_slots.is_booked AS practitioner_slots_is_booked, practitioner_slots.created_at AS practitioner_slots_created_at 
+FROM practitioner_slots 
+WHERE practitioner_slots.id = $1::UUID
+2026-06-19 10:29:06,994 INFO sqlalchemy.engine.Engine: SELECT practitioner_slots.id AS practitioner_slots_id, practitioner_slots.practitioner_id AS practitioner_slots_practitioner_id, practitioner_slots.slot_date AS practitioner_slots_slot_date, practitioner_slots.slot_time AS practitioner_slots_slot_time, practitioner_slots.is_booked AS practitioner_slots_is_booked, practitioner_slots.created_at AS practitioner_slots_created_at 
+FROM practitioner_slots 
+WHERE practitioner_slots.id = $1::UUID
+2026-06-19 10:29:06,994 INFO sqlalchemy.engine.Engine [generated in 0.00074s] (UUID('a69e23b6-1280-4bb7-aa3e-b133664e37cd'),)
+2026-06-19 10:29:06,994 INFO sqlalchemy.engine.Engine: [generated in 0.00074s] (UUID('a69e23b6-1280-4bb7-aa3e-b133664e37cd'),)
+2026-06-19 10:29:07,045 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:29:07,045 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:29:07,046 INFO sqlalchemy.engine.Engine [cached since 83.29s ago] ('72df07aa-8510-45e7-84e6-9b381249b164',)
+2026-06-19 10:29:07,046 INFO sqlalchemy.engine.Engine: [cached since 83.29s ago] ('72df07aa-8510-45e7-84e6-9b381249b164',)
+2026-06-19 10:29:07,054 INFO sqlalchemy.engine.Engine SELECT practitioners.id AS practitioners_id, practitioners.org_id AS practitioners_org_id, practitioners.name AS practitioners_name, practitioners.specialty AS practitioners_specialty, practitioners.city AS practitioners_city, practitioners.clinic_name AS practitioners_clinic_name, practitioners.phone AS practitioners_phone, practitioners.bio AS practitioners_bio, practitioners.is_active AS practitioners_is_active, practitioners.created_at AS practitioners_created_at 
+FROM practitioners 
+WHERE practitioners.id = $1::UUID
+2026-06-19 10:29:07,054 INFO sqlalchemy.engine.Engine: SELECT practitioners.id AS practitioners_id, practitioners.org_id AS practitioners_org_id, practitioners.name AS practitioners_name, practitioners.specialty AS practitioners_specialty, practitioners.city AS practitioners_city, practitioners.clinic_name AS practitioners_clinic_name, practitioners.phone AS practitioners_phone, practitioners.bio AS practitioners_bio, practitioners.is_active AS practitioners_is_active, practitioners.created_at AS practitioners_created_at 
+FROM practitioners 
+WHERE practitioners.id = $1::UUID
+2026-06-19 10:29:07,055 INFO sqlalchemy.engine.Engine [generated in 0.00067s] (UUID('5afdb602-d367-4bfb-b7fd-0006acd23179'),)
+2026-06-19 10:29:07,055 INFO sqlalchemy.engine.Engine: [generated in 0.00067s] (UUID('5afdb602-d367-4bfb-b7fd-0006acd23179'),)
+2026-06-19 10:29:07,072 INFO sqlalchemy.engine.Engine UPDATE practitioner_slots SET is_booked=$1::BOOLEAN WHERE practitioner_slots.id = $2::UUID
+2026-06-19 10:29:07,072 INFO sqlalchemy.engine.Engine: UPDATE practitioner_slots SET is_booked=$1::BOOLEAN WHERE practitioner_slots.id = $2::UUID
+2026-06-19 10:29:07,072 INFO sqlalchemy.engine.Engine [generated in 0.00110s] (True, UUID('a69e23b6-1280-4bb7-aa3e-b133664e37cd'))
+2026-06-19 10:29:07,072 INFO sqlalchemy.engine.Engine: [generated in 0.00110s] (True, UUID('a69e23b6-1280-4bb7-aa3e-b133664e37cd'))
+192.168.18.95:39154 - "GET /api/v1/cases/72df07aa-8510-45e7-84e6-9b381249b164 HTTP/1.1" 401
+192.168.18.95:39154 - "GET /api/v1/cases/72df07aa-8510-45e7-84e6-9b381249b164 HTTP/1.1" 401
+2026-06-19 10:29:07,078 INFO uvicorn.access: 192.168.18.95:39154 - "GET /api/v1/cases/72df07aa-8510-45e7-84e6-9b381249b164 HTTP/1.1" 401
+2026-06-19 10:29:07,111 INFO sqlalchemy.engine.Engine INSERT INTO appointments (id, practitioner_id, slot_id, case_id, patient_name, patient_phone, chief_complaint, triage_level, status, booked_at, notes) VALUES ($1::UUID, $2::UUID, $3::UUID, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR, $8::VARCHAR, $9::VARCHAR, $10::TIMESTAMP WITHOUT TIME ZONE, $11::VARCHAR)
+2026-06-19 10:29:07,111 INFO sqlalchemy.engine.Engine: INSERT INTO appointments (id, practitioner_id, slot_id, case_id, patient_name, patient_phone, chief_complaint, triage_level, status, booked_at, notes) VALUES ($1::UUID, $2::UUID, $3::UUID, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR, $8::VARCHAR, $9::VARCHAR, $10::TIMESTAMP WITHOUT TIME ZONE, $11::VARCHAR)
+2026-06-19 10:29:07,112 INFO sqlalchemy.engine.Engine [generated in 0.00133s] (UUID('93f868a1-0bcf-4eef-9544-9098144de312'), UUID('5afdb602-d367-4bfb-b7fd-0006acd23179'), UUID('a69e23b6-1280-4bb7-aa3e-b133664e37cd'), '72df07aa-8510-45e7-84e6-9b381249b164', 'Abdullah Rizwan', '+92-341-2959275', 'high fever', 'AMBER', 'PENDING', datetime.datetime(2026, 6, 19, 5, 29, 7, 111283), None)
+2026-06-19 10:29:07,112 INFO sqlalchemy.engine.Engine: [generated in 0.00133s] (UUID('93f868a1-0bcf-4eef-9544-9098144de312'), UUID('5afdb602-d367-4bfb-b7fd-0006acd23179'), UUID('a69e23b6-1280-4bb7-aa3e-b133664e37cd'), '72df07aa-8510-45e7-84e6-9b381249b164', 'Abdullah Rizwan', '+92-341-2959275', 'high fever', 'AMBER', 'PENDING', datetime.datetime(2026, 6, 19, 5, 29, 7, 111283), None)
+2026-06-19 10:29:07,307 INFO sqlalchemy.engine.Engine COMMIT
+2026-06-19 10:29:07,307 INFO sqlalchemy.engine.Engine: COMMIT
+2026-06-19 10:29:07,328 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:29:07,328 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:29:07,333 INFO sqlalchemy.engine.Engine SELECT appointments.id, appointments.practitioner_id, appointments.slot_id, appointments.case_id, appointments.patient_name, appointments.patient_phone, appointments.chief_complaint, appointments.triage_level, appointments.status, appointments.booked_at, appointments.notes 
+FROM appointments 
+WHERE appointments.id = $1::UUID
+2026-06-19 10:29:07,333 INFO sqlalchemy.engine.Engine: SELECT appointments.id, appointments.practitioner_id, appointments.slot_id, appointments.case_id, appointments.patient_name, appointments.patient_phone, appointments.chief_complaint, appointments.triage_level, appointments.status, appointments.booked_at, appointments.notes 
+FROM appointments 
+WHERE appointments.id = $1::UUID
+2026-06-19 10:29:07,333 INFO sqlalchemy.engine.Engine [generated in 0.00069s] (UUID('93f868a1-0bcf-4eef-9544-9098144de312'),)
+2026-06-19 10:29:07,333 INFO sqlalchemy.engine.Engine: [generated in 0.00069s] (UUID('93f868a1-0bcf-4eef-9544-9098144de312'),)
+192.168.18.95:39146 - "POST /api/v1/appointments HTTP/1.1" 201
+192.168.18.95:39146 - "POST /api/v1/appointments HTTP/1.1" 201
+2026-06-19 10:29:07,344 INFO uvicorn.access: 192.168.18.95:39146 - "POST /api/v1/appointments HTTP/1.1" 201
+2026-06-19 10:29:07,344 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:29:07,344 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:01,899 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:01,899 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:01,904 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:01,904 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:01,905 INFO sqlalchemy.engine.Engine [generated in 0.00070s] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 10:31:01,905 INFO sqlalchemy.engine.Engine: [generated in 0.00070s] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:01,998 INFO uvicorn.access: 127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,000 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:02,000 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:02,258 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:02,258 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:02,259 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,259 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,259 INFO sqlalchemy.engine.Engine [cached since 0.3552s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 10:31:02,259 INFO sqlalchemy.engine.Engine: [cached since 0.3552s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,274 INFO uvicorn.access: 127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,275 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:02,275 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:02,503 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:02,503 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:02,504 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,504 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,504 INFO sqlalchemy.engine.Engine [cached since 0.6006s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 10:31:02,504 INFO sqlalchemy.engine.Engine: [cached since 0.6006s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,511 INFO uvicorn.access: 127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,511 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:02,511 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:02,601 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:02,601 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:02,602 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,602 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,602 INFO sqlalchemy.engine.Engine [cached since 0.698s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 10:31:02,602 INFO sqlalchemy.engine.Engine: [cached since 0.698s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,611 INFO uvicorn.access: 127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,612 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:02,612 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:02,704 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:02,704 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:02,705 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,705 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,706 INFO sqlalchemy.engine.Engine [cached since 0.8013s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 10:31:02,706 INFO sqlalchemy.engine.Engine: [cached since 0.8013s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,712 INFO uvicorn.access: 127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,714 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:02,714 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:02,787 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:02,787 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:02,788 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,788 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:31:02,789 INFO sqlalchemy.engine.Engine [cached since 0.8842s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 10:31:02,789 INFO sqlalchemy.engine.Engine: [cached since 0.8842s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,794 INFO uvicorn.access: 127.0.0.1:49598 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:31:02,795 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:02,795 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:49607 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:49607 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 10:31:04,956 INFO uvicorn.access: 127.0.0.1:49607 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:49608 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:49608 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 10:31:04,962 INFO uvicorn.access: 127.0.0.1:49608 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:49609 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:49609 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 10:31:04,963 INFO uvicorn.access: 127.0.0.1:49609 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:49610 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:49610 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 10:31:04,964 INFO uvicorn.access: 127.0.0.1:49610 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 10:31:05,072 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:05,072 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:05,082 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 10:31:05,082 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 10:31:05,083 INFO sqlalchemy.engine.Engine [generated in 0.00212s] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 10:31:05,083 INFO sqlalchemy.engine.Engine: [generated in 0.00212s] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 10:31:05,693 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 10:31:05,693 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 10:31:05,694 INFO sqlalchemy.engine.Engine [generated in 0.00224s] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 10:31:05,694 INFO sqlalchemy.engine.Engine: [generated in 0.00224s] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:49610 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:49610 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 10:31:05,844 INFO uvicorn.access: 127.0.0.1:49610 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 10:31:05,845 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:05,845 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:05,893 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:05,893 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:05,895 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 10:31:05,895 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 10:31:05,895 INFO sqlalchemy.engine.Engine [cached since 0.8151s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 10:31:05,895 INFO sqlalchemy.engine.Engine: [cached since 0.8151s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 10:31:05,965 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 10:31:05,965 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 10:31:05,966 INFO sqlalchemy.engine.Engine [cached since 0.2737s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 10:31:05,966 INFO sqlalchemy.engine.Engine: [cached since 0.2737s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:49608 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:49608 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 10:31:05,988 INFO uvicorn.access: 127.0.0.1:49608 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 10:31:05,989 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:05,989 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:06,357 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:06,357 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:06,359 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($2::casestatus, $3::casestatus, $4::casestatus) AND cases.claimed_by_org_id = $1::UUID
+2026-06-19 10:31:06,359 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($2::casestatus, $3::casestatus, $4::casestatus) AND cases.claimed_by_org_id = $1::UUID
+2026-06-19 10:31:06,359 INFO sqlalchemy.engine.Engine [generated in 0.00065s] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 10:31:06,359 INFO sqlalchemy.engine.Engine: [generated in 0.00065s] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 10:31:06,455 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($4::casestatus, $5::casestatus, $6::casestatus) AND cases.claimed_by_org_id = $1::UUID ORDER BY cases.received_at DESC 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER
+2026-06-19 10:31:06,455 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($4::casestatus, $5::casestatus, $6::casestatus) AND cases.claimed_by_org_id = $1::UUID ORDER BY cases.received_at DESC 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER
+2026-06-19 10:31:06,456 INFO sqlalchemy.engine.Engine [generated in 0.00171s] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 10:31:06,456 INFO sqlalchemy.engine.Engine: [generated in 0.00171s] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+127.0.0.1:49609 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:49609 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 10:31:06,515 INFO uvicorn.access: 127.0.0.1:49609 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 10:31:06,517 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:06,517 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:31:06,595 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:31:06,595 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:31:06,597 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($2::casestatus, $3::casestatus, $4::casestatus) AND cases.claimed_by_org_id = $1::UUID
+2026-06-19 10:31:06,597 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($2::casestatus, $3::casestatus, $4::casestatus) AND cases.claimed_by_org_id = $1::UUID
+2026-06-19 10:31:06,598 INFO sqlalchemy.engine.Engine [cached since 0.2387s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 10:31:06,598 INFO sqlalchemy.engine.Engine: [cached since 0.2387s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 10:31:06,609 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($4::casestatus, $5::casestatus, $6::casestatus) AND cases.claimed_by_org_id = $1::UUID ORDER BY cases.received_at DESC 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER
+2026-06-19 10:31:06,609 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($4::casestatus, $5::casestatus, $6::casestatus) AND cases.claimed_by_org_id = $1::UUID ORDER BY cases.received_at DESC 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER
+2026-06-19 10:31:06,610 INFO sqlalchemy.engine.Engine [cached since 0.1554s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 10:31:06,610 INFO sqlalchemy.engine.Engine: [cached since 0.1554s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+127.0.0.1:49608 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:49608 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 10:31:06,619 INFO uvicorn.access: 127.0.0.1:49608 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 10:31:06,620 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:31:06,620 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:49615 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:49615 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 10:31:08,774 INFO uvicorn.error: 127.0.0.1:49615 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 10:31:08,790 INFO uvicorn.error: connection open
+127.0.0.1:49617 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:49617 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 10:31:08,991 INFO uvicorn.error: 127.0.0.1:49617 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 10:31:08,992 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 10:34:24,208 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 10:34:24,210 INFO uvicorn.error: connection closed
+127.0.0.1:50704 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:50704 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 10:36:15,432 INFO uvicorn.error: 127.0.0.1:50704 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 10:36:15,436 INFO uvicorn.error: connection open
+127.0.0.1:50706 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:50706 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 10:36:15,458 INFO uvicorn.error: 127.0.0.1:50706 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 10:36:15,460 INFO uvicorn.error: connection open
+2026-06-19 10:39:58,539 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:39:58,539 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:39:58,541 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 10:39:58,541 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 10:39:58,542 INFO sqlalchemy.engine.Engine [cached since 828.8s ago] (1,)
+2026-06-19 10:39:58,542 INFO sqlalchemy.engine.Engine: [cached since 828.8s ago] (1,)
+192.168.18.95:34724 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:34724 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 10:39:58,551 INFO uvicorn.access: 192.168.18.95:34724 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 10:39:58,552 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:39:58,552 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:40:33,777 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:40:33,777 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:40:33,778 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:40:33,778 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:40:33,779 INFO sqlalchemy.engine.Engine [cached since 770s ago] ('11b1b831-d1ff-4b91-8482-d00d6934e3af',)
+2026-06-19 10:40:33,779 INFO sqlalchemy.engine.Engine: [cached since 770s ago] ('11b1b831-d1ff-4b91-8482-d00d6934e3af',)
+2026-06-19 10:40:33,790 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:40:33,790 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:35590 - "GET /api/v1/cases/11b1b831-d1ff-4b91-8482-d00d6934e3af/status HTTP/1.1" 404
+192.168.18.95:35590 - "GET /api/v1/cases/11b1b831-d1ff-4b91-8482-d00d6934e3af/status HTTP/1.1" 404
+2026-06-19 10:40:33,795 INFO uvicorn.access: 192.168.18.95:35590 - "GET /api/v1/cases/11b1b831-d1ff-4b91-8482-d00d6934e3af/status HTTP/1.1" 404
+2026-06-19 10:40:44,182 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:40:44,182 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:40:44,184 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:40:44,184 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:40:44,189 INFO sqlalchemy.engine.Engine [cached since 780.4s ago] ('14c47d94-ff60-4be4-bd01-1fe5d2a7779f',)
+2026-06-19 10:40:44,189 INFO sqlalchemy.engine.Engine: [cached since 780.4s ago] ('14c47d94-ff60-4be4-bd01-1fe5d2a7779f',)
+2026-06-19 10:40:44,230 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:40:44,230 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:51506 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+192.168.18.95:51506 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+2026-06-19 10:40:44,238 INFO uvicorn.access: 192.168.18.95:51506 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+2026-06-19 10:40:50,357 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:40:50,357 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:40:50,358 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:40:50,358 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:40:50,360 INFO sqlalchemy.engine.Engine [cached since 786.6s ago] ('27a25ca1-dbb2-4f5b-b307-810a0869ef5a',)
+2026-06-19 10:40:50,360 INFO sqlalchemy.engine.Engine: [cached since 786.6s ago] ('27a25ca1-dbb2-4f5b-b307-810a0869ef5a',)
+2026-06-19 10:40:50,366 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:40:50,366 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:38840 - "GET /api/v1/cases/27a25ca1-dbb2-4f5b-b307-810a0869ef5a/status HTTP/1.1" 404
+192.168.18.95:38840 - "GET /api/v1/cases/27a25ca1-dbb2-4f5b-b307-810a0869ef5a/status HTTP/1.1" 404
+2026-06-19 10:40:50,369 INFO uvicorn.access: 192.168.18.95:38840 - "GET /api/v1/cases/27a25ca1-dbb2-4f5b-b307-810a0869ef5a/status HTTP/1.1" 404
+2026-06-19 10:41:01,839 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:41:01,839 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:41:01,841 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:41:01,841 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:41:01,841 INFO sqlalchemy.engine.Engine [cached since 798.1s ago] ('27a25ca1-dbb2-4f5b-b307-810a0869ef5a',)
+2026-06-19 10:41:01,841 INFO sqlalchemy.engine.Engine: [cached since 798.1s ago] ('27a25ca1-dbb2-4f5b-b307-810a0869ef5a',)
+2026-06-19 10:41:01,848 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:41:01,848 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:59196 - "GET /api/v1/cases/27a25ca1-dbb2-4f5b-b307-810a0869ef5a/status HTTP/1.1" 404
+192.168.18.95:59196 - "GET /api/v1/cases/27a25ca1-dbb2-4f5b-b307-810a0869ef5a/status HTTP/1.1" 404
+2026-06-19 10:41:01,850 INFO uvicorn.access: 192.168.18.95:59196 - "GET /api/v1/cases/27a25ca1-dbb2-4f5b-b307-810a0869ef5a/status HTTP/1.1" 404
+2026-06-19 10:41:06,775 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:41:06,775 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:41:06,779 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:41:06,779 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:41:06,780 INFO sqlalchemy.engine.Engine [cached since 803s ago] ('6ce55fb8-e59c-4f17-9c7e-8554e41d7100',)
+2026-06-19 10:41:06,780 INFO sqlalchemy.engine.Engine: [cached since 803s ago] ('6ce55fb8-e59c-4f17-9c7e-8554e41d7100',)
+2026-06-19 10:41:06,789 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:41:06,789 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:59196 - "GET /api/v1/cases/6ce55fb8-e59c-4f17-9c7e-8554e41d7100/status HTTP/1.1" 404
+192.168.18.95:59196 - "GET /api/v1/cases/6ce55fb8-e59c-4f17-9c7e-8554e41d7100/status HTTP/1.1" 404
+2026-06-19 10:41:06,794 INFO uvicorn.access: 192.168.18.95:59196 - "GET /api/v1/cases/6ce55fb8-e59c-4f17-9c7e-8554e41d7100/status HTTP/1.1" 404
+connection closed
+connection closed
+2026-06-19 10:45:08,783 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 10:45:08,788 INFO uvicorn.error: connection closed
+2026-06-19 10:45:31,867 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:45:31,867 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:45:31,869 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:45:31,869 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 10:45:31,870 INFO sqlalchemy.engine.Engine [cached since 870s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 10:45:31,870 INFO sqlalchemy.engine.Engine: [cached since 870s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:51992 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:51992 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:45:31,884 INFO uvicorn.access: 127.0.0.1:51992 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 10:45:31,885 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:45:31,885 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:51994 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:51994 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 10:45:32,375 INFO uvicorn.error: 127.0.0.1:51994 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 10:45:32,378 INFO uvicorn.error: connection open
+127.0.0.1:51996 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:51996 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 10:45:32,555 INFO uvicorn.error: 127.0.0.1:51996 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 10:45:32,557 INFO uvicorn.error: connection open
+127.0.0.1:51998 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:51998 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 10:45:32,848 INFO uvicorn.error: 127.0.0.1:51998 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 10:45:32,854 INFO uvicorn.error: connection open
+127.0.0.1:52001 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:52001 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 10:45:32,987 INFO uvicorn.error: 127.0.0.1:52001 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 10:45:32,989 INFO uvicorn.error: connection open
+2026-06-19 10:46:22,974 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:46:22,974 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:46:22,976 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 10:46:22,976 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 10:46:22,976 INFO sqlalchemy.engine.Engine [cached since 1213s ago] (1,)
+2026-06-19 10:46:22,976 INFO sqlalchemy.engine.Engine: [cached since 1213s ago] (1,)
+192.168.18.95:54666 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:54666 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 10:46:22,983 INFO uvicorn.access: 192.168.18.95:54666 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 10:46:22,984 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:46:22,984 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 10:47:15,189 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:47:15,189 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:47:15,191 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:47:15,191 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:47:15,192 INFO sqlalchemy.engine.Engine [cached since 1171s ago] ('11b1b831-d1ff-4b91-8482-d00d6934e3af',)
+2026-06-19 10:47:15,192 INFO sqlalchemy.engine.Engine: [cached since 1171s ago] ('11b1b831-d1ff-4b91-8482-d00d6934e3af',)
+2026-06-19 10:47:15,208 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:47:15,208 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:45014 - "GET /api/v1/cases/11b1b831-d1ff-4b91-8482-d00d6934e3af/status HTTP/1.1" 404
+192.168.18.95:45014 - "GET /api/v1/cases/11b1b831-d1ff-4b91-8482-d00d6934e3af/status HTTP/1.1" 404
+2026-06-19 10:47:15,214 INFO uvicorn.access: 192.168.18.95:45014 - "GET /api/v1/cases/11b1b831-d1ff-4b91-8482-d00d6934e3af/status HTTP/1.1" 404
+2026-06-19 10:47:54,562 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 10:47:54,562 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 10:47:54,566 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:47:54,566 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 10:47:54,567 INFO sqlalchemy.engine.Engine [cached since 1211s ago] ('14c47d94-ff60-4be4-bd01-1fe5d2a7779f',)
+2026-06-19 10:47:54,567 INFO sqlalchemy.engine.Engine: [cached since 1211s ago] ('14c47d94-ff60-4be4-bd01-1fe5d2a7779f',)
+2026-06-19 10:47:54,594 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 10:47:54,594 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:44548 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+192.168.18.95:44548 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+2026-06-19 10:47:54,605 INFO uvicorn.access: 192.168.18.95:44548 - "GET /api/v1/cases/14c47d94-ff60-4be4-bd01-1fe5d2a7779f/status HTTP/1.1" 404
+2026-06-19 11:05:23,503 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 11:05:23,503 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 11:05:23,505 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 11:05:23,505 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 11:05:23,505 INFO sqlalchemy.engine.Engine [cached since 2062s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 11:05:23,505 INFO sqlalchemy.engine.Engine: [cached since 2062s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:53357 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:53357 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 11:05:23,512 INFO uvicorn.access: 127.0.0.1:53357 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 11:05:23,514 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 11:05:23,514 INFO sqlalchemy.engine.Engine: ROLLBACK
+connection closed
+connection closed
+2026-06-19 11:35:54,276 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 11:35:54,320 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 11:35:54,324 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 11:35:54,702 INFO uvicorn.error: connection closed
+2026-06-19 11:51:00,198 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 11:51:00,198 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 11:51:00,199 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 11:51:00,199 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 11:51:00,199 INFO sqlalchemy.engine.Engine [cached since 4798s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 11:51:00,199 INFO sqlalchemy.engine.Engine: [cached since 4798s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:54341 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:54341 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 11:51:00,208 INFO uvicorn.access: 127.0.0.1:54341 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 11:51:00,210 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 11:51:00,210 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:54343 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:54343 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 11:51:00,589 INFO uvicorn.error: 127.0.0.1:54343 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 11:51:00,592 INFO uvicorn.error: connection open
+127.0.0.1:54345 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:54345 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 11:51:00,607 INFO uvicorn.error: 127.0.0.1:54345 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 11:51:00,609 INFO uvicorn.error: connection open
+127.0.0.1:54349 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:54349 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 11:51:01,250 INFO uvicorn.error: 127.0.0.1:54349 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 11:51:01,252 INFO uvicorn.error: connection open
+127.0.0.1:54352 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:54352 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 11:51:01,416 INFO uvicorn.error: 127.0.0.1:54352 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 11:51:01,419 INFO uvicorn.error: connection open
+127.0.0.1:54354 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:54354 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 11:51:01,479 INFO uvicorn.error: 127.0.0.1:54354 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 11:51:01,482 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 11:51:02,474 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 11:51:02,476 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 11:51:02,555 INFO uvicorn.error: connection closed
+127.0.0.1:54358 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:54358 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 11:51:02,581 INFO uvicorn.error: 127.0.0.1:54358 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 11:51:02,582 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 11:51:02,596 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 12:13:51,860 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 12:13:51,872 INFO uvicorn.error: connection closed
+2026-06-19 16:03:01,578 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:03:01,578 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:03:01,616 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 16:03:01,616 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 16:03:01,621 INFO sqlalchemy.engine.Engine [cached since 1.992e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 16:03:01,621 INFO sqlalchemy.engine.Engine: [cached since 1.992e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:64774 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:64774 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 16:03:01,962 INFO uvicorn.access: 127.0.0.1:64774 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 16:03:01,972 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:03:01,972 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:64810 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:64810 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:03:03,887 INFO uvicorn.error: 127.0.0.1:64810 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:03:03,905 INFO uvicorn.error: connection open
+127.0.0.1:64826 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:64826 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:03:06,262 INFO uvicorn.error: 127.0.0.1:64826 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:03:06,264 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 16:03:08,244 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 16:03:08,245 INFO uvicorn.error: connection closed
+127.0.0.1:64837 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:64837 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:03:08,579 INFO uvicorn.error: 127.0.0.1:64837 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:03:08,582 INFO uvicorn.error: connection open
+127.0.0.1:64839 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:64839 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:03:08,608 INFO uvicorn.error: 127.0.0.1:64839 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:03:08,610 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 16:16:49,940 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 16:16:49,945 INFO uvicorn.error: connection closed
+127.0.0.1:51034 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:51034 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:34:31,669 INFO uvicorn.error: 127.0.0.1:51034 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:34:31,689 INFO uvicorn.error: connection open
+127.0.0.1:51036 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:51036 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:34:31,742 INFO uvicorn.error: 127.0.0.1:51036 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:34:31,751 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 16:34:31,825 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 16:34:31,828 INFO uvicorn.error: connection closed
+2026-06-19 16:44:34,294 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:44:34,294 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:44:34,320 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 16:44:34,320 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 16:44:34,325 INFO sqlalchemy.engine.Engine [cached since 2.271e+04s ago] (1,)
+2026-06-19 16:44:34,325 INFO sqlalchemy.engine.Engine: [cached since 2.271e+04s ago] (1,)
+192.168.18.95:45142 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:45142 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 16:44:34,420 INFO uvicorn.access: 192.168.18.95:45142 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 16:44:34,429 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:44:34,429 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 16:48:41,096 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:48:41,096 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:48:41,098 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 16:48:41,098 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 16:48:41,100 INFO sqlalchemy.engine.Engine [cached since 2.286e+04s ago] ('1a9e953f-d44d-44b8-b428-c48767b603c6',)
+2026-06-19 16:48:41,100 INFO sqlalchemy.engine.Engine: [cached since 2.286e+04s ago] ('1a9e953f-d44d-44b8-b428-c48767b603c6',)
+2026-06-19 16:48:41,581 INFO sqlalchemy.engine.Engine INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
+2026-06-19 16:48:41,581 INFO sqlalchemy.engine.Engine: INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
+2026-06-19 16:48:41,585 INFO sqlalchemy.engine.Engine [cached since 2.28e+04s ago] ('1a9e953f-d44d-44b8-b428-c48767b603c6', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah Rizwan', '+92-341-2959275', 24.9621698, 67.0597153, 'feeling unwell and depressed', ['gabrahat', 'depression'], 10, 'RED', 'Severity score 8 or above — immediate medical attention required.', 'Patient is feeling unwell and depressed for days, with severe discomfort and limited mobility, but is still alert and has no bleeding. Additional: Mobility: limited, Consciousness: alert.', 'PENDING', None, None, datetime.datetime(2026, 6, 19, 11, 48, 41, 576151), None, "samsung-abdullah's-a06", None)
+2026-06-19 16:48:41,585 INFO sqlalchemy.engine.Engine: [cached since 2.28e+04s ago] ('1a9e953f-d44d-44b8-b428-c48767b603c6', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah Rizwan', '+92-341-2959275', 24.9621698, 67.0597153, 'feeling unwell and depressed', ['gabrahat', 'depression'], 10, 'RED', 'Severity score 8 or above — immediate medical attention required.', 'Patient is feeling unwell and depressed for days, with severe discomfort and limited mobility, but is still alert and has no bleeding. Additional: Mobility: limited, Consciousness: alert.', 'PENDING', None, None, datetime.datetime(2026, 6, 19, 11, 48, 41, 576151), None, "samsung-abdullah's-a06", None)
+2026-06-19 16:48:41,852 INFO sqlalchemy.engine.Engine COMMIT
+2026-06-19 16:48:41,852 INFO sqlalchemy.engine.Engine: COMMIT
+192.168.18.95:59756 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+192.168.18.95:59756 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-06-19 16:48:42,105 INFO uvicorn.access: 192.168.18.95:59756 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-06-19 16:48:42,513 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:48:42,513 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:48:42,517 INFO sqlalchemy.engine.Engine SELECT knowledge_documents.id, knowledge_documents.topic_keywords 
+FROM knowledge_documents 
+WHERE knowledge_documents.status = $1::documentstatus AND knowledge_documents.topic_keywords IS NOT NULL
+2026-06-19 16:48:42,517 INFO sqlalchemy.engine.Engine: SELECT knowledge_documents.id, knowledge_documents.topic_keywords 
+FROM knowledge_documents 
+WHERE knowledge_documents.status = $1::documentstatus AND knowledge_documents.topic_keywords IS NOT NULL
+2026-06-19 16:48:42,518 INFO sqlalchemy.engine.Engine [cached since 2.28e+04s ago] ('ACTIVE',)
+2026-06-19 16:48:42,518 INFO sqlalchemy.engine.Engine: [cached since 2.28e+04s ago] ('ACTIVE',)
+2026-06-19 16:48:45,218 INFO httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+192.168.18.95:59756 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+192.168.18.95:59756 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+2026-06-19 16:48:45,265 INFO uvicorn.access: 192.168.18.95:59756 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+2026-06-19 16:48:45,267 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:48:45,267 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 16:48:53,021 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:48:53,021 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:48:53,024 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 16:48:53,024 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 16:48:53,025 INFO sqlalchemy.engine.Engine [cached since 2.268e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 16:48:53,025 INFO sqlalchemy.engine.Engine: [cached since 2.268e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:52235 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:52235 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 16:48:53,062 INFO uvicorn.access: 127.0.0.1:52235 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 16:48:53,063 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:48:53,063 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:52237 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:52237 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:48:53,644 INFO uvicorn.error: 127.0.0.1:52237 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:48:53,646 INFO uvicorn.error: connection open
+127.0.0.1:52239 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:52239 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:48:53,665 INFO uvicorn.error: 127.0.0.1:52239 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:48:53,668 INFO uvicorn.error: connection open
+192.168.18.95:50370 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+192.168.18.95:50370 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+2026-06-19 16:48:55,360 INFO uvicorn.access: 192.168.18.95:50370 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+connection closed
+connection closed
+2026-06-19 16:49:04,582 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 16:49:04,584 INFO uvicorn.error: connection closed
+192.168.18.95:57490 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+192.168.18.95:57490 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+2026-06-19 16:49:05,574 INFO uvicorn.access: 192.168.18.95:57490 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+127.0.0.1:52258 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:52258 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 16:49:11,506 INFO uvicorn.access: 127.0.0.1:52258 - "OPTIONS /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:52258 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:52258 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 16:49:11,515 INFO uvicorn.access: 127.0.0.1:52258 - "OPTIONS /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 16:49:11,585 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:49:11,585 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:49:11,602 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($2::casestatus, $3::casestatus, $4::casestatus) AND cases.claimed_by_org_id = $1::UUID
+2026-06-19 16:49:11,602 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($2::casestatus, $3::casestatus, $4::casestatus) AND cases.claimed_by_org_id = $1::UUID
+2026-06-19 16:49:11,603 INFO sqlalchemy.engine.Engine [cached since 2.269e+04s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 16:49:11,603 INFO sqlalchemy.engine.Engine: [cached since 2.269e+04s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 16:49:11,648 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:49:11,648 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:49:11,651 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 16:49:11,651 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 16:49:11,652 INFO sqlalchemy.engine.Engine [cached since 2.269e+04s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 16:49:11,652 INFO sqlalchemy.engine.Engine: [cached since 2.269e+04s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:52262 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:52262 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:49:11,835 INFO uvicorn.error: 127.0.0.1:52262 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:49:11,836 INFO uvicorn.error: connection open
+127.0.0.1:52265 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:52265 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:49:11,868 INFO uvicorn.error: 127.0.0.1:52265 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:49:11,870 INFO uvicorn.error: connection open
+2026-06-19 16:49:13,741 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($4::casestatus, $5::casestatus, $6::casestatus) AND cases.claimed_by_org_id = $1::UUID ORDER BY cases.received_at DESC 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER
+2026-06-19 16:49:13,741 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($4::casestatus, $5::casestatus, $6::casestatus) AND cases.claimed_by_org_id = $1::UUID ORDER BY cases.received_at DESC 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER
+2026-06-19 16:49:13,743 INFO sqlalchemy.engine.Engine [cached since 2.269e+04s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 16:49:13,743 INFO sqlalchemy.engine.Engine: [cached since 2.269e+04s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 16:49:14,107 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 16:49:14,107 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 16:49:14,108 INFO sqlalchemy.engine.Engine [cached since 2.269e+04s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 16:49:14,108 INFO sqlalchemy.engine.Engine: [cached since 2.269e+04s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:52258 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:52258 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 16:49:14,462 INFO uvicorn.access: 127.0.0.1:52258 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 16:49:14,464 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:49:14,464 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 16:49:14,536 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:49:14,536 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:49:14,540 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($2::casestatus, $3::casestatus, $4::casestatus) AND cases.claimed_by_org_id = $1::UUID
+2026-06-19 16:49:14,540 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.status IN ($2::casestatus, $3::casestatus, $4::casestatus) AND cases.claimed_by_org_id = $1::UUID
+2026-06-19 16:49:14,541 INFO sqlalchemy.engine.Engine [cached since 2.269e+04s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 16:49:14,541 INFO sqlalchemy.engine.Engine: [cached since 2.269e+04s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 16:49:14,557 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($4::casestatus, $5::casestatus, $6::casestatus) AND cases.claimed_by_org_id = $1::UUID ORDER BY cases.received_at DESC 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER
+2026-06-19 16:49:14,557 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.status IN ($4::casestatus, $5::casestatus, $6::casestatus) AND cases.claimed_by_org_id = $1::UUID ORDER BY cases.received_at DESC 
+ LIMIT $2::INTEGER OFFSET $3::INTEGER
+2026-06-19 16:49:14,560 INFO sqlalchemy.engine.Engine [cached since 2.269e+04s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+2026-06-19 16:49:14,560 INFO sqlalchemy.engine.Engine: [cached since 2.269e+04s ago] (UUID('1680decb-e3fb-42dd-b80d-e0dacbc3017c'), 20, 0, 'ACKNOWLEDGED', 'RESOLVED', 'CLOSED')
+127.0.0.1:52261 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+127.0.0.1:52261 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 16:49:14,566 INFO uvicorn.access: 127.0.0.1:52261 - "GET /api/v1/cases?status=ACKNOWLEDGED%2CRESOLVED%2CCLOSED&limit=20 HTTP/1.1" 200
+2026-06-19 16:49:14,568 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:49:14,568 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:52260 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:52260 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 16:49:14,847 INFO uvicorn.access: 127.0.0.1:52260 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 16:49:14,848 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:49:14,848 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 16:49:14,877 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:49:14,877 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:49:14,879 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 16:49:14,879 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 16:49:14,881 INFO sqlalchemy.engine.Engine [cached since 2.269e+04s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 16:49:14,881 INFO sqlalchemy.engine.Engine: [cached since 2.269e+04s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 16:49:14,918 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 16:49:14,918 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 16:49:14,919 INFO sqlalchemy.engine.Engine [cached since 2.269e+04s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 16:49:14,919 INFO sqlalchemy.engine.Engine: [cached since 2.269e+04s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:52261 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:52261 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 16:49:15,045 INFO uvicorn.access: 127.0.0.1:52261 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 16:49:15,046 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:49:15,046 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:46978 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+192.168.18.95:46978 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+2026-06-19 16:49:15,377 INFO uvicorn.access: 192.168.18.95:46978 - "GET /api/v1/cases/1a9e953f-d44d-44b8-b428-c48767b603c6 HTTP/1.1" 401
+2026-06-19 16:50:57,610 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:50:57,610 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:50:57,613 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 16:50:57,613 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 16:50:57,615 INFO sqlalchemy.engine.Engine [cached since 2.3e+04s ago] ('89ce1709-63d4-4aa4-b03f-4cfe349af3fa',)
+2026-06-19 16:50:57,615 INFO sqlalchemy.engine.Engine: [cached since 2.3e+04s ago] ('89ce1709-63d4-4aa4-b03f-4cfe349af3fa',)
+2026-06-19 16:50:58,007 INFO sqlalchemy.engine.Engine INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
+2026-06-19 16:50:58,007 INFO sqlalchemy.engine.Engine: INSERT INTO cases (id, patient_cnic_hash, patient_name, patient_phone, lat, lng, chief_complaint, symptoms, severity, triage_level, triage_reason, conversation_summary, status, claimed_by_org_id, claimed_at, received_at, resolved_at, device_id, org_id) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::FLOAT, $6::FLOAT, $7::VARCHAR, $8::VARCHAR[], $9::INTEGER, $10::triagelevel, $11::VARCHAR, $12::VARCHAR, $13::casestatus, $14::UUID, $15::TIMESTAMP WITHOUT TIME ZONE, $16::TIMESTAMP WITHOUT TIME ZONE, $17::TIMESTAMP WITHOUT TIME ZONE, $18::VARCHAR, $19::UUID)
+2026-06-19 16:50:58,008 INFO sqlalchemy.engine.Engine [cached since 2.294e+04s ago] ('89ce1709-63d4-4aa4-b03f-4cfe349af3fa', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah Rizwan', '+92-341-2959275', 24.9621698, 67.0597153, 'feeling unwell', ['feeling strange'], 5, 'AMBER', 'Severity score 5 or above — medical attention needed soon.', 'Patient is feeling unwell and strange for one week, no pain or bleeding, no known allergies. Additional: Consciousness: alert.', 'PENDING', None, None, datetime.datetime(2026, 6, 19, 11, 50, 58, 7059), None, "samsung-abdullah's-a06", None)
+2026-06-19 16:50:58,008 INFO sqlalchemy.engine.Engine: [cached since 2.294e+04s ago] ('89ce1709-63d4-4aa4-b03f-4cfe349af3fa', '143c66bdcc9cf049f89f3088879d046a0b2245ed331fc2cda6621a3e9d127fc4', 'Abdullah Rizwan', '+92-341-2959275', 24.9621698, 67.0597153, 'feeling unwell', ['feeling strange'], 5, 'AMBER', 'Severity score 5 or above — medical attention needed soon.', 'Patient is feeling unwell and strange for one week, no pain or bleeding, no known allergies. Additional: Consciousness: alert.', 'PENDING', None, None, datetime.datetime(2026, 6, 19, 11, 50, 58, 7059), None, "samsung-abdullah's-a06", None)
+2026-06-19 16:50:58,019 INFO sqlalchemy.engine.Engine COMMIT
+2026-06-19 16:50:58,019 INFO sqlalchemy.engine.Engine: COMMIT
+192.168.18.95:43600 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+192.168.18.95:43600 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-06-19 16:50:58,039 INFO uvicorn.access: 192.168.18.95:43600 - "POST /api/v1/cases/ingest HTTP/1.1" 202
+2026-06-19 16:50:58,573 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:50:58,573 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:50:58,577 INFO sqlalchemy.engine.Engine SELECT knowledge_documents.id, knowledge_documents.topic_keywords 
+FROM knowledge_documents 
+WHERE knowledge_documents.status = $1::documentstatus AND knowledge_documents.topic_keywords IS NOT NULL
+2026-06-19 16:50:58,577 INFO sqlalchemy.engine.Engine: SELECT knowledge_documents.id, knowledge_documents.topic_keywords 
+FROM knowledge_documents 
+WHERE knowledge_documents.status = $1::documentstatus AND knowledge_documents.topic_keywords IS NOT NULL
+2026-06-19 16:50:58,579 INFO sqlalchemy.engine.Engine [cached since 2.294e+04s ago] ('ACTIVE',)
+2026-06-19 16:50:58,579 INFO sqlalchemy.engine.Engine: [cached since 2.294e+04s ago] ('ACTIVE',)
+2026-06-19 16:51:00,584 INFO httpx: HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-19 16:51:00,597 INFO sqlalchemy.engine.Engine 
+                SELECT
+                    kc.content,
+                    kc.article_title,
+                    kc.article_url,
+                    kc.article_author,
+                    kc.article_source,
+                    kc.section_type,
+                    kc.document_id
+                FROM knowledge_chunks kc
+                JOIN knowledge_documents kd ON kd.id = kc.document_id
+                WHERE kd.status = 'ACTIVE'
+                  AND kc.embedding IS NOT NULL
+                  AND kd.id = ANY(CAST($1 AS uuid[]))
+                ORDER BY kc.chunk_index ASC
+            
+2026-06-19 16:51:00,597 INFO sqlalchemy.engine.Engine: 
+                SELECT
+                    kc.content,
+                    kc.article_title,
+                    kc.article_url,
+                    kc.article_author,
+                    kc.article_source,
+                    kc.section_type,
+                    kc.document_id
+                FROM knowledge_chunks kc
+                JOIN knowledge_documents kd ON kd.id = kc.document_id
+                WHERE kd.status = 'ACTIVE'
+                  AND kc.embedding IS NOT NULL
+                  AND kd.id = ANY(CAST($1 AS uuid[]))
+                ORDER BY kc.chunk_index ASC
+            
+2026-06-19 16:51:00,600 INFO sqlalchemy.engine.Engine [cached since 2.294e+04s ago] (['0430bec4-c9e1-4cc2-aa67-5938cac8072b', '4397a2bd-795c-482f-9a44-ce4a9931a93d'],)
+2026-06-19 16:51:00,600 INFO sqlalchemy.engine.Engine: [cached since 2.294e+04s ago] (['0430bec4-c9e1-4cc2-aa67-5938cac8072b', '4397a2bd-795c-482f-9a44-ce4a9931a93d'],)
+2026-06-19 16:51:00,693 INFO sqlalchemy.engine.Engine 
+                    UPDATE knowledge_documents
+                    SET retrieval_count = retrieval_count + 1
+                    WHERE id = ANY(CAST($1 AS uuid[]))
+                
+2026-06-19 16:51:00,693 INFO sqlalchemy.engine.Engine: 
+                    UPDATE knowledge_documents
+                    SET retrieval_count = retrieval_count + 1
+                    WHERE id = ANY(CAST($1 AS uuid[]))
+                
+2026-06-19 16:51:00,694 INFO sqlalchemy.engine.Engine [cached since 2.294e+04s ago] (['0430bec4-c9e1-4cc2-aa67-5938cac8072b'],)
+2026-06-19 16:51:00,694 INFO sqlalchemy.engine.Engine: [cached since 2.294e+04s ago] (['0430bec4-c9e1-4cc2-aa67-5938cac8072b'],)
+2026-06-19 16:51:00,728 INFO sqlalchemy.engine.Engine COMMIT
+2026-06-19 16:51:00,728 INFO sqlalchemy.engine.Engine: COMMIT
+192.168.18.95:43600 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+192.168.18.95:43600 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+2026-06-19 16:51:00,743 INFO uvicorn.access: 192.168.18.95:43600 - "POST /api/v1/knowledge/route HTTP/1.1" 200
+2026-06-19 16:51:03,627 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:51:03,627 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:51:03,628 INFO sqlalchemy.engine.Engine SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 16:51:03,628 INFO sqlalchemy.engine.Engine: SELECT count(cases.id) AS count_1 
+FROM cases 
+WHERE cases.triage_level IN ($1::triagelevel, $2::triagelevel, $3::triagelevel) AND cases.status IN ($4::casestatus)
+2026-06-19 16:51:03,629 INFO sqlalchemy.engine.Engine [cached since 2.28e+04s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 16:51:03,629 INFO sqlalchemy.engine.Engine: [cached since 2.28e+04s ago] ('RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 16:51:03,638 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 16:51:03,638 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.triage_level IN ($3::triagelevel, $4::triagelevel, $5::triagelevel) AND cases.status IN ($6::casestatus) ORDER BY cases.received_at DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2026-06-19 16:51:03,639 INFO sqlalchemy.engine.Engine [cached since 2.28e+04s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+2026-06-19 16:51:03,639 INFO sqlalchemy.engine.Engine: [cached since 2.28e+04s ago] (50, 0, 'RED', 'AMBER', 'GREEN', 'PENDING')
+127.0.0.1:52682 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+127.0.0.1:52682 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 16:51:03,679 INFO uvicorn.access: 127.0.0.1:52682 - "GET /api/v1/cases?triage_level=RED%2CAMBER%2CGREEN&status=PENDING&sort=received_at%3Adesc HTTP/1.1" 200
+2026-06-19 16:51:03,681 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:51:03,681 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 16:51:05,199 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:51:05,199 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:51:05,273 INFO sqlalchemy.engine.Engine SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.is_active = true
+2026-06-19 16:51:05,273 INFO sqlalchemy.engine.Engine: SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.is_active = true
+2026-06-19 16:51:05,274 INFO sqlalchemy.engine.Engine [generated in 0.00118s] ()
+2026-06-19 16:51:05,274 INFO sqlalchemy.engine.Engine: [generated in 0.00118s] ()
+192.168.18.95:43600 - "GET /api/v1/practitioners HTTP/1.1" 200
+192.168.18.95:43600 - "GET /api/v1/practitioners HTTP/1.1" 200
+2026-06-19 16:51:05,310 INFO uvicorn.access: 192.168.18.95:43600 - "GET /api/v1/practitioners HTTP/1.1" 200
+2026-06-19 16:51:05,311 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:51:05,311 INFO sqlalchemy.engine.Engine: ROLLBACK
+192.168.18.95:56156 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 401
+192.168.18.95:56156 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 401
+2026-06-19 16:51:10,890 INFO uvicorn.access: 192.168.18.95:56156 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 401
+192.168.18.95:40946 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 401
+192.168.18.95:40946 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 401
+2026-06-19 16:51:20,882 INFO uvicorn.access: 192.168.18.95:40946 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 401
+2026-06-19 16:51:23,409 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:51:23,409 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:51:23,411 INFO sqlalchemy.engine.Engine SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.is_active = true
+2026-06-19 16:51:23,411 INFO sqlalchemy.engine.Engine: SELECT practitioners.id, practitioners.org_id, practitioners.name, practitioners.specialty, practitioners.city, practitioners.clinic_name, practitioners.phone, practitioners.bio, practitioners.is_active, practitioners.created_at, practitioner_slots_1.id AS id_1, practitioner_slots_1.practitioner_id, practitioner_slots_1.slot_date, practitioner_slots_1.slot_time, practitioner_slots_1.is_booked, practitioner_slots_1.created_at AS created_at_1 
+FROM practitioners LEFT OUTER JOIN practitioner_slots AS practitioner_slots_1 ON practitioners.id = practitioner_slots_1.practitioner_id 
+WHERE practitioners.is_active = true
+2026-06-19 16:51:23,413 INFO sqlalchemy.engine.Engine [cached since 18.14s ago] ()
+2026-06-19 16:51:23,413 INFO sqlalchemy.engine.Engine: [cached since 18.14s ago] ()
+192.168.18.95:40946 - "GET /api/v1/practitioners HTTP/1.1" 200
+192.168.18.95:40946 - "GET /api/v1/practitioners HTTP/1.1" 200
+2026-06-19 16:51:23,496 INFO uvicorn.access: 192.168.18.95:40946 - "GET /api/v1/practitioners HTTP/1.1" 200
+2026-06-19 16:51:23,498 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:51:23,498 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 16:51:27,709 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 16:51:27,709 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 16:51:27,711 INFO sqlalchemy.engine.Engine SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 16:51:27,711 INFO sqlalchemy.engine.Engine: SELECT cases.id AS cases_id, cases.patient_cnic_hash AS cases_patient_cnic_hash, cases.patient_name AS cases_patient_name, cases.patient_phone AS cases_patient_phone, cases.lat AS cases_lat, cases.lng AS cases_lng, cases.chief_complaint AS cases_chief_complaint, cases.symptoms AS cases_symptoms, cases.severity AS cases_severity, cases.triage_level AS cases_triage_level, cases.triage_reason AS cases_triage_reason, cases.conversation_summary AS cases_conversation_summary, cases.status AS cases_status, cases.claimed_by_org_id AS cases_claimed_by_org_id, cases.claimed_at AS cases_claimed_at, cases.received_at AS cases_received_at, cases.resolved_at AS cases_resolved_at, cases.device_id AS cases_device_id, cases.org_id AS cases_org_id 
+FROM cases 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 16:51:27,713 INFO sqlalchemy.engine.Engine [cached since 2.303e+04s ago] ('89ce1709-63d4-4aa4-b03f-4cfe349af3fa',)
+2026-06-19 16:51:27,713 INFO sqlalchemy.engine.Engine: [cached since 2.303e+04s ago] ('89ce1709-63d4-4aa4-b03f-4cfe349af3fa',)
+192.168.18.95:40946 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa/status HTTP/1.1" 200
+192.168.18.95:40946 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa/status HTTP/1.1" 200
+2026-06-19 16:51:27,740 INFO uvicorn.access: 192.168.18.95:40946 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa/status HTTP/1.1" 200
+2026-06-19 16:51:27,742 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 16:51:27,742 INFO sqlalchemy.engine.Engine: ROLLBACK
+connection closed
+connection closed
+2026-06-19 16:53:42,003 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 16:53:42,003 INFO uvicorn.error: connection closed
+127.0.0.1:52802 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:52802 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:53:52,834 INFO uvicorn.error: 127.0.0.1:52802 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:53:52,838 INFO uvicorn.error: connection open
+127.0.0.1:52804 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:52804 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 16:53:52,856 INFO uvicorn.error: 127.0.0.1:52804 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 16:53:52,859 INFO uvicorn.error: connection open
+2026-06-19 17:06:37,191 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 17:06:37,191 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 17:06:37,195 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 17:06:37,195 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 17:06:37,196 INFO sqlalchemy.engine.Engine [cached since 2.374e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 17:06:37,196 INFO sqlalchemy.engine.Engine: [cached since 2.374e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:54914 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:54914 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 17:06:37,220 INFO uvicorn.access: 127.0.0.1:54914 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 17:06:37,222 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 17:06:37,222 INFO sqlalchemy.engine.Engine: ROLLBACK
+connection closed
+connection closed
+2026-06-19 17:15:07,561 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 17:15:07,568 INFO uvicorn.error: connection closed
+127.0.0.1:57033 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57033 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 17:15:47,287 INFO uvicorn.error: 127.0.0.1:57033 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 17:15:47,299 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 17:15:47,334 INFO uvicorn.error: connection closed
+127.0.0.1:57037 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57037 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 17:15:47,587 INFO uvicorn.error: 127.0.0.1:57037 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 17:15:47,588 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 17:15:47,596 INFO uvicorn.error: connection closed
+2026-06-19 17:31:11,734 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 17:31:11,734 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 17:31:11,736 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 17:31:11,736 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 17:31:11,736 INFO sqlalchemy.engine.Engine [cached since 2.521e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 17:31:11,736 INFO sqlalchemy.engine.Engine: [cached since 2.521e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:57784 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:57784 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 17:31:11,768 INFO uvicorn.access: 127.0.0.1:57784 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 17:31:11,769 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 17:31:11,769 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:57786 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57786 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 17:31:12,677 INFO uvicorn.error: 127.0.0.1:57786 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 17:31:12,679 INFO uvicorn.error: connection open
+127.0.0.1:57788 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:57788 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 17:31:12,761 INFO uvicorn.error: 127.0.0.1:57788 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 17:31:12,763 INFO uvicorn.error: connection open
+2026-06-19 17:52:52,329 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 17:52:52,329 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 17:52:52,330 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 17:52:52,330 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 17:52:52,331 INFO sqlalchemy.engine.Engine [cached since 2.651e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 17:52:52,331 INFO sqlalchemy.engine.Engine: [cached since 2.651e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:59541 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:59541 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 17:52:52,426 INFO uvicorn.access: 127.0.0.1:59541 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 17:52:52,427 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 17:52:52,427 INFO sqlalchemy.engine.Engine: ROLLBACK
+connection closed
+connection closed
+2026-06-19 17:53:51,403 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 17:53:51,405 INFO uvicorn.error: connection closed
+127.0.0.1:60781 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:60781 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 18:29:06,633 INFO uvicorn.error: 127.0.0.1:60781 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 18:29:06,636 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 18:29:06,659 INFO uvicorn.error: connection closed
+127.0.0.1:60783 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:60783 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 18:29:06,667 INFO uvicorn.error: 127.0.0.1:60783 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 18:29:06,668 INFO uvicorn.error: connection open
+connection closed
+connection closed
+2026-06-19 18:29:06,677 INFO uvicorn.error: connection closed
+2026-06-19 18:29:06,825 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 18:29:06,825 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 18:29:06,826 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 18:29:06,826 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 18:29:06,826 INFO sqlalchemy.engine.Engine [cached since 2.869e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 18:29:06,826 INFO sqlalchemy.engine.Engine: [cached since 2.869e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:60779 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:60779 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 18:29:07,380 INFO uvicorn.access: 127.0.0.1:60779 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 18:29:07,381 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 18:29:07,381 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:55110 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:55110 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 18:29:09,406 INFO uvicorn.error: 127.0.0.1:55110 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 18:29:09,407 INFO uvicorn.error: connection open
+127.0.0.1:55112 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+127.0.0.1:55112 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+2026-06-19 18:29:09,433 INFO uvicorn.error: 127.0.0.1:55112 - "WebSocket /socket.io/?EIO=4&transport=websocket" [accepted]
+connection open
+connection open
+2026-06-19 18:29:09,434 INFO uvicorn.error: connection open
+2026-06-19 18:29:10,338 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 18:29:10,338 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 18:29:10,339 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 18:29:10,339 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 18:29:10,340 INFO sqlalchemy.engine.Engine [cached since 2.869e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 18:29:10,340 INFO sqlalchemy.engine.Engine: [cached since 2.869e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:60779 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:60779 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 18:29:10,670 INFO uvicorn.access: 127.0.0.1:60779 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 18:29:10,672 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 18:29:10,672 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 18:47:57,687 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 18:47:57,687 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 18:47:57,688 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 18:47:57,688 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 18:47:57,689 INFO sqlalchemy.engine.Engine [cached since 2.982e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 18:47:57,689 INFO sqlalchemy.engine.Engine: [cached since 2.982e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:57896 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:57896 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 18:47:57,698 INFO uvicorn.access: 127.0.0.1:57896 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 18:47:57,699 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 18:47:57,699 INFO sqlalchemy.engine.Engine: ROLLBACK
+127.0.0.1:57902 - "OPTIONS /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 200
+127.0.0.1:57902 - "OPTIONS /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 200
+2026-06-19 18:47:58,056 INFO uvicorn.access: 127.0.0.1:57902 - "OPTIONS /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 200
+2026-06-19 18:47:58,225 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 18:47:58,225 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 18:47:58,452 INFO sqlalchemy.engine.Engine SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 18:47:58,452 INFO sqlalchemy.engine.Engine: SELECT cases.id, cases.patient_cnic_hash, cases.patient_name, cases.patient_phone, cases.lat, cases.lng, cases.chief_complaint, cases.symptoms, cases.severity, cases.triage_level, cases.triage_reason, cases.conversation_summary, cases.status, cases.claimed_by_org_id, cases.claimed_at, cases.received_at, cases.resolved_at, cases.device_id, cases.org_id, soap_reports_1.id AS id_1, soap_reports_1.case_id, soap_reports_1.subjective, soap_reports_1.objective, soap_reports_1.assessment, soap_reports_1.plan, soap_reports_1.generated_at, soap_reports_1.model_used 
+FROM cases LEFT OUTER JOIN soap_reports AS soap_reports_1 ON cases.id = soap_reports_1.case_id 
+WHERE cases.id = $1::VARCHAR
+2026-06-19 18:47:58,454 INFO sqlalchemy.engine.Engine [generated in 0.00428s] ('89ce1709-63d4-4aa4-b03f-4cfe349af3fa',)
+2026-06-19 18:47:58,454 INFO sqlalchemy.engine.Engine: [generated in 0.00428s] ('89ce1709-63d4-4aa4-b03f-4cfe349af3fa',)
+127.0.0.1:57902 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 200
+127.0.0.1:57902 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 200
+2026-06-19 18:47:58,651 INFO uvicorn.access: 127.0.0.1:57902 - "GET /api/v1/cases/89ce1709-63d4-4aa4-b03f-4cfe349af3fa HTTP/1.1" 200
+2026-06-19 18:47:58,654 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 18:47:58,654 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 19:02:59,675 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 19:02:59,675 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 19:02:59,677 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 19:02:59,677 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 19:02:59,678 INFO sqlalchemy.engine.Engine [cached since 3.072e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 19:02:59,678 INFO sqlalchemy.engine.Engine: [cached since 3.072e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:60349 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:60349 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 19:02:59,747 INFO uvicorn.access: 127.0.0.1:60349 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 19:02:59,750 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 19:02:59,750 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 19:24:21,468 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 19:24:21,468 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 19:24:21,470 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 19:24:21,470 INFO sqlalchemy.engine.Engine: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.role AS users_role, users.org_id AS users_org_id, users.created_at AS users_created_at 
+FROM users 
+WHERE users.id = $1::UUID
+2026-06-19 19:24:21,470 INFO sqlalchemy.engine.Engine [cached since 3.2e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+2026-06-19 19:24:21,470 INFO sqlalchemy.engine.Engine: [cached since 3.2e+04s ago] (UUID('416904a6-db29-4fe4-a3b2-e7c8c62d9cec'),)
+127.0.0.1:62214 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+127.0.0.1:62214 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 19:24:21,502 INFO uvicorn.access: 127.0.0.1:62214 - "POST /api/v1/auth/refresh HTTP/1.1" 200
+2026-06-19 19:24:21,504 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 19:24:21,504 INFO sqlalchemy.engine.Engine: ROLLBACK
+connection closed
+connection closed
+2026-06-19 19:54:58,918 INFO uvicorn.error: connection closed
+connection closed
+connection closed
+2026-06-19 19:54:58,938 INFO uvicorn.error: connection closed
+2026-06-19 20:57:13,085 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 20:57:13,085 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 20:57:13,096 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:13,096 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:13,102 INFO sqlalchemy.engine.Engine [cached since 3.787e+04s ago] (1,)
+2026-06-19 20:57:13,102 INFO sqlalchemy.engine.Engine: [cached since 3.787e+04s ago] (1,)
+192.168.18.95:60500 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:60500 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:13,171 INFO uvicorn.access: 192.168.18.95:60500 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:13,173 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 20:57:13,173 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 20:57:23,967 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 20:57:23,967 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 20:57:23,967 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:23,967 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:23,968 INFO sqlalchemy.engine.Engine [cached since 3.788e+04s ago] (1,)
+2026-06-19 20:57:23,968 INFO sqlalchemy.engine.Engine: [cached since 3.788e+04s ago] (1,)
+192.168.18.95:39336 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:39336 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:23,996 INFO uvicorn.access: 192.168.18.95:39336 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:23,997 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 20:57:23,997 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 20:57:31,840 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 20:57:31,840 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 20:57:31,841 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:31,841 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:31,841 INFO sqlalchemy.engine.Engine [cached since 3.789e+04s ago] (1,)
+2026-06-19 20:57:31,841 INFO sqlalchemy.engine.Engine: [cached since 3.789e+04s ago] (1,)
+192.168.18.95:39340 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:39340 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:31,847 INFO uvicorn.access: 192.168.18.95:39340 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:31,850 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 20:57:31,850 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 20:57:51,270 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 20:57:51,270 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 20:57:51,272 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:51,272 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:51,272 INFO sqlalchemy.engine.Engine [cached since 3.791e+04s ago] (1,)
+2026-06-19 20:57:51,272 INFO sqlalchemy.engine.Engine: [cached since 3.791e+04s ago] (1,)
+192.168.18.95:53818 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:53818 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:51,277 INFO uvicorn.access: 192.168.18.95:53818 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:51,278 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 20:57:51,278 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 20:57:59,801 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 20:57:59,801 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 20:57:59,802 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:59,802 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:57:59,802 INFO sqlalchemy.engine.Engine [cached since 3.791e+04s ago] (1,)
+2026-06-19 20:57:59,802 INFO sqlalchemy.engine.Engine: [cached since 3.791e+04s ago] (1,)
+192.168.18.95:47870 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:47870 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:59,808 INFO uvicorn.access: 192.168.18.95:47870 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:57:59,810 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 20:57:59,810 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 20:58:13,542 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 20:58:13,542 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 20:58:13,545 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:58:13,545 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:58:13,545 INFO sqlalchemy.engine.Engine [cached since 3.793e+04s ago] (1,)
+2026-06-19 20:58:13,545 INFO sqlalchemy.engine.Engine: [cached since 3.793e+04s ago] (1,)
+192.168.18.95:60214 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:60214 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:58:13,551 INFO uvicorn.access: 192.168.18.95:60214 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:58:13,552 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 20:58:13,552 INFO sqlalchemy.engine.Engine: ROLLBACK
+2026-06-19 20:58:20,913 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-06-19 20:58:20,913 INFO sqlalchemy.engine.Engine: BEGIN (implicit)
+2026-06-19 20:58:20,915 INFO sqlalchemy.engine.Engine SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:58:20,915 INFO sqlalchemy.engine.Engine: SELECT knowledge_base_version.id AS knowledge_base_version_id, knowledge_base_version.version AS knowledge_base_version_version, knowledge_base_version.index_file_path AS knowledge_base_version_index_file_path, knowledge_base_version.updated_at AS knowledge_base_version_updated_at, knowledge_base_version.document_count AS knowledge_base_version_document_count, knowledge_base_version.chunk_count AS knowledge_base_version_chunk_count 
+FROM knowledge_base_version 
+WHERE knowledge_base_version.id = $1::INTEGER
+2026-06-19 20:58:20,915 INFO sqlalchemy.engine.Engine [cached since 3.794e+04s ago] (1,)
+2026-06-19 20:58:20,915 INFO sqlalchemy.engine.Engine: [cached since 3.794e+04s ago] (1,)
+192.168.18.95:46424 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+192.168.18.95:46424 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:58:20,922 INFO uvicorn.access: 192.168.18.95:46424 - "GET /api/v1/knowledge/version HTTP/1.1" 200
+2026-06-19 20:58:20,923 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-06-19 20:58:20,923 INFO sqlalchemy.engine.Engine: ROLLBACK
 Shutting down
-2026-06-17 21:10:44,147 INFO uvicorn.error: Shutting down
+Shutting down
+2026-06-19 21:07:52,028 INFO uvicorn.error: Shutting down
 Waiting for application shutdown.
 Waiting for application shutdown.
-2026-06-17 21:10:44,309 INFO uvicorn.error: Waiting for application shutdown.
+2026-06-19 21:07:52,143 INFO uvicorn.error: Waiting for application shutdown.
 Application shutdown complete.
 Application shutdown complete.
-2026-06-17 21:10:44,359 INFO uvicorn.error: Application shutdown complete.
-Finished server process [9324]
-Finished server process [9324]
-2026-06-17 21:10:44,365 INFO uvicorn.error: Finished server process [9324]
+2026-06-19 21:07:52,189 INFO uvicorn.error: Application shutdown complete.
+Finished server process [2904]
+Finished server process [2904]
+2026-06-19 21:07:52,203 INFO uvicorn.error: Finished server process [2904]
 uvicorn.run returned (server stopped)
-NFO uvicorn.error: Application shutdown complete.
+Exception ignored in atexit callback: <function dump_compile_times at 0x000001A864FAAC00>
+Traceback (most recent call last):
+  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\torch\_dynamo\utils.py", line 910, in dump_compile_times
+    log.info(compile_times(repr="str", aggregate=True))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ABDULLAH RIZWAN\OneDrive\Desktop\FYP Project\Agentic_AI_Triage\apps\api\.venv\Lib\site-packages\torch\_dynamo\utils.py", line 869, in compile_times
+    def compile_times(  # type: ignore[misc]
+    
+KeyboardInterrupt: 

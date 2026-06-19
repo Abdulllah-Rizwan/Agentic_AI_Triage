@@ -3876,6 +3876,169 @@ Same `.value` bug existed in the list endpoint. After `db.refresh()` / ORM load,
 
 ---
 
+## Session 35 — 2026-06-18
+
+### Goal
+Fix two logo rendering problems that had been documented as known limitations since Session 34's logo integration work: (1) the mobile splash screen showed the entire JPEG as a white rectangular "slide" instead of just the symbol, and (2) the dashboard threw a "received null" error and could not load `/logo.jpg` at all.
+
+---
+
+### What was done
+
+#### Fix 1 — Mobile splash screen: JPEG logo replaced with native View component
+
+**Problem:** `SplashScreen.tsx` loaded `logo.jpg` via React Native's `<Image>` component. JPEGs have no transparency channel — the white background of the artwork was fully visible as a white square/slide sitting on the dark splash screen background.
+
+**Root cause:** `logo.jpg` is a JPEG. JPEG does not support alpha transparency. No amount of `resizeMode` tweaking can remove the white fill.
+
+**Decision:** Remove the `<Image>` entirely. Draw the logo at runtime using pure React Native `View` primitives — no third-party library needed and no asset file required. `react-native-svg` is not installed (confirmed by checking `package.json`), so all rendering uses standard `StyleSheet` and `View`.
+
+**Implementation (`apps/mobile/src/screens/SplashScreen.tsx`):**
+- Added an inline `MedicalCrossLogo` component above the screen's `Props` interface
+- Component accepts a `size` prop and derives all dimensions proportionally from it
+- Renders a `View` with `borderRadius = size/2`, `borderColor: '#DC2626'`, and `borderWidth` — produces the red circle outline
+- Inside: two absolutely-positioned `View` bars (vertical + horizontal) both `backgroundColor: '#DC2626'` — they overlap at centre to form the plus/cross shape
+- Bar proportions: thickness = 22% of size, length = 52% of size — matches the visual weight of the original artwork
+- Removed `<Image source={require('../assets/logo.jpg')} ...>` and the `Image` import from `react-native`
+- Removed the now-unused `logoImage` StyleSheet entry
+
+**Result:** The splash screen shows only the red medical cross symbol floating on the dark background — no white edges, no rectangular artefact.
+
+---
+
+#### Fix 2 — Dashboard: "received null" on /logo.jpg replaced with inline SVG component
+
+**Problem:** Both `app/(dashboard)/layout.tsx` (sidebar brand area) and `app/(auth)/login/page.tsx` used `next/image` `<Image src="/logo.jpg" ...>`. The Next.js image optimizer threw "The requested resource isn't a valid image for /logo.jpg received null" — the file existed in `public/` but the optimizer could not process it. Additionally, even if it had loaded, the JPEG's white background would have been visible against the dark sidebar and login card backgrounds (same transparency problem as mobile).
+
+**Decision:** Replace `<Image src="/logo.jpg">` with an inline SVG component. SVG has a transparent background by default and requires no optimizer pipeline — no next.config changes, no `domains` entry, no file format conversion.
+
+**Implementation:**
+- Created `apps/dashboard/components/MedicalCrossLogo.tsx` — a shared functional component that renders an `<svg>` element
+  - Accepts `size?: number` (default 36) and `className?: string`
+  - `viewBox="0 0 100 100"` with `fill="none"` background (transparent)
+  - `<circle cx="50" cy="50" r="44" stroke="#DC2626" strokeWidth="7" />` — red circle outline matching the original artwork
+  - `<rect x="37" y="20" width="26" height="60" rx="5" fill="#DC2626" />` — vertical bar
+  - `<rect x="20" y="37" width="60" height="26" rx="5" fill="#DC2626" />` — horizontal bar
+- Updated `app/(dashboard)/layout.tsx`:
+  - Removed `import Image from "next/image"`
+  - Added `import MedicalCrossLogo from "@/components/MedicalCrossLogo"`
+  - Collapsed sidebar: `<Image ... width={32}>` → `<MedicalCrossLogo size={32} />`
+  - Expanded sidebar: `<Image ... width={36}>` → `<MedicalCrossLogo size={36} className="shrink-0" />`
+- Updated `app/(auth)/login/page.tsx`:
+  - Removed `import Image from "next/image"`
+  - Added `import MedicalCrossLogo from "@/components/MedicalCrossLogo"`
+  - Login card logo: `<Image ... width={72}>` → `<MedicalCrossLogo size={72} />`
+
+**Result:** Dashboard loads without any image error. The red cross SVG renders cleanly on all dark backgrounds with no white border artefact.
+
+---
+
+### Files created this session
+
+| File | Description |
+|---|---|
+| `apps/dashboard/components/MedicalCrossLogo.tsx` | Shared inline SVG medical cross logo component — renders the red circle + plus symbol at any size with transparent background |
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/screens/SplashScreen.tsx` | Replaced `<Image source={logo.jpg}>` with inline `MedicalCrossLogo` View component; removed `Image` import; removed `logoImage` style |
+| `apps/dashboard/app/(dashboard)/layout.tsx` | Replaced both `<Image src="/logo.jpg">` usages with `<MedicalCrossLogo>`; removed `next/image` import |
+| `apps/dashboard/app/(auth)/login/page.tsx` | Replaced `<Image src="/logo.jpg">` with `<MedicalCrossLogo size={72} />`; removed `next/image` import |
+
+---
+
+### What is next
+- No known open issues from this session
+- `logo.jpg` remains in `apps/mobile/src/assets/` and `apps/dashboard/public/` — these can be deleted if no other code references them, but they are harmless if left in place
+
+---
+
+## Session 36 — 2026-06-19
+
+### Goal
+Post-FYP-display debrief and SLM rollback. No new features — this session was diagnostic analysis of the university demo failure followed by reverting the on-device SLM from Llama 3.2 3B back to phi4-mini 3.8B.
+
+---
+
+### What was done
+
+#### Analysis 1 — University demo failure explained (no code changed)
+
+**Observation:** At the FYP display, chat worked and guidance appeared, but report transmission and the doctor list both silently failed. Everything worked normally at home afterward.
+
+**Root cause — two separate backend paths, only one of which needs ngrok:**
+
+The app has two distinct network paths:
+
+1. **Groq API (chat)** — called directly from the mobile app over the public internet. No ngrok involved. As long as the university WiFi had any external internet at all, Groq was reachable. This is why the chat worked even though the local server was unreachable.
+
+2. **Local FastAPI server (reports, doctor list, RAG routing)** — accessed via an ngrok tunnel URL that is baked into the Metro bundle at startup via `EXPO_PUBLIC_API_BASE_URL`. ngrok free-tier URLs rotate on every `ngrok http 3001` restart. If ngrok was restarted at home after the bundle was built, or if it had expired, the URL in the bundle pointed at a dead tunnel.
+
+3. **RAG guidance (silent fallback — DEC-027):** The `/api/v1/knowledge/route` server endpoint was also unreachable. However, the RAG service has a silent BM25 LocalRAG fallback built in — when the server call fails, the app falls back to offline BM25 search against the bundled index without showing any error. The guidance appeared to work but was actually coming from the local index, not the server.
+
+**Why it worked at home:** At home, ngrok was restarted and the new URL was in the active bundle. The tunnel was live, so `/ingest` and `/appointments` reached the server normally.
+
+**Key lesson:** The ngrok URL must be re-embedded in the bundle every time ngrok is restarted. For demos, either use a fixed domain (ngrok paid tier) or start ngrok before bundling and never restart it during the demo.
+
+---
+
+#### Analysis 2 — Cached university reports will not auto-retry (no code changed)
+
+**Question:** Would the reports saved (cached) during the university demo automatically transmit now that connectivity is restored at home?
+
+**Answer: No — those reports are permanently stuck.**
+
+The `TransmissionService` retry loop only retries rows where `attempts < 5` (MAX_ATTEMPTS). During the university demo, every 60-second retry attempt failed because the ngrok tunnel was dead. After 5 failed attempts, the `attempts` counter hit 5 and those rows are permanently excluded from the retry query. They remain in `pending_payloads` in SQLite but will never be retried automatically.
+
+The only way to recover those specific reports would be to manually query the SQLite database on the device and reset the `attempts` counter — not practical in production. This is acceptable behavior for the FYP: the system is designed for disaster scenarios where connectivity may be permanently lost, and once 5 attempts are exhausted, the case is considered undeliverable.
+
+---
+
+### DEC-045 — Reverted on-device SLM from Llama 3.2 3B back to phi4-mini 3.8B
+
+**Decision:** Switch the production on-device SLM back to `phi4-mini 3.8B Q4_K_M` (from `unsloth/Phi-4-mini-instruct-GGUF`), reverting DEC-044.
+
+**Reason:** User preference — phi4-mini produces better quality responses for the symptom collection conversation. The switch to Llama 3.2 3B in DEC-044 was motivated by inference speed on 4GB phones, but after the FYP display the quality trade-off was reconsidered.
+
+**Risk acknowledged:** phi4-mini 3.8B was observed to take 5–6 minutes per inference turn on low-RAM (4GB) Android devices in Session 30 testing. This is still a known limitation. Future mitigation: test on the target demo device before any presentation.
+
+**Files changed:**
+
+`apps/mobile/src/services/llm/SLMAdapter.ts`:
+- `OLLAMA_MODEL`: `llama3.2:3b` → `phi4-mini`
+- `MODEL_FILENAME`: `Llama-3.2-3B-Instruct-Q4_K_M.gguf` → `Phi-4-mini-instruct-Q4_K_M.gguf`
+- `MODEL_URL`: Llama 3.2 3B HuggingFace URL → `unsloth/Phi-4-mini-instruct-GGUF` HuggingFace URL
+- `OLD_MODEL_PATHS`: Added `Llama-3.2-3B-Instruct-Q4_K_M.gguf` — auto-deleted on first launch after upgrade
+- Chat template function: `formatLlamaPrompt` (Llama 3.2 `<|begin_of_text|>` format) → `formatPhi4Prompt` (Phi-4 `<|system|>...<|end|>` format)
+- `n_ctx`: 1024 → 2048 (both `initialize()` and `_ensureLlamaRnLoaded()` call sites)
+- Stop tokens: `['<|eot_id|>', '<|end_of_text|>', '<|start_header_id|>']` → `['<|end|>', '<|endoftext|>', '<|user|>']`
+- `_stripArtifacts`: Updated to strip Phi-4 template tokens (`<|end|>`, `<|user|>`, `<|assistant|>`, `<|endoftext|>`) instead of Llama tokens
+- Download validation error message: `~2.0 GB` → `~2.3 GB`
+
+`apps/mobile/src/screens/HomeScreen.tsx`:
+- Both `~2.0 GB` size labels updated to `~2.3 GB` (Alert text + model card display)
+
+---
+
+### Files changed this session
+
+| File | Change |
+|---|---|
+| `apps/mobile/src/services/llm/SLMAdapter.ts` | All model constants, chat template, stop tokens, `_stripArtifacts`, n_ctx, and download size updated for phi4-mini (reverts DEC-044) |
+| `apps/mobile/src/screens/HomeScreen.tsx` | Both `~2.0 GB` size labels → `~2.3 GB` |
+
+---
+
+### What is next
+- Run `ollama pull phi4-mini` for dev testing with Ollama
+- Trigger an EAS preview build — on first launch the Llama 3.2 3B file is auto-deleted, download button appears for phi4-mini
+- Rotate Groq API key (exposed in git history pre-Session 16) — carry-forward from previous sessions
+- For future demos: start ngrok once before bundling and do not restart it during the presentation; or upgrade to ngrok paid tier for a fixed domain
+
+---
+
 ## Reverted Decisions
 
 <!-- Move entries here if a decision was reversed, and document why. -->
