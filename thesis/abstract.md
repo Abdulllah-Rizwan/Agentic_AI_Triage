@@ -1,9 +1,0 @@
-# Abstract
-
-Natural disasters destroy the infrastructure — cellular networks, electricity, road access — that emergency medical response depends upon. Patients cannot communicate their condition to responders, and responders lack the situational awareness to allocate resources effectively. MediReach is an offline-first disaster medical intelligence system built to close this gap.
-
-The system comprises a patient-facing mobile application and a web-based responder dashboard for NGOs, hospitals, and government relief agencies. At its core is a five-stage intelligence relay that degrades gracefully across three connectivity modes: FULL, DEGRADED, and OFFLINE. A network orchestrator routes symptom collection between a cloud large language model (Groq llama-3.3-70b-versatile) when online and an on-device small language model (phi4-mini 3.8B Q4_K_M) when offline. A deterministic rule-based triage engine classifies patients into RED, AMBER, and GREEN priority levels in under one millisecond, independent of any network or API availability. Completed triage reports are serialised as Protocol Buffer payloads (~564 bytes), AES-256 encrypted, and queued locally for automatic store-and-forward delivery upon connectivity restoration.
-
-A retrieval-augmented generation pipeline provides WHO and NHS evidence-based guidance, with a language-model-based routing mechanism achieving 90% multilingual accuracy across English, Urdu, and Roman Urdu input. The responder dashboard delivers real-time situational awareness through Socket.IO push, geospatial mapping, and AI-generated SOAP clinical reports. Evaluation confirmed 28 of 29 backend integration tests passing and all seven security criteria satisfied.
-
-**Key Words:** *Disaster medical response, offline-first AI, small language model, clinical triage, retrieval-augmented generation, store-and-forward, emergency health informatics, Pakistan disaster management.*
